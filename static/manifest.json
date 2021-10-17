@@ -1,0 +1,17 @@
+{
+  "background_color": "#238752",
+  "display": "fullscreen",
+  "favicon.ico": "/favicon.ico",
+  "icons": [
+    {
+      "src": "/tile.png",
+      "sizes": "196x196 256x256 512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "name": "Webpack",
+  "short_name": "Webpack",
+  "start_url": "https://app.medsystem.co",
+  "theme_color": "#238752"
+}
