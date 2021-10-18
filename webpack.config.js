@@ -96,7 +96,14 @@ const globalCSSLoaders = (isProduction, useModules = false) => [
 ]
 
 module.exports = (env, argv) => {
-  const isProduction = process.env.NODE_ENV === 'production' || argv.mode === 'production'
+
+  console.log(['env', env])
+  console.log(['argv', argv])
+  console.log(['process.env.NODE_ENV', process.env.NODE_ENV])
+
+  const isProduction = process.env.NODE_ENV === 'production' || argv.mode === 'production' || argv.nodeEnv === 'production'
+  const useStats = !!argv.stats
+
   process.env.NODE_ENV = isProduction ? 'production' : 'development'
 
   return {
@@ -130,9 +137,9 @@ module.exports = (env, argv) => {
           use: globalCSSLoaders(isProduction, true),
         },
         {
-          test: /\.[jt]sx?$/,
+          exclude: [common.appNodeModules],
           loader: 'ts-loader',
-          exclude: /node_modules/
+          test: /\.[jt]sx?$/,
         },
         {
           test: /\.svg$/,
@@ -156,7 +163,7 @@ module.exports = (env, argv) => {
       emitOnErrors: false,
       minimize: true,
       moduleIds: 'deterministic',
-      nodeEnv: isProduction ? 'production' : 'development',
+      nodeEnv: process.env.NODE_ENV,
       splitChunks: {
         automaticNameDelimiter: '-',
         chunks: 'all',
@@ -243,18 +250,18 @@ module.exports = (env, argv) => {
       publicPath,
     },
     plugins: [
-      new CopyWebpackPlugin({
+      isProduction && new CopyWebpackPlugin({
         patterns: [{from: common.staticPath, to: ''}],
       }),
-      new HtmlWebpackPlugin({
+      isProduction && new HtmlWebpackPlugin({
         cache: true,
         favicon: path.join(common.staticPath, 'favicon.ico'),
         filename: 'index.html',
         template: path.join(common.staticPath, 'indexTemplate.html'),
       }),
       new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
-      new LodashModuleReplacementPlugin,
-      new BundleAnalyzerPlugin({
+      new LodashModuleReplacementPlugin(),
+      useStats && new BundleAnalyzerPlugin({
         analyzerMode: 'static',
         defaultSizes: 'parsed',
         openAnalyzer: false,
