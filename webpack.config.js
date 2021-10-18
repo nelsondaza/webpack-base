@@ -89,6 +89,7 @@ module.exports = (env, argv) => {
         directory: common.staticPath,
       },
     },
+    devtool: isProduction ? 'source-map' : 'cheap-module-source-map',
     entry: [
       './src/index'
     ],
@@ -133,16 +134,11 @@ module.exports = (env, argv) => {
       ]
     },
     optimization: {
-      runtimeChunk: 'single',
-      splitChunks: {
-        cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            chunks: 'all'
-          }
-        }
-      }
+      chunkIds: 'named',
+      emitOnErrors: false,
+      minimize: true,
+      moduleIds: 'deterministic',
+      nodeEnv: isProduction ? 'production' : 'development',
     },
     output: {
       path: common.outputPath,
