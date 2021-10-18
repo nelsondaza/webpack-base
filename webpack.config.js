@@ -13,6 +13,7 @@ const appDist = path.join(projectRoot, 'dist')
 const appEntry = path.join(projectRoot, 'src')
 const appNodeModules = path.join(projectRoot, 'node_modules')
 const packages = path.join(appEntry, 'packages')
+const publicPath = '/'
 
 const common = {
   appConfig,
@@ -166,7 +167,7 @@ module.exports = (env, argv) => {
             name: 'clip',
             priority: 5,
             reuseExistingChunk: false,
-            test: ({context}) => /[/\\]src[/\\]packages[/\\]app[/\\]src[/\\]App/.test(context),
+            test: ({context}) => !!context && /[/\\]src[/\\]packages[/\\]app[/\\]src[/\\]App/.test(context),
           },
           base: {
             chunks: 'all',
@@ -190,7 +191,7 @@ module.exports = (env, argv) => {
             name: ({context}) => context.replace(/.+[\\/]src[\\/]packages[\\/]([^\\/]+)[\\/].+/, 'pkg-$1'),
             priority: 2,
             reuseExistingChunk: false,
-            test: ({context}) => /[/\\]src[/\\]packages[/\\](images|form|ui)[/\\]/.test(context),
+            test: ({context}) => !!context && /[/\\]src[/\\]packages[/\\](images|form|ui)[/\\]/.test(context),
           },
           vendors: {
             chunks: 'all',
@@ -198,7 +199,7 @@ module.exports = (env, argv) => {
             name: ({context}) => `vendors-${fixedChunks.find(chunkInContext(context))}`,
             priority: 1.1,
             reuseExistingChunk: false,
-            test: ({context}) => fixedChunks.some(chunkInContext(context)),
+            test: ({context}) => !!context && fixedChunks.some(chunkInContext(context)),
           },
           node_modules: {
             chunks: 'all',
@@ -214,7 +215,7 @@ module.exports = (env, argv) => {
             name: ({context}) => context.replace(/.+[\\/]src[\\/]packages[\\/]([^\\/]+)[\\/].+/, 'pkg-$1'),
             priority: 0,
             reuseExistingChunk: true,
-            test: ({context}) => /[/\\]src[/\\]packages[/\\]/.test(context),
+            test: ({context}) => !!context && /[/\\]src[/\\]packages[/\\]/.test(context),
           },
           common: {
             chunks: 'async',
@@ -226,6 +227,8 @@ module.exports = (env, argv) => {
             //   if (chunk && chunk[0]) {
             //     // eslint-disable-next-line no-console
             //     console.log(`${chunk[0].name} -> ${context}`)
+            //   } else {
+            //     console.log(chunk, context)
             //   }
             //   return true
             // },
@@ -234,8 +237,10 @@ module.exports = (env, argv) => {
       },
     },
     output: {
+      chunkFilename: 'js/[name].[chunkhash].js',
+      filename: 'js/[name].[chunkhash].js',
       path: common.outputPath,
-      filename: '[name].[contenthash].js'
+      publicPath,
     },
     plugins: [
       new CopyWebpackPlugin({
@@ -251,9 +256,15 @@ module.exports = (env, argv) => {
       new LodashModuleReplacementPlugin,
       new BundleAnalyzerPlugin({
         analyzerMode: 'static',
+        defaultSizes: 'parsed',
         openAnalyzer: false,
+        reportFilename: path.join(common.appDist, `bundleAnalyzer${isProduction ? 'Prod': 'Dev' }.html`),
       }),
-      new MiniCssExtractPlugin(),
+      new MiniCssExtractPlugin({
+        chunkFilename: 'css/[name].[contenthash].css',
+        filename: 'css/[name].[contenthash].css',
+        ignoreOrder: true,
+      }),
       !isProduction && new ReactRefreshWebpackPlugin(),
     ].filter(Boolean),
     resolve: {
