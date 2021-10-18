@@ -24,6 +24,30 @@ const common = {
   projectRoot,
   staticPath: path.join(projectRoot, 'static'),
 }
+const fixedChunks = [
+  'core-js',
+  'tailwindcss',
+  'emoji-mart',
+  'gsap',
+  'd3',
+  'i18next',
+  'lodash',
+  'moment',
+  'react-dom',
+  'react',
+  'react-router-dom',
+  'recharts',
+  'rxjs',
+  'sentry',
+  'semantic',
+  'rc-',
+]
+const chunkInContext = context => chunk => !!context && (
+  context.includes(`/${chunk}`)
+  || context.includes(`/@${chunk}`)
+  || context.includes(`\\${chunk}`)
+  || context.includes(`\\@${chunk}`)
+)
 
 const capitalize = (result, word) => result + word.charAt(0).toUpperCase() + word.slice(1)
 
@@ -59,8 +83,8 @@ const globalCSSLoaders = (isProduction, useModules = false) => [
       sourceMap: !isProduction,
     },
   },
-  { loader: 'postcss-loader', options: { sourceMap: !isProduction } },
-  { loader: 'sass-loader', options: { sourceMap: !isProduction } },
+  {loader: 'postcss-loader', options: {sourceMap: !isProduction}},
+  {loader: 'sass-loader', options: {sourceMap: !isProduction}},
   {
     loader: 'sass-resources-loader',
     options: {
@@ -90,16 +114,9 @@ module.exports = (env, argv) => {
       },
     },
     devtool: isProduction ? 'source-map' : 'cheap-module-source-map',
-    entry: [
-      './src/index'
-    ],
+    entry: { bundle: './src/index' },
     module: {
       rules: [
-        {
-          test: /\.(js|jsx)$/,
-          use: [{ loader: 'babel-loader', options: { plugins: isProduction ? [] : ['react-refresh/babel'] } }],
-          exclude: /node_modules/
-        },
         {
           exclude: [common.packages],
           include: [common.appConfig, common.appEntry, common.appNodeModules],
@@ -112,7 +129,7 @@ module.exports = (env, argv) => {
           use: globalCSSLoaders(isProduction, true),
         },
         {
-          test: /\.ts(x)?$/,
+          test: /\.[jt]sx?$/,
           loader: 'ts-loader',
           exclude: /node_modules/
         },
@@ -139,6 +156,82 @@ module.exports = (env, argv) => {
       minimize: true,
       moduleIds: 'deterministic',
       nodeEnv: isProduction ? 'production' : 'development',
+      splitChunks: {
+        automaticNameDelimiter: '-',
+        chunks: 'all',
+        cacheGroups: {
+          clip: {
+            chunks: 'all',
+            enforce: true,
+            name: 'clip',
+            priority: 5,
+            reuseExistingChunk: false,
+            test: ({context}) => /[/\\]src[/\\]packages[/\\]app[/\\]src[/\\]App/.test(context),
+          },
+          base: {
+            chunks: 'all',
+            enforce: true,
+            name: ({context}) => `vendors-${fixedChunks.find(chunkInContext(context))}`,
+            priority: 4,
+            reuseExistingChunk: false,
+            test: ({context}) => !!context && context.includes('tailwind'),
+          },
+          primary: {
+            chunks: 'all',
+            enforce: true,
+            name: ({context}) => `vendors-${fixedChunks.find(chunkInContext(context))}`,
+            priority: 3,
+            reuseExistingChunk: false,
+            test: ({context}) => !!context && context.includes('semantic'),
+          },
+          secondary: {
+            chunks: 'all',
+            enforce: true,
+            name: ({context}) => context.replace(/.+[\\/]src[\\/]packages[\\/]([^\\/]+)[\\/].+/, 'pkg-$1'),
+            priority: 2,
+            reuseExistingChunk: false,
+            test: ({context}) => /[/\\]src[/\\]packages[/\\](images|form|ui)[/\\]/.test(context),
+          },
+          vendors: {
+            chunks: 'all',
+            enforce: true,
+            name: ({context}) => `vendors-${fixedChunks.find(chunkInContext(context))}`,
+            priority: 1.1,
+            reuseExistingChunk: false,
+            test: ({context}) => fixedChunks.some(chunkInContext(context)),
+          },
+          node_modules: {
+            chunks: 'all',
+            enforce: true,
+            name: 'vendors',
+            priority: 1,
+            reuseExistingChunk: false,
+            test: ({context}) => !!context && context.includes('node_modules'),
+          },
+          pkg: {
+            chunks: 'all',
+            enforce: true,
+            name: ({context}) => context.replace(/.+[\\/]src[\\/]packages[\\/]([^\\/]+)[\\/].+/, 'pkg-$1'),
+            priority: 0,
+            reuseExistingChunk: true,
+            test: ({context}) => /[/\\]src[/\\]packages[/\\]/.test(context),
+          },
+          common: {
+            chunks: 'async',
+            minChunks: 2,
+            name: 'common',
+            priority: 0,
+            reuseExistingChunk: true,
+            // test: ({ context }, chunk) => {
+            //   if (chunk && chunk[0]) {
+            //     // eslint-disable-next-line no-console
+            //     console.log(`${chunk[0].name} -> ${context}`)
+            //   }
+            //   return true
+            // },
+          },
+        },
+      },
     },
     output: {
       path: common.outputPath,

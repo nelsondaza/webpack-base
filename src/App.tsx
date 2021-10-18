@@ -15,8 +15,8 @@ class App extends React.Component<Props> {
       <>
         <h1 className="text-4xl text-white bg-black">
           Hello {name}
-          <SimpleButton primary>Test ...</SimpleButton>
-          <SimpleButton secondary>Test ...</SimpleButton>
+          <SimpleButton primary>Test 1</SimpleButton>
+          <SimpleButton secondary>Test 2</SimpleButton>
           <hr />
           <Block>...</Block>
         </h1>
