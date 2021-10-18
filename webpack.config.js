@@ -7,6 +7,24 @@ const path = require('path');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const webpack = require('webpack');
 
+const projectRoot = path.resolve(__dirname, './')
+const appDist = path.join(projectRoot, 'dist')
+const appEntry = path.join(projectRoot, 'src')
+const appConfig = path.join(projectRoot, 'config')
+const packages = path.join(appEntry, 'packages')
+const appNodeModules = path.join(projectRoot, 'node_modules')
+
+const common = {
+  appConfig,
+  appDist,
+  appEntry,
+  appNodeModules,
+  outputPath: path.join(appDist, 'public'),
+  packages,
+  projectRoot,
+  staticPath: path.join(projectRoot, 'static'),
+}
+
 const capitalize = (result, word) => result + word.charAt(0).toUpperCase() + word.slice(1)
 
 const globalCSSLoaders = prod => [
@@ -46,7 +64,7 @@ const globalCSSLoaders = prod => [
   {
     loader: 'sass-resources-loader',
     options: {
-      resources: path.join(path.resolve(__dirname, 'config'), 'assets', 'scss', '**/*.scss'),
+      resources: path.join(common.appConfig, 'assets', 'scss', '**/*.scss'),
       sourceMap: !prod,
     },
   },
@@ -60,7 +78,7 @@ module.exports = (env, argv) => {
     devServer: {
       hot: true,
       'static': {
-        directory: path.resolve(__dirname, 'static'),
+        directory: common.staticPath,
       }
     },
     entry: [
@@ -112,18 +130,18 @@ module.exports = (env, argv) => {
       }
     },
     output: {
-      path: path.resolve(__dirname, 'dist'),
+      path: common.outputPath,
       filename: '[name].[contenthash].js'
     },
     plugins: [
       new CopyWebpackPlugin({
-        patterns: [{from: path.join(path.resolve(__dirname, 'static')), to: ''}],
+        patterns: [{from: common.staticPath, to: ''}],
       }),
       new HtmlWebpackPlugin({
         cache: true,
-        favicon: path.join(path.resolve(__dirname, 'static'), 'favicon.ico'),
+        favicon: path.join(common.staticPath, 'favicon.ico'),
         filename: 'index.html',
-        template: path.join(path.resolve(__dirname, 'static'), 'indexTemplate.html'),
+        template: path.join(common.staticPath, 'indexTemplate.html'),
       }),
       new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
       new LodashModuleReplacementPlugin,
@@ -135,12 +153,9 @@ module.exports = (env, argv) => {
       !isProduction && new ReactRefreshWebpackPlugin(),
     ].filter(Boolean),
     resolve: {
-      extensions: [
-        '.tsx',
-        '.ts',
-        '.js'
-      ],
-      alias: {}
+      alias: {},
+      extensions: ['.ts', '.tsx', '.js', '.jsx', '.css', '.scss', '.sass'],
+      modules: [common.appEntry, common.packages, common.appNodeModules],
     },
   }
 };
