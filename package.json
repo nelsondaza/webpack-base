@@ -7,12 +7,19 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "clean": "rm dist/bundle.js",
+    "build": "yarn clear:public && yarn compile",
     "build-dev": "webpack --mode development",
-    "build-prod": "NODE_ENV=production webpack --mode production",
-    "start": "yarn install && yarn webpack serve --hot --no-open --cache --bail --mode development",
-    "test": "jest --config=./config/jest/index.js -u",
-    "cypress:open": "cypress open"
+    "build:w": "yarn build -w",
+    "clear": "rimraf ./dist",
+    "clear:public": "rimraf ./dist/public",
+    "compile": "yarn install && NODE_ENV=production webpack --mode production --bail",
+    "cypress:open": "cypress open",
+    "serve": "yarn install && yarn webpack serve --hot --no-open --cache --bail --mode development",
+    "serve:public": "npx http-server dist/public -p 7071 --push-state",
+    "serve:static": "npx http-server static -p 7072 --push-state",
+    "test": "yarn install && yarn test:base --maxWorkers=40% --json --outputFile=./dist/coverage/test-results.json",
+    "test:base": "jest --config=./config/jest/index.js -u",
+    "test:w": "yarn test --watchAll"
   },
   "browserslist": [
     "last 3 versions",
@@ -52,6 +59,7 @@
     "postcss-loader": "^6.2.0",
     "prettier": "^2.4.1",
     "react-refresh": "^0.10.0",
+    "rimraf": "^3.0.2",
     "sass-loader": "^12.2.0",
     "sass-resources-loader": "^2.2.4",
     "style-loader": "^3.3.0",

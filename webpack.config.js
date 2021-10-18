@@ -8,11 +8,11 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 const webpack = require('webpack');
 
 const projectRoot = path.resolve(__dirname, './')
+const appConfig = path.join(projectRoot, 'config')
 const appDist = path.join(projectRoot, 'dist')
 const appEntry = path.join(projectRoot, 'src')
-const appConfig = path.join(projectRoot, 'config')
-const packages = path.join(appEntry, 'packages')
 const appNodeModules = path.join(projectRoot, 'node_modules')
+const packages = path.join(appEntry, 'packages')
 
 const common = {
   appConfig,
@@ -76,10 +76,18 @@ module.exports = (env, argv) => {
 
   return {
     devServer: {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+      },
+      historyApiFallback: true,
+      host: '0.0.0.0',
       hot: true,
-      'static': {
+      liveReload: true,
+      port: 7070,
+      static: {
         directory: common.staticPath,
-      }
+      },
     },
     entry: [
       './src/index'
