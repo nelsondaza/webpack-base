@@ -103,6 +103,7 @@ module.exports = (env, argv) => {
 
   const isProduction = process.env.NODE_ENV === 'production' || argv.mode === 'production' || argv.nodeEnv === 'production'
   const useStats = !!argv.stats
+  const showProgress = !!argv.progress
 
   process.env.NODE_ENV = isProduction ? 'production' : 'development'
 
@@ -273,6 +274,13 @@ module.exports = (env, argv) => {
         ignoreOrder: true,
       }),
       !isProduction && new ReactRefreshWebpackPlugin(),
+      showProgress && new webpack.ProgressPlugin({
+        activeModules: true,
+        entries: true,
+        modules: true,
+        modulesCount: 1,
+        profile: true,
+      }),
     ].filter(Boolean),
     resolve: {
       alias: {},
