@@ -10,8 +10,8 @@
     "clean": "rm dist/bundle.js",
     "build-dev": "webpack --mode development",
     "build-prod": "NODE_ENV=production webpack --mode production",
-    "start": "webpack serve --hot --no-open --mode development",
-    "test": "jest",
+    "start": "yarn install && yarn webpack serve --hot --no-open --cache --bail --mode development",
+    "test": "jest --config=./config/jest/index.js -u",
     "cypress:open": "cypress open"
   },
   "dependencies": {
