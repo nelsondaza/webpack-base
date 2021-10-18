@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const webpack = require('webpack');
 
 const capitalize = (result, word) => result + word.charAt(0).toUpperCase() + word.slice(1)
@@ -57,19 +58,19 @@ module.exports = (env, argv) => {
 
   return {
     devServer: {
+      hot: true,
       'static': {
         directory: path.resolve(__dirname, 'static'),
       }
     },
     entry: [
-      'react-hot-loader/patch',
       './src/index'
     ],
     module: {
       rules: [
         {
           test: /\.(js|jsx)$/,
-          use: 'babel-loader',
+          use: [{ loader: 'babel-loader', options: { plugins: isProduction ? [] : ['react-refresh/babel'] } }],
           exclude: /node_modules/
         },
         {
@@ -130,17 +131,16 @@ module.exports = (env, argv) => {
         analyzerMode: 'static',
         openAnalyzer: false,
       }),
-      new MiniCssExtractPlugin()
-    ],
+      new MiniCssExtractPlugin(),
+      !isProduction && new ReactRefreshWebpackPlugin(),
+    ].filter(Boolean),
     resolve: {
       extensions: [
         '.tsx',
         '.ts',
         '.js'
       ],
-      alias: {
-        'react-dom': '@hot-loader/react-dom'
-      }
+      alias: {}
     },
   }
 };
