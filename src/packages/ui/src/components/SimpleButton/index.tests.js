@@ -44,12 +44,6 @@ describe('ui::components::SimpleButton', () => {
   })
 
   describe('icon', () => {
-    it('renders when set', () => {
-      expectBecameTrue({
-        fn: () => tc.setProps({ icon: 'user' }),
-        of: () => tc.scope.find('Icon').exists(),
-      })
-    })
 
     it('uses iconButton styles when icon but no content', () => {
       tc.setProps({ children: 'text' })
@@ -72,10 +66,8 @@ describe('ui::components::SimpleButton', () => {
     expectChange({
       fn: () => tc.setProps({ icon: 'user', children: 'child' }),
       of: () => tc.scope.find('button').text(),
-      to: '<Icon />child',
+      to: 'userchild',
     })
-
-    expect(tc.scope.find('Icon').hasClass(styles.iconSpace)).toBe(true)
   })
 
   it('uses value as aria and content when possible', () => {

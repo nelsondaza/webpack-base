@@ -75,8 +75,8 @@ module.exports = {
 
   // A set of global variables that need to be available in all test environments
   globals: {
-    SYSTEM: common.SYSTEM,
     FEATURES_FLAGS: common.getFeaturesFlags('jest'),
+    SYSTEM: common.SYSTEM,
   },
 
   // An array of directory names to be searched recursively up from the requiring module's location
@@ -87,9 +87,9 @@ module.exports = {
   // An array of file extensions your modules use
   moduleFileExtensions: [
     'js',
-    // 'json',
     'jsx',
-    // 'node',
+    'ts',
+    'tsx',
   ],
 
   // A map from regular expressions to module names that allow to
@@ -110,6 +110,7 @@ module.exports = {
 
   // A preset that is used as a base for Jest's configuration
   // preset: null,
+  preset: 'ts-jest',
 
   // Run tests from one or more projects
   // projects: null,
@@ -144,7 +145,7 @@ module.exports = {
   // The paths to modules that run some code to configure or set
   // up the testing environment before each test
   setupFiles: [
-    // '<rootDir>/config/jest/suite.js',
+    '<rootDir>/config/jest/suite.js',
   ],
 
   // The path to a module that runs some code to configure or set
@@ -157,7 +158,7 @@ module.exports = {
 
   // The test environment that will be used for testing
   // testEnvironment: "jest-environment-jsdom",
-  testEnvironment: 'jsdom',
+  testEnvironment: 'node',
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},
@@ -169,7 +170,7 @@ module.exports = {
   testMatch: [
     // '**/__tests__/**/*.js?(x)',
     // '**/?(*.)+(spec|test).js?(x)',
-    '**/?(*.)+(tests).js?(x)',
+    '**/?(*.)+(tests).[jt]s?(x)',
   ],
 
   // An array of regexp pattern strings that are matched against
@@ -198,6 +199,7 @@ module.exports = {
 
   // A map from regular expressions to paths to transformers
   // transform: null,
+  transform: {"\\.[jt]sx?$": "ts-jest"},
 
   // An array of regexp pattern strings that are matched against
   // all source file paths, matched files will skip transformation

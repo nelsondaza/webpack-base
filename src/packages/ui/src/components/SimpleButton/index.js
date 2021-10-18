@@ -38,9 +38,7 @@ class SimpleButton extends PureComponent {
         type="button"
         value={value || ariaLabel}
       >
-        {!!icon && (
-          <Icon className={classnames(styles.icon, !iconButton && styles.iconSpace)} name={icon} />
-        )}
+        {icon}
         <span>{children || value}</span>
       </button>
     )
