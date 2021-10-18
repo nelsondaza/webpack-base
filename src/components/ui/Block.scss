@@ -1,0 +1,19 @@
+.Block {
+  background-color: $white;
+  border-bottom: 1px solid $greyLightMed;
+  margin: 0;
+  padding: em(20);
+  position: relative;
+}
+
+.small .Block,
+.mobile .Block {
+  padding: em(8);
+}
+
+[data-dark-mode] {
+  .Block {
+    background-color: $navy;
+    border-bottom: 1px solid $greyLight;
+  }
+}

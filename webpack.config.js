@@ -27,13 +27,13 @@ const common = {
 
 const capitalize = (result, word) => result + word.charAt(0).toUpperCase() + word.slice(1)
 
-const globalCSSLoaders = prod => [
-  prod ? MiniCssExtractPlugin.loader : 'style-loader',
+const globalCSSLoaders = (isProduction, useModules = false) => [
+  isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
   {
     loader: 'css-loader',
     options: {
       importLoaders: 3,
-      modules: {
+      modules: useModules ? {
         getLocalIdent: (context, localIdentName, localName) => {
           if (localName.match(/^(GLOBAL_|KEEP_|_)/g)) {
             return localName.replace(/^(GLOBAL_|KEEP_|_)/g, '')
@@ -55,17 +55,17 @@ const globalCSSLoaders = prod => [
           return `${localScope}_${localName}`
         },
         localIdentName: '[folder]_[local]_[hash:base64:5]',
-      },
-      sourceMap: !prod,
+      } : undefined,
+      sourceMap: !isProduction,
     },
   },
-  { loader: 'postcss-loader', options: { sourceMap: !prod } },
-  { loader: 'sass-loader', options: { sourceMap: !prod } },
+  { loader: 'postcss-loader', options: { sourceMap: !isProduction } },
+  { loader: 'sass-loader', options: { sourceMap: !isProduction } },
   {
     loader: 'sass-resources-loader',
     options: {
       resources: path.join(common.appConfig, 'assets', 'scss', '**/*.scss'),
-      sourceMap: !prod,
+      sourceMap: !isProduction,
     },
   },
 ]
@@ -92,8 +92,15 @@ module.exports = (env, argv) => {
           exclude: /node_modules/
         },
         {
+          exclude: [common.packages],
+          include: [common.appConfig, common.appEntry, common.appNodeModules],
           test: /\.s?[ac]ss$/i,
           use: globalCSSLoaders(isProduction),
+        },
+        {
+          include: [packages],
+          test: /\.s?[ac]ss$/i,
+          use: globalCSSLoaders(isProduction, true),
         },
         {
           test: /\.ts(x)?$/,

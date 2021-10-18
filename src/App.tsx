@@ -2,6 +2,8 @@ import * as React from 'react';
 
 import { SimpleButton } from "ui";
 
+import Block from "./components/ui/Block";
+
 interface Props {
    name: string;
 }
@@ -15,6 +17,8 @@ class App extends React.Component<Props> {
           Hello {name}
           <SimpleButton primary>Test ...</SimpleButton>
           <SimpleButton secondary>Test ...</SimpleButton>
+          <hr />
+          <Block>...</Block>
         </h1>
       </>
     );
