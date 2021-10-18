@@ -1,0 +1,155 @@
+.button {
+  transition: color $durationFast1Toggle $easingLinear;
+
+  align-items: center;
+  background: none;
+  border: none;
+  box-shadow: none;
+  color: currentColor;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: inherit;
+  font-size: em(14);
+  font-weight: bold;
+  justify-content: center;
+  outline: none;
+  padding: em(3, 14) em(6, 14);
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  text-rendering: geometricPrecision;
+  text-transform: uppercase;
+  vertical-align: middle;
+  z-index: 0;
+
+  &::before {
+    transition: opacity $durationFast1Toggle $easingLinear;
+
+    border: 0 solid transparent;
+    border-bottom-width: em(1, 14);
+    bottom: em(3, 14);
+    content: '';
+    height: 0;
+    left: em(5, 14);
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    right: em(5, 14);
+    z-index: -1;
+  }
+
+  &:focus,
+  &:hover {
+    color: $primaryColor;
+
+    &::before {
+      border-color: currentColor;
+      opacity: 1;
+    }
+  }
+
+  &[disabled] {
+    cursor: default;
+    opacity: 0.8;
+
+    &::before {
+      border-color: currentColor;
+      opacity: 0;
+    }
+  }
+
+  &:active {
+    color: rgba($primaryColor, 0.6);
+  }
+
+  & > * {
+    pointer-events: none;
+  }
+}
+
+.icon {
+  margin: 0 !important;
+  width: auto !important;
+}
+
+.iconSpace {
+  margin-right: em(3, 14) !important;
+}
+
+.iconButton {
+  display: inline-block;
+  border-radius: 50%;
+
+  &::before {
+    border-radius: inherit;
+    border-width: em(1, 14);
+    bottom: 0;
+    content: '';
+    height: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+  }
+}
+
+.itemsRTL {
+  flex-direction: row-reverse;
+  & > .iconSpace {
+    margin: 0 0 0 em(3, 14) !important;
+  }
+}
+
+.itemsTTB {
+  align-items: center;
+  flex-direction: column;
+
+  & > .iconSpace {
+    margin: 0 0 em(2, 14) 0 !important;
+  }
+}
+
+.itemsBTT {
+  align-items: center;
+  flex-direction: column-reverse;
+  padding-bottom: em(2, 14);
+
+  & > .iconSpace {
+    margin: 0 0 em(3, 14) 0 !important;
+  }
+}
+
+.tertiary {
+  color: $tertiaryColor;
+}
+
+.secondary {
+  color: $secondaryColor;
+}
+
+.primary {
+  color: $primaryColor;
+}
+
+[data-dark-mode] {
+  .button {
+    &:focus,
+    &:hover {
+      color: $primaryHCMColor;
+    }
+    &:active {
+      color: $primaryHCMColor;
+    }
+  }
+
+  .tertiary {
+    color: $tertiaryHCMColor;
+  }
+
+  .secondary {
+    color: $secondaryHCMColor;
+  }
+
+  .primary {
+    color: $primaryHCMColor;
+  }
+}

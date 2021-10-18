@@ -1,0 +1,54 @@
+
+@import './colors';
+
+$MAX_ELEVATION_LEVEL: 6;
+
+@mixin elevation($level, $borderColor: $greyLightMed, $shadowColor: $greyLightMed) {
+  @if($level <= 0) {
+    box-shadow: none;
+    border: 1px solid transparent;
+  } @else if($level == 1) {
+    border: 1px solid $borderColor;
+  } @else {
+    $lvl: $level - 2;
+    border: 1px solid $borderColor;
+    box-shadow:
+      0 ( 5 + ($lvl * 4px)) ( 2 + ($lvl * 2px)) ( -4 - ($lvl * 2px)) $shadowColor,
+      0 ( 4 + ($lvl * 4px)) ( 1 + ($lvl * 2px)) ( -4 - ($lvl * 3px)) $shadowColor;
+  }
+}
+
+@mixin elevations(
+  $borderColor: $greyLightMed,
+  $shadowColor: $borderColor,
+  $activeBorderColor: $borderColor,
+  $activeShadowColor: $shadowColor,
+  $maxElevationLevel: $MAX_ELEVATION_LEVEL
+) {
+  @for $i from 0 through $maxElevationLevel {
+    &#{$i} {
+      @include elevation($i, $borderColor, $shadowColor);
+      z-index: 0;
+
+      &:hover {
+        @include elevation($i + 1, $activeBorderColor, $activeShadowColor);
+        z-index: 1;
+
+        @media print {
+          @include elevation(0, $activeBorderColor, $activeShadowColor);
+        }
+      }
+
+      &:active,
+      &:focus-within,
+      &:focus {
+        @include elevation($i + 1, $activeBorderColor, $activeShadowColor);
+        z-index: 1;
+
+        @media print {
+          @include elevation(0, $activeBorderColor, $activeShadowColor);
+        }
+      }
+    }
+  }
+}

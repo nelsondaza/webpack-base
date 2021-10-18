@@ -8,6 +8,49 @@ const webpack = require('webpack');
 
 const capitalize = (result, word) => result + word.charAt(0).toUpperCase() + word.slice(1)
 
+const globalCSSLoaders = prod => [
+  prod ? MiniCssExtractPlugin.loader : 'style-loader',
+  {
+    loader: 'css-loader',
+    options: {
+      importLoaders: 3,
+      modules: {
+        getLocalIdent: (context, localIdentName, localName) => {
+          if (localName.match(/^(GLOBAL_|KEEP_|_)/g)) {
+            return localName.replace(/^(GLOBAL_|KEEP_|_)/g, '')
+          }
+          const local = context.resourcePath.substring(context.context.length).split('.')[0]
+          let localPath = context.context
+            .substring(context.rootContext.length)
+            .replace(/([/\\]+)/g, '/')
+            .replace(/(\/?)(src|packages|components)(\/)/gi, '$1')
+          if (local !== '/index') {
+            localPath += local.replace(/[^A-Za-z0-9_]+/gi, '_')
+          }
+
+          const localScope = localPath
+            .replace(/[^A-Za-z0-9_]+/gi, ' ')
+            .split(' ')
+            .reduce(capitalize)
+
+          return `${localScope}_${localName}`
+        },
+        localIdentName: '[folder]_[local]_[hash:base64:5]',
+      },
+      sourceMap: !prod,
+    },
+  },
+  { loader: 'postcss-loader', options: { sourceMap: !prod } },
+  { loader: 'sass-loader', options: { sourceMap: !prod } },
+  {
+    loader: 'sass-resources-loader',
+    options: {
+      resources: path.join(path.resolve(__dirname, 'config'), 'assets', 'scss', '**/*.scss'),
+      sourceMap: !prod,
+    },
+  },
+]
+
 module.exports = (env, argv) => {
   const isProduction = process.env.NODE_ENV === 'production' || argv.mode === 'production'
   process.env.NODE_ENV = isProduction ? 'production' : 'development'
@@ -30,83 +73,13 @@ module.exports = (env, argv) => {
           exclude: /node_modules/
         },
         {
-          test: /\.css$/,
-          use: [
-            MiniCssExtractPlugin.loader,
-            {
-              loader: 'css-loader',
-              options: {
-                importLoaders: 1,
-                modules: {
-                  getLocalIdent: (context, localIdentName, localName) => {
-                    if (localName.match(/^(GLOBAL_|KEEP_|_)/g)) {
-                      return localName.replace(/^(GLOBAL_|KEEP_|_)/g, '')
-                    }
-                    const local = context.resourcePath.substring(context.context.length).split('.')[0]
-                    let localPath = context.context
-                      .substring(context.rootContext.length)
-                      .replace(/([/\\]+)/g, '/')
-                      .replace(/(\/?)(src|packages|components)(\/)/gi, '$1')
-                    if (local !== '/index') {
-                      localPath += local.replace(/[^A-Za-z0-9_]+/gi, '_')
-                    }
-
-                    const localScope = localPath
-                      .replace(/[^A-Za-z0-9_]+/gi, ' ')
-                      .split(' ')
-                      .reduce(capitalize)
-
-                    return `${localScope}_${localName}`
-                  },
-                  localIdentName: '[folder]_[local]_[hash:base64:5]',
-                },
-                sourceMap: !isProduction,
-              },
-            },
-            'postcss-loader'
-          ]
+          test: /\.s?[ac]ss$/i,
+          use: globalCSSLoaders(isProduction),
         },
         {
           test: /\.ts(x)?$/,
           loader: 'ts-loader',
           exclude: /node_modules/
-        },
-        {
-          test: /\.scss$/,
-          use: [
-            MiniCssExtractPlugin.loader,
-            {
-              loader: 'css-loader',
-              options: {
-                importLoaders: 1,
-                modules: {
-                  getLocalIdent: (context, localIdentName, localName) => {
-                    if (localName.match(/^(GLOBAL_|KEEP_|_)/g)) {
-                      return localName.replace(/^(GLOBAL_|KEEP_|_)/g, '')
-                    }
-                    const local = context.resourcePath.substring(context.context.length).split('.')[0]
-                    let localPath = context.context
-                      .substring(context.rootContext.length)
-                      .replace(/([/\\]+)/g, '/')
-                      .replace(/(\/?)(src|packages|components)(\/)/gi, '$1')
-                    if (local !== '/index') {
-                      localPath += local.replace(/[^A-Za-z0-9_]+/gi, '_')
-                    }
-
-                    const localScope = localPath
-                      .replace(/[^A-Za-z0-9_]+/gi, ' ')
-                      .split(' ')
-                      .reduce(capitalize)
-
-                    return `${localScope}_${localName}`
-                  },
-                  localIdentName: '[folder]_[local]_[hash:base64:5]',
-                },
-                sourceMap: !isProduction,
-              },
-            },
-            'sass-loader'
-          ]
         },
         {
           test: /\.svg$/,

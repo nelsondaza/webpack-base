@@ -1,0 +1,37 @@
+
+// check https://medium.com/@aviadtend/motion-design-system-practical-guide-8c15599262fe
+
+$durationFast1Toggle: .1s;
+$durationFast2Button: .15s;
+
+$durationNormal1Icon: .2s;
+$durationNormal2Toast: .25s;
+
+$durationFast1Card: .15s;
+$durationFast2Dimming: .25s;
+$durationSlow1Card: .3s;
+$durationSlow2Dimming: .5s;
+
+// In some cases, we will want to use “dynamic durations”
+// that are based on the distance or the size of the object.
+// “the animation lasts 25ms for every 10% of the viewport traveled”.
+@function durationSize($size, $viewportSize: 1000) {
+  $minSize: $size - 130;
+  @if $minSize <= 0 {
+    @return .13s;
+  }
+  @return (($minSize / ($viewportSize * 0.1)) * .025s) + .13s;
+}
+
+$durationSizeUnder100: durationSize(100);
+$durationSizeUnder200: durationSize(200);
+$durationSizeUnder300: durationSize(300);
+
+// Appearing elements
+$easingEntrance: cubic-bezier(0, 0, .3, 1);
+// Removing elements
+$easingExit: cubic-bezier(.4, .14, 1, 1);
+// Non-moving: Fade In, Fade Out, Color, etc
+$easingLinear: linear;
+// Always visible: Move, Spin, Shrink, Morph, Pop...
+$easingStandard: cubic-bezier(.4, .14, .3, 1);
