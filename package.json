@@ -11,20 +11,6 @@
     "not IE < 11",
     "not ExplorerMobile < 11"
   ],
-  "lint-staged": {
-    "**/*.{js,jsx,ts,tsx}": [
-      "yarn prettier --write",
-      "yarn lint --fix",
-      "yarn test --findRelatedTests --bail"
-    ],
-    "**/*.{json,css,scss,sass,yaml}": [
-      "yarn prettier --write",
-      "yarn test --findRelatedTests --bail"
-    ],
-    "**/*.{md,html}": [
-      "yarn prettier --write"
-    ]
-  },
   "scripts": {
     "build": "yarn clear:public && yarn compile",
     "build:progress": "yarn build --progress",
@@ -35,7 +21,6 @@
     "compile": "yarn install && webpack --mode production --bail",
     "cypress:open": "cypress open",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
-    "pre-commit": "lint-staged",
     "pretty": "prettier --write ./src && yarn lint --fix",
     "serve": "yarn install && yarn webpack serve --hot --no-open --cache --bail --mode development",
     "serve:progress": "yarn serve --progress",
@@ -57,6 +42,7 @@
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
+    "@arkweid/lefthook": "^0.7.7",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.1",
     "@types/jest": "^27.0.2",
     "@types/react": "^17.0.30",

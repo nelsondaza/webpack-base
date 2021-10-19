@@ -1,0 +1,16 @@
+pre-commit:
+  commands:
+    pretty:
+      glob: '*.{js,ts,jsx,tsx,json,css,scss,sass,yml}'
+      run: yarn prettier --write {staged_files} && git add {staged_files}
+    lint:
+      glob: '*.{js,jsx,ts,tsx}'
+      run: yarn lint --fix {staged_files} && git add {staged_files}
+
+pre-push:
+  parallel: true
+  commands:
+    test:
+      files: git diff --name-only origin/main
+      glob: '*.{js,ts,jsx,tsx,json,css,scss,sass,yaml}'
+      run: yarn test --findRelatedTests --bail {files}
