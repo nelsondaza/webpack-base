@@ -1,51 +1,46 @@
-# empty-project
+# webpack-base
 
-Empty project.
+This is my basic webpack configuration
 
-## Building and running on localhost
+![Webpack](https://img.shields.io/badge/webpack-%238DD6F9.svg?style=for-the-badge&logo=webpack&logoColor=black)
 
-First install dependencies:
+![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![Redux](https://img.shields.io/badge/redux-%23593d88.svg?style=for-the-badge&logo=redux&logoColor=white)
+![RxJS](https://img.shields.io/badge/rxjs-%23B7178C.svg?style=for-the-badge&logo=reactivex&logoColor=white)
 
-```sh
-npm install
-```
+![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
+![SASS](https://img.shields.io/badge/SASS-hotpink.svg?style=for-the-badge&logo=SASS&logoColor=white)
+![Semantic UI React](https://img.shields.io/badge/Semantic%20UI%20React-%2335BDB2.svg?style=for-the-badge&logo=SemanticUIReact&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
-To run in hot module reloading mode:
+![Jest](https://img.shields.io/badge/-jest-%23C21325?style=for-the-badge&logo=jest&logoColor=white)
+![cypress](https://img.shields.io/badge/-cypress-%23E5E5E5?style=for-the-badge&logo=cypress&logoColor=058a5e)
 
-```sh
-npm start
-```
+![ESLint](https://img.shields.io/badge/ESLint-4B3263?style=for-the-badge&logo=eslint&logoColor=white)
+![CircleCI](https://img.shields.io/badge/CIRCLECI-%23161616.svg?style=for-the-badge&logo=circleci&logoColor=white)
 
-To create a production build:
+## Includes
 
-```sh
-npm run build-prod
-```
+ - Support for TS as well as JS
+ - React
+ - ESlint + Prettier (my opinionated configuration)
+ - Jest + Enzyme + Custom test suite + Coverage
+ - SASS + SASS modules + SASS resources + PostCSS
+ - Subpackages with modules
+ - Pre-commit lint and test
 
-To create a development build:
+## WIP
 
-```sh
-npm run build-dev
-```
-
-## Running
-
-Open the file `dist/index.html` in your browser
-
-## Testing
-
-To run unit tests:
-
-```sh
-npm test
-```
-
-To run cypress:
-
-```sh
-npm cypress:open
-```
-
-## Credits
-
-Made with [createapp.dev](https://createapp.dev/)
+ - Redux
+ - RxJS
+ - Cypress
+ - Tailwind + SemanticUI
+ - Storybook
+ - SASS + SASS modules + SASS resources + PostCSS
+ - Subpackages with modules
+ - Feature flags
+ - Custom configuration
+ - CircleCI (GitHub actions)
+ - Size Limit (GitHub actions)

@@ -1,5 +1,5 @@
 {
-  "name": "webpack",
+  "name": "webpack-base",
   "version": "1.0.0",
   "description": "Webpack base configuration",
   "main": "index.js",
@@ -35,6 +35,7 @@
     "compile": "yarn install && webpack --mode production --bail",
     "cypress:open": "cypress open",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
+    "pre-commit": "lint-staged",
     "pretty": "prettier --write ./src && yarn lint --fix",
     "serve": "yarn install && yarn webpack serve --hot --no-open --cache --bail --mode development",
     "serve:progress": "yarn serve --progress",
