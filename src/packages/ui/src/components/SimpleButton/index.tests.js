@@ -44,7 +44,6 @@ describe('ui::components::SimpleButton', () => {
   })
 
   describe('icon', () => {
-
     it('uses iconButton styles when icon but no content', () => {
       tc.setProps({ children: 'text' })
       expectBecameTrue({

@@ -1,0 +1,5 @@
+/config/assets/**
+/dist/**
+/docs/**
+/node_modules/**
+/static/**

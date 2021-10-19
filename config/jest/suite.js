@@ -24,13 +24,12 @@ const fileReaderProps = {
 global.FileReader = () => fileReaderProps
 global.FileReader.prototype = fileReaderProps
 
-const createElementConnected = (Component, props) => {
-  store.dispatch(environmentSet())
-  return createReactElement(
+const createElementConnected = (Component, props) => 
+  // store.dispatch(environmentSet())
+   createReactElement(
     Component,
-    { ...props, store },
+    { ...props /* store */ },
   )
-}
 
 const createElement = (Component, props, connected) => {
   if (connected) {
@@ -112,7 +111,7 @@ global.createTestComponent = (Component, props = {}, options = {}) => {
   })
 
   Object.defineProperty(component, 'getProp', {
-    value: key => (
+    value: (key) => (
       component.scope.instance()
         ? component.scope.instance().props[key]
         : undefined
@@ -120,7 +119,7 @@ global.createTestComponent = (Component, props = {}, options = {}) => {
   })
 
   Object.defineProperty(component, 'setProps', {
-    value: p => component.scope.setProps(p),
+    value: (p) => component.scope.setProps(p),
   })
 
   Object.defineProperty(component, 'setProp', {
@@ -128,7 +127,7 @@ global.createTestComponent = (Component, props = {}, options = {}) => {
   })
 
   Object.defineProperty(component, 'getState', {
-    value: key => (key ? component.scope.state()[key] : component.scope.state()),
+    value: (key) => (key ? component.scope.state()[key] : component.scope.state()),
   })
 
   Object.defineProperty(component, 'setState', {

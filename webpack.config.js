@@ -1,11 +1,12 @@
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+/* eslint-disable @typescript-eslint/no-var-requires */
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const path = require('path')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
-const webpack = require('webpack');
+const webpack = require('webpack')
 
 const projectRoot = path.resolve(__dirname, './')
 const appConfig = path.join(projectRoot, 'config')
@@ -43,7 +44,7 @@ const fixedChunks = [
   'semantic',
   'rc-',
 ]
-const chunkInContext = context => chunk => !!context && (
+const chunkInContext = (context) => (chunk) => !!context && (
   context.includes(`/${chunk}`)
   || context.includes(`/@${chunk}`)
   || context.includes(`\\${chunk}`)
@@ -96,11 +97,6 @@ const globalCSSLoaders = (isProduction, useModules = false) => [
 ]
 
 module.exports = (env, argv) => {
-
-  console.log(['env', env])
-  console.log(['argv', argv])
-  console.log(['process.env.NODE_ENV', process.env.NODE_ENV])
-
   const isProduction = process.env.NODE_ENV === 'production' || argv.mode === 'production' || argv.nodeEnv === 'production'
   const useStats = !!argv.stats
   const showProgress = !!argv.progress
@@ -144,7 +140,7 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.svg$/,
-          use: 'file-loader'
+          use: 'file-loader',
         },
         {
           test: /\.png$/,
@@ -152,12 +148,12 @@ module.exports = (env, argv) => {
             {
               loader: 'url-loader',
               options: {
-                mimetype: 'image/png'
-              }
-            }
-          ]
-        }
-      ]
+                mimetype: 'image/png',
+              },
+            },
+          ],
+        },
+      ],
     },
     optimization: {
       chunkIds: 'named',
@@ -260,7 +256,7 @@ module.exports = (env, argv) => {
         filename: 'index.html',
         template: path.join(common.staticPath, 'indexTemplate.html'),
       }),
-      new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
+      new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en/),
       new LodashModuleReplacementPlugin(),
       useStats && new BundleAnalyzerPlugin({
         analyzerMode: 'static',
@@ -288,4 +284,4 @@ module.exports = (env, argv) => {
       modules: [common.appEntry, common.packages, common.appNodeModules],
     },
   }
-};
+}
