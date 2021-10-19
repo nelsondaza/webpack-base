@@ -6,6 +6,25 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "browserslist": [
+    "last 3 versions",
+    "not IE < 11",
+    "not ExplorerMobile < 11"
+  ],
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": [
+      "yarn prettier --write",
+      "yarn lint --fix",
+      "yarn test --findRelatedTests --bail"
+    ],
+    "**/*.{json,css,scss,sass,yaml}": [
+      "yarn prettier --write",
+      "yarn test --findRelatedTests --bail"
+    ],
+    "**/*.{md,html}": [
+      "yarn prettier --write"
+    ]
+  },
   "scripts": {
     "build": "yarn clear:public && yarn compile",
     "build:progress": "yarn build --progress",
@@ -28,11 +47,6 @@
     "test:ci": "yarn test:base:ci --coverageReporters=text-summary --forceExit --ci -b",
     "test:w": "yarn test --watchAll"
   },
-  "browserslist": [
-    "last 3 versions",
-    "not IE < 11",
-    "not ExplorerMobile < 11"
-  ],
   "dependencies": {
     "classnames": "^2.3.1",
     "lodash": "^4.17.21",
@@ -67,6 +81,7 @@
     "html-webpack-plugin": "^5.4.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.3.0",
+    "lint-staged": "^11.2.3",
     "lodash-webpack-plugin": "^0.11.6",
     "mini-css-extract-plugin": "^2.4.2",
     "node-sass": "^6.0.1",
