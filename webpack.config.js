@@ -44,12 +44,12 @@ const fixedChunks = [
   'semantic',
   'rc-',
 ]
-const chunkInContext = (context) => (chunk) => !!context && (
-  context.includes(`/${chunk}`)
-  || context.includes(`/@${chunk}`)
-  || context.includes(`\\${chunk}`)
-  || context.includes(`\\@${chunk}`)
-)
+const chunkInContext = (context) => (chunk) =>
+  !!context &&
+  (context.includes(`/${chunk}`) ||
+    context.includes(`/@${chunk}`) ||
+    context.includes(`\\${chunk}`) ||
+    context.includes(`\\@${chunk}`))
 
 const capitalize = (result, word) => result + word.charAt(0).toUpperCase() + word.slice(1)
 
@@ -59,34 +59,36 @@ const globalCSSLoaders = (isProduction, useModules = false) => [
     loader: 'css-loader',
     options: {
       importLoaders: 3,
-      modules: useModules ? {
-        getLocalIdent: (context, localIdentName, localName) => {
-          if (localName.match(/^(GLOBAL_|KEEP_|_)/g)) {
-            return localName.replace(/^(GLOBAL_|KEEP_|_)/g, '')
-          }
-          const local = context.resourcePath.substring(context.context.length).split('.')[0]
-          let localPath = context.context
-            .substring(context.rootContext.length)
-            .replace(/([/\\]+)/g, '/')
-            .replace(/(\/?)(src|packages|components)(\/)/gi, '$1')
-          if (local !== '/index') {
-            localPath += local.replace(/[^A-Za-z0-9_]+/gi, '_')
-          }
+      modules: useModules
+        ? {
+            getLocalIdent: (context, localIdentName, localName) => {
+              if (localName.match(/^(GLOBAL_|KEEP_|_)/g)) {
+                return localName.replace(/^(GLOBAL_|KEEP_|_)/g, '')
+              }
+              const local = context.resourcePath.substring(context.context.length).split('.')[0]
+              let localPath = context.context
+                .substring(context.rootContext.length)
+                .replace(/([/\\]+)/g, '/')
+                .replace(/(\/?)(src|packages|components)(\/)/gi, '$1')
+              if (local !== '/index') {
+                localPath += local.replace(/[^A-Za-z0-9_]+/gi, '_')
+              }
 
-          const localScope = localPath
-            .replace(/[^A-Za-z0-9_]+/gi, ' ')
-            .split(' ')
-            .reduce(capitalize)
+              const localScope = localPath
+                .replace(/[^A-Za-z0-9_]+/gi, ' ')
+                .split(' ')
+                .reduce(capitalize)
 
-          return `${localScope}_${localName}`
-        },
-        localIdentName: '[folder]_[local]_[hash:base64:5]',
-      } : undefined,
+              return `${localScope}_${localName}`
+            },
+            localIdentName: '[folder]_[local]_[hash:base64:5]',
+          }
+        : undefined,
       sourceMap: !isProduction,
     },
   },
-  {loader: 'postcss-loader', options: {sourceMap: !isProduction}},
-  {loader: 'sass-loader', options: {sourceMap: !isProduction}},
+  { loader: 'postcss-loader', options: { sourceMap: !isProduction } },
+  { loader: 'sass-loader', options: { sourceMap: !isProduction } },
   {
     loader: 'sass-resources-loader',
     options: {
@@ -97,7 +99,10 @@ const globalCSSLoaders = (isProduction, useModules = false) => [
 ]
 
 module.exports = (env, argv) => {
-  const isProduction = process.env.NODE_ENV === 'production' || argv.mode === 'production' || argv.nodeEnv === 'production'
+  const isProduction =
+    process.env.NODE_ENV === 'production' ||
+    argv.mode === 'production' ||
+    argv.nodeEnv === 'production'
   const useStats = !!argv.stats
   const showProgress = !!argv.progress
 
@@ -171,39 +176,42 @@ module.exports = (env, argv) => {
             name: 'clip',
             priority: 5,
             reuseExistingChunk: false,
-            test: ({context}) => !!context && /[/\\]src[/\\]packages[/\\]app[/\\]src[/\\]App/.test(context),
+            test: ({ context }) =>
+              !!context && /[/\\]src[/\\]packages[/\\]app[/\\]src[/\\]App/.test(context),
           },
           base: {
             chunks: 'all',
             enforce: true,
-            name: ({context}) => `vendors-${fixedChunks.find(chunkInContext(context))}`,
+            name: ({ context }) => `vendors-${fixedChunks.find(chunkInContext(context))}`,
             priority: 4,
             reuseExistingChunk: false,
-            test: ({context}) => !!context && context.includes('tailwind'),
+            test: ({ context }) => !!context && context.includes('tailwind'),
           },
           primary: {
             chunks: 'all',
             enforce: true,
-            name: ({context}) => `vendors-${fixedChunks.find(chunkInContext(context))}`,
+            name: ({ context }) => `vendors-${fixedChunks.find(chunkInContext(context))}`,
             priority: 3,
             reuseExistingChunk: false,
-            test: ({context}) => !!context && context.includes('semantic'),
+            test: ({ context }) => !!context && context.includes('semantic'),
           },
           secondary: {
             chunks: 'all',
             enforce: true,
-            name: ({context}) => context.replace(/.+[\\/]src[\\/]packages[\\/]([^\\/]+)[\\/].+/, 'pkg-$1'),
+            name: ({ context }) =>
+              context.replace(/.+[\\/]src[\\/]packages[\\/]([^\\/]+)[\\/].+/, 'pkg-$1'),
             priority: 2,
             reuseExistingChunk: false,
-            test: ({context}) => !!context && /[/\\]src[/\\]packages[/\\](images|form|ui)[/\\]/.test(context),
+            test: ({ context }) =>
+              !!context && /[/\\]src[/\\]packages[/\\](images|form|ui)[/\\]/.test(context),
           },
           vendors: {
             chunks: 'all',
             enforce: true,
-            name: ({context}) => `vendors-${fixedChunks.find(chunkInContext(context))}`,
+            name: ({ context }) => `vendors-${fixedChunks.find(chunkInContext(context))}`,
             priority: 1.1,
             reuseExistingChunk: false,
-            test: ({context}) => !!context && fixedChunks.some(chunkInContext(context)),
+            test: ({ context }) => !!context && fixedChunks.some(chunkInContext(context)),
           },
           node_modules: {
             chunks: 'all',
@@ -211,15 +219,16 @@ module.exports = (env, argv) => {
             name: 'vendors',
             priority: 1,
             reuseExistingChunk: false,
-            test: ({context}) => !!context && context.includes('node_modules'),
+            test: ({ context }) => !!context && context.includes('node_modules'),
           },
           pkg: {
             chunks: 'all',
             enforce: true,
-            name: ({context}) => context.replace(/.+[\\/]src[\\/]packages[\\/]([^\\/]+)[\\/].+/, 'pkg-$1'),
+            name: ({ context }) =>
+              context.replace(/.+[\\/]src[\\/]packages[\\/]([^\\/]+)[\\/].+/, 'pkg-$1'),
             priority: 0,
             reuseExistingChunk: true,
-            test: ({context}) => !!context && /[/\\]src[/\\]packages[/\\]/.test(context),
+            test: ({ context }) => !!context && /[/\\]src[/\\]packages[/\\]/.test(context),
           },
           common: {
             chunks: 'async',
@@ -247,10 +256,11 @@ module.exports = (env, argv) => {
       publicPath,
     },
     plugins: [
-      isProduction && new CopyWebpackPlugin({
-        patterns: [{from: common.staticPath, to: ''}],
-      }),
-      isProduction && new HtmlWebpackPlugin({
+      isProduction &&
+        new CopyWebpackPlugin({
+          patterns: [{ from: common.staticPath, to: '' }],
+        }),
+      new HtmlWebpackPlugin({
         cache: true,
         favicon: path.join(common.staticPath, 'favicon.ico'),
         filename: 'index.html',
@@ -258,25 +268,30 @@ module.exports = (env, argv) => {
       }),
       new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en/),
       new LodashModuleReplacementPlugin(),
-      useStats && new BundleAnalyzerPlugin({
-        analyzerMode: 'static',
-        defaultSizes: 'parsed',
-        openAnalyzer: false,
-        reportFilename: path.join(common.appDist, `bundleAnalyzer${isProduction ? 'Prod': 'Dev' }.html`),
-      }),
+      useStats &&
+        new BundleAnalyzerPlugin({
+          analyzerMode: 'static',
+          defaultSizes: 'parsed',
+          openAnalyzer: false,
+          reportFilename: path.join(
+            common.appDist,
+            `bundleAnalyzer${isProduction ? 'Prod' : 'Dev'}.html`,
+          ),
+        }),
       new MiniCssExtractPlugin({
         chunkFilename: 'css/[name].[contenthash].css',
         filename: 'css/[name].[contenthash].css',
         ignoreOrder: true,
       }),
       !isProduction && new ReactRefreshWebpackPlugin(),
-      showProgress && new webpack.ProgressPlugin({
-        activeModules: true,
-        entries: true,
-        modules: true,
-        modulesCount: 1,
-        profile: true,
-      }),
+      showProgress &&
+        new webpack.ProgressPlugin({
+          activeModules: true,
+          entries: true,
+          modules: true,
+          modulesCount: 1,
+          profile: true,
+        }),
     ].filter(Boolean),
     resolve: {
       alias: {},
