@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const webpack = require('webpack')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 const projectRoot = path.resolve(__dirname, './')
 const appConfig = path.join(projectRoot, 'config')
@@ -28,7 +29,6 @@ const common = {
 }
 const fixedChunks = [
   'core-js',
-  'tailwindcss',
   'emoji-mart',
   'gsap',
   'd3',
@@ -41,6 +41,7 @@ const fixedChunks = [
   'recharts',
   'rxjs',
   'sentry',
+  'tailwind',
   'semantic',
   'rc-',
 ]
@@ -144,26 +145,41 @@ module.exports = (env, argv) => {
           test: /\.[jt]sx?$/,
         },
         {
-          test: /\.svg$/,
-          use: 'file-loader',
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+            outputPath: 'img/',
+            publicPath,
+          },
+          test: /\.(jpe?g|png|gif|svg)$/i,
         },
         {
-          test: /\.png$/,
-          use: [
-            {
-              loader: 'url-loader',
-              options: {
-                mimetype: 'image/png',
-              },
-            },
-          ],
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+            outputPath: 'fonts/',
+            publicPath,
+          },
+          test: /\.(woff(2)?|eot|ttf|otf)$/,
         },
       ],
     },
     optimization: {
       chunkIds: 'named',
       emitOnErrors: false,
-      minimize: true,
+      minimize: isProduction,
+      minimizer: [
+        new CssMinimizerPlugin({
+          minimizerOptions: {
+            preset: [
+              'default',
+              {
+                discardComments: { removeAll: true },
+              },
+            ],
+          },
+        }),
+      ],
       moduleIds: 'deterministic',
       nodeEnv: process.env.NODE_ENV,
       splitChunks: {

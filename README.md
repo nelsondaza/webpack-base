@@ -30,15 +30,15 @@ This is my basic webpack configuration
  - SASS + SASS modules + SASS resources + PostCSS
  - Subpackages with modules
  - Pre-commit lint and test
+ - SASS + SASS modules + SASS resources + PostCSS
+ - Tailwind + SemanticUI
 
 ## WIP
 
  - Redux
  - RxJS
  - Cypress
- - Tailwind + SemanticUI
  - Storybook
- - SASS + SASS modules + SASS resources + PostCSS
  - Subpackages with modules
  - Feature flags
  - Custom configuration
