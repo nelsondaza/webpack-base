@@ -32,6 +32,7 @@ This is my basic webpack configuration
  - Pre-commit lint and test
  - SASS + SASS modules + SASS resources + PostCSS
  - Tailwind + SemanticUI
+ - Subpackages with modules
 
 ## WIP
 
@@ -39,7 +40,6 @@ This is my basic webpack configuration
  - RxJS
  - Cypress
  - Storybook
- - Subpackages with modules
  - Feature flags
  - Custom configuration
  - CircleCI (GitHub actions)
