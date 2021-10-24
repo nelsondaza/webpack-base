@@ -34,11 +34,11 @@ This is my basic webpack configuration
  - Tailwind + SemanticUI
  - Subpackages with modules
  - Storybook with: A11y, Controls, Actions, Test 
+ - Redux
+ - RxJS
 
 ## WIP
 
- - Redux
- - RxJS
  - Cypress
  - Feature flags
  - Custom configuration

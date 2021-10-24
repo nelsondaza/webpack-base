@@ -1,4 +1,4 @@
-/* eslint-disable global-require,@typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-var-requires */
 const baseConfig = require('../../webpack.config')
 
 module.exports = {

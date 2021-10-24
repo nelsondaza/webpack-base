@@ -1,16 +1,26 @@
+import { Provider, useDispatch } from 'react-redux'
+import { ConnectedRouter } from 'connected-react-router'
 import { ReactNode, useEffect } from 'react'
+
+import history from '../history'
+import store from '../store'
 
 import '../assets/tailwind/tailwind.css'
 import '../assets/semantic-ui/semantic.css'
 import './stories.css'
 
 type StoriesHolderProps = {
-  environmentSet?: () => void
+  environmentSet?: () => { type: string; payload?: unknown }
   children: ReactNode
 }
 
-const StoriesHolder = ({ children, environmentSet = () => {} }: StoriesHolderProps) => {
-  useEffect(() => environmentSet(), [environmentSet])
+const StoriesHolder = ({
+  children,
+  environmentSet = () => ({ type: 'ENVIRONMENT_SET' }),
+}: StoriesHolderProps) => {
+  const dispatch = useDispatch()
+  // @ts-ignore
+  useEffect(() => dispatch(environmentSet()), [dispatch, environmentSet])
 
   return (
     <div className="StoriesContainer">
@@ -20,10 +30,12 @@ const StoriesHolder = ({ children, environmentSet = () => {} }: StoriesHolderPro
 }
 
 export const withEnvironment = (Story: JSX.IntrinsicAttributes) => (
-  <StoriesHolder>
-    {/* @ts-ignore */}
-    <Story />
-  </StoriesHolder>
+  <Provider store={store}>
+    <ConnectedRouter history={history}>
+      <StoriesHolder>
+        {/* @ts-ignore */}
+        <Story />
+      </StoriesHolder>
+    </ConnectedRouter>
+  </Provider>
 )
-
-export default StoriesHolder

@@ -37,6 +37,7 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': 'off',
     'arrow-parens': ['error', 'always'],
     'comma-dangle': ['error', 'always-multiline'],
+    'global-require': 'off',
     'import/no-extraneous-dependencies': 'off',
     'import/prefer-default-export': 'off',
     'jsx-a11y/control-has-associated-label': 'off',
