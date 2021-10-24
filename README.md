@@ -44,3 +44,5 @@ This is my basic webpack configuration
  - Custom configuration
  - CircleCI (GitHub actions)
  - Size Limit (GitHub actions)
+ - Manifest
+ - Service worker + Offline
