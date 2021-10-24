@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const baseConfig = require('../../webpack.config')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const baseConfig = require('../webpack.config')
 
 module.exports = {
   addons: [
@@ -37,6 +38,14 @@ module.exports = {
         path: require.resolve('path-browserify'),
       },
     })
+
+    config.plugins.push(
+      new MiniCssExtractPlugin({
+        chunkFilename: 'css/[name].[contenthash].css',
+        filename: 'css/[name].[contenthash].css',
+        ignoreOrder: true,
+      }),
+    )
 
     return config
   },
