@@ -34,6 +34,7 @@ module.exports = {
   plugins: ['react', 'react-hooks', '@typescript-eslint'],
   root: true,
   rules: {
+    '@typescript-eslint/ban-ts-comment': 'off',
     'arrow-parens': ['error', 'always'],
     'comma-dangle': ['error', 'always-multiline'],
     'import/no-extraneous-dependencies': 'off',

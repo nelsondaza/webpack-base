@@ -1,5 +1,6 @@
 import { withTests } from '@storybook/addon-jest'
 
+import { withEnvironment } from './stories'
 import results from '../../dist/coverage/test-results.json'
 
 const getTestName = (str) =>
@@ -22,6 +23,7 @@ export const parameters = {
 }
 
 export const decorators = [
+  withEnvironment,
   (Story, config) => {
     const jest = [getTestName(config.parameters.fileName)]
 

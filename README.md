@@ -33,13 +33,13 @@ This is my basic webpack configuration
  - SASS + SASS modules + SASS resources + PostCSS
  - Tailwind + SemanticUI
  - Subpackages with modules
+ - Storybook with: A11y, Controls, Actions, Test 
 
 ## WIP
 
  - Redux
  - RxJS
  - Cypress
- - Storybook
  - Feature flags
  - Custom configuration
  - CircleCI (GitHub actions)
