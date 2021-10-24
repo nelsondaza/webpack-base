@@ -126,6 +126,7 @@ module.exports = (env, argv) => {
     },
     devtool: isProduction ? 'source-map' : 'cheap-module-source-map',
     entry: { bundle: './src/index' },
+    mode: process.env.NODE_ENV,
     module: {
       rules: [
         {

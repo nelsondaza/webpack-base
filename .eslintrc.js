@@ -71,6 +71,7 @@ module.exports = {
     'react/jsx-uses-react': 'off',
     'react/no-deprecated': 'error',
     'react/react-in-jsx-scope': 'off',
+    'react/require-default-props': 'off',
     'react/sort-comp': [
       'error',
       {
