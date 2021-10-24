@@ -3,6 +3,7 @@ const baseConfig = require('../../webpack.config')
 
 module.exports = {
   addons: [
+    '@storybook/addon-a11y',
     '@storybook/addon-essentials',
     '@storybook/addon-jest',
     '@storybook/addon-links',
@@ -20,11 +21,14 @@ module.exports = {
   },
   webpackFinal: (config) => {
     const localConfig = baseConfig({}, config.mode)
+
+    // Use local CSS rules instead of storybook's
     const rules = [
       ...config.module.rules.filter((r) => `${r.test}` !== '/\\.css$/'),
       ...localConfig.module.rules.filter((r) => `${r.test}` === '/\\.s?[ac]ss$/i'),
     ]
     Object.assign(config.module, { rules })
+
     Object.assign(config.resolve, {
       alias: {
         ...config.resolve.alias,
