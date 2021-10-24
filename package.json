@@ -49,6 +49,7 @@
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.1",
     "@storybook/addon-actions": "^6.4.0-beta.19",
     "@storybook/addon-essentials": "^6.4.0-beta.19",
+    "@storybook/addon-jest": "^6.3.12",
     "@storybook/addon-links": "^6.4.0-beta.19",
     "@storybook/addon-postcss": "^2.0.0",
     "@storybook/builder-webpack5": "^6.4.0-beta.19",
