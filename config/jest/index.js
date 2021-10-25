@@ -3,10 +3,9 @@
 // For a detailed explanation regarding each configuration property, visit:
 // https://jestjs.io/docs/en/configuration.html
 
-const { getConfig } = require('../utils')
+const { getConfig, getFeaturesFlags, SYSTEM } = require('../utils')
 
 const config = getConfig('jest')
-const common = { getFeaturesFlags: () => ({}) } // require('../build/common')
 
 module.exports = {
   // All imported modules in your tests should be mocked automatically
@@ -73,8 +72,8 @@ module.exports = {
 
   // A set of global variables that need to be available in all test environments
   globals: {
-    FEATURES_FLAGS: common.getFeaturesFlags('jest'),
-    SYSTEM: common.SYSTEM,
+    FEATURES_FLAGS: getFeaturesFlags('development'),
+    SYSTEM,
   },
 
   // An array of directory names to be searched recursively up from the requiring module's location

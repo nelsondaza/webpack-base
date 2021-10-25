@@ -36,12 +36,12 @@ This is my basic webpack configuration
  - Storybook with: A11y, Controls, Actions, Test 
  - Redux
  - RxJS
+ - Custom configuration
+ - Feature flags
 
 ## WIP
 
  - Cypress
- - Feature flags
- - Custom configuration
  - CircleCI (GitHub actions)
  - Size Limit (GitHub actions)
  - Manifest

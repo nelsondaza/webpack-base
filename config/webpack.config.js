@@ -10,7 +10,7 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 const webpack = require('webpack')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
-const { getConfig } = require('./utils')
+const { getConfig, getFeaturesFlags } = require('./utils')
 
 const config = getConfig('build')
 
@@ -261,6 +261,9 @@ module.exports = (env, argv) => {
       publicPath,
     },
     plugins: [
+      new webpack.DefinePlugin({
+        FEATURES_FLAGS: JSON.stringify(getFeaturesFlags(process.env.NODE_ENV)),
+      }),
       isProduction &&
         new CopyWebpackPlugin({
           patterns: [{ from: common.staticPath, to: '' }],
