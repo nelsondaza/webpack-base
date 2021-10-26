@@ -4,7 +4,7 @@
   "favicon.ico": "/favicon.ico",
   "icons": [
     {
-      "src": "/tile.png",
+      "src": "/icon-512x512.png",
       "sizes": "196x196 256x256 512x512",
       "type": "image/png",
       "purpose": "any maskable"
@@ -12,6 +12,6 @@
   ],
   "name": "Webpack",
   "short_name": "Webpack",
-  "start_url": "https://app.medsystem.co",
+  "start_url": "https://web.app.public.co",
   "theme_color": "#238752"
 }

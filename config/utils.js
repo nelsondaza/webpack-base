@@ -57,7 +57,19 @@ const SYSTEM = {
 // eslint-disable-next-line no-console
 console.log('VERSION: ', SYSTEM.version)
 
+const buildManifest = (buffer) => {
+  const manifest = JSON.parse(buffer.toString())
+  const configManifest = getConfig('manifest')
+
+  return JSON.stringify({
+    ...manifest,
+    ...configManifest,
+    version: SYSTEM.version,
+  })
+}
+
 module.exports = {
+  buildManifest,
   createVersion,
   getConfig,
   getFeaturesFlags,

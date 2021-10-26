@@ -3,9 +3,9 @@
 <browserconfig>
     <msapplication>
         <tile>
-            <square150x150logo src="/mstile-150x150.png"/>
-            <square310x310logo src="/android-chrome-512x512.png"/>
-            <square70x70logo src="/mstile-150x150.png"/>
+            <square150x150logo src="/icon-150x150.png"/>
+            <square310x310logo src="/icon-384x384.png"/>
+            <square70x70logo src="/icon-150x150.png"/>
             <wide310x150logo src="/tile-wide.png"/>
         </tile>
     </msapplication>

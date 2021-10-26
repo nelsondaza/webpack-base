@@ -11,7 +11,7 @@ const webpack = require('webpack')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { GenerateSW } = require('workbox-webpack-plugin')
 
-const { getConfig, getFeaturesFlags } = require('./utils')
+const { getConfig, getFeaturesFlags, buildManifest } = require('./utils')
 
 const config = getConfig('build')
 
@@ -267,7 +267,16 @@ module.exports = (env, argv) => {
       }),
       isProduction &&
         new CopyWebpackPlugin({
-          patterns: [{ from: common.staticPath, to: '' }],
+          patterns: [
+            { from: common.staticPath, to: '' },
+            {
+              from: path.resolve(common.staticPath, 'manifest.json'),
+              to: 'manifest.json',
+              transform(content) {
+                return buildManifest(content)
+              },
+            },
+          ],
         }),
       new HtmlWebpackPlugin({
         cache: true,
