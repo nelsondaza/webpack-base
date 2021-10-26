@@ -9,6 +9,7 @@ const path = require('path')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const webpack = require('webpack')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+const { GenerateSW } = require('workbox-webpack-plugin')
 
 const { getConfig, getFeaturesFlags } = require('./utils')
 
@@ -292,6 +293,14 @@ module.exports = (env, argv) => {
         ignoreOrder: true,
       }),
       !isProduction && new ReactRefreshWebpackPlugin(),
+      isProduction &&
+        new GenerateSW({
+          clientsClaim: true,
+          exclude: [/\.map$/, /\.txt$/, /asset-manifest\.json$/, /indexTemplate\.html$/],
+          navigateFallback: `${publicPath}index.html`,
+          skipWaiting: true,
+          swDest: 'sw.js',
+        }),
       showProgress &&
         new webpack.ProgressPlugin({
           activeModules: true,
