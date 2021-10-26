@@ -1,0 +1,103 @@
+version: 2.1
+
+executors:
+  node_16:
+    docker:
+      - image: circleci/node:16
+orbs:
+  slack: circleci/slack@4
+
+commands:
+  # debug only
+  halt:
+    steps:
+      - run: circleci step halt
+
+  # https://circleci.com/docs/2.0/caching/#basic-example-of-dependency-caching
+  save_dependencies:
+    steps:
+      - save_cache:
+          key: yarn-deps-v1-{{ checksum "./yarn.lock" }}
+          paths:
+            - ./node_modules
+
+  # https://circleci.com/docs/2.0/caching/#restoring-cache
+  load_dependencies:
+    steps:
+      - restore_cache:
+          keys:
+            - yarn-deps-v1-{{ checksum "./yarn.lock" }}
+
+  setup:
+    steps:
+      - checkout
+      - load_dependencies
+      - run:
+          command: yarn install
+          no_output_timeout: 120s
+      - save_dependencies
+
+  run_tests:
+    steps:
+      - run:
+          command: yarn lint
+          no_output_timeout: 120s
+      - run:
+          command: yarn test:ci
+          no_output_timeout: 120s
+
+  run_build:
+    steps:
+      - run:
+          command: yarn build:progress
+          no_output_timeout: 120s
+
+jobs:
+  'Tests and Coverage':
+    executor: node_16
+    steps:
+      - setup
+      - run_tests
+      # https://circleci.com/developer/orbs/orb/circleci/slack
+      - slack/approval:
+          color: '#2ea44f'
+          include_job_number_field: false
+          include_project_field: false
+          message: ':woot: hey $CIRCLE_USERNAME, your changes are ready for review \nhttps://bitbucket.org/medsystem_front/medsystemweb1x/commits/$CIRCLE_SHA1'
+      - slack/status:
+          fail_only: true
+          include_job_number_field: false
+          include_project_field: false
+          failure_message: ':doh: $CIRCLE_USERNAME :pandaomg: *$CIRCLE_JOB* failed \nhttps://bitbucket.org/medsystem_front/medsystemweb1x/commits/$CIRCLE_SHA1'
+
+  'Production build':
+    executor: node_16
+    steps:
+      - setup
+      - run_tests
+      - run_build
+      - slack/approval:
+          color: '#6f42c1'
+          include_job_number_field: false
+          include_project_field: false
+          message: ':woot: changes from $CIRCLE_USERNAME were merged! :allthethings: \nhttps://bitbucket.org/medsystem_front/medsystemweb1x/commits/$CIRCLE_SHA1'
+      - slack/status:
+          fail_only: true
+          include_job_number_field: false
+          include_project_field: false
+          failure_message: ':rotating_light: somebody call $CIRCLE_USERNAME :omg-onoz: :omgomgomg: *$CIRCLE_JOB* failed \nhttps://bitbucket.org/medsystem_front/medsystemweb1x/commits/$CIRCLE_SHA1'
+
+workflows:
+  pr-tests:
+    jobs:
+      - 'Tests and Coverage':
+          filters:
+            branches:
+              ignore: master
+
+  merge-build:
+    jobs:
+      - 'Production build':
+          filters:
+            branches:
+              only: master

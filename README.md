@@ -26,7 +26,7 @@ This is my basic webpack configuration
 
  - Support for TS as well as JS
  - React
- - ESlint + Prettier (my opinionated configuration)
+ - ESLint + Prettier (my opinionated configuration)
  - Jest + Enzyme + Custom test suite + Coverage
  - SASS + SASS modules + SASS resources + PostCSS
  - Subpackages with modules
@@ -42,8 +42,5 @@ This is my basic webpack configuration
  - Service worker + Offline (Google workbox)
  - Manifest
  - Size Limit (GitHub actions)
-
-## WIP
-
  - Cypress
- - CircleCI (GitHub actions)
+ - CircleCI (GitHub/Bitbucket actions)
