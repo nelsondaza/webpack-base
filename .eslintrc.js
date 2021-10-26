@@ -16,6 +16,7 @@ module.exports = {
     ajaxIntercept: true,
     createTestComponent: true,
     createTestComponentConnected: true,
+    cy: true,
     epicToPromise: true,
     expectBecameFalse: true,
     expectBecameTrue: true,

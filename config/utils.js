@@ -3,7 +3,6 @@
 const fs = require('fs')
 const path = require('path')
 const { load } = require('js-yaml')
-const yaml = require('js-yaml')
 
 const filePath = path.resolve(__dirname, '.env.yml')
 
@@ -26,7 +25,7 @@ const getFeaturesFlags = (environment) => {
   let flags = {}
 
   if (fs.existsSync(ffPath)) {
-    flags = yaml.load(fs.readFileSync(ffPath, 'utf8')) || {}
+    flags = load(fs.readFileSync(ffPath, 'utf8')) || {}
     flags.feature_flags = flags.feature_flags || 'on'
   }
 
