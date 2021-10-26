@@ -40,11 +40,10 @@ This is my basic webpack configuration
  - Custom configuration
  - Feature flags
  - Service worker + Offline (Google workbox)
+ - Manifest
+ - Size Limit (GitHub actions)
 
 ## WIP
 
  - Cypress
  - CircleCI (GitHub actions)
- - Size Limit (GitHub actions)
- - Manifest
- 
