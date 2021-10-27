@@ -51,7 +51,7 @@ const createVersion = () => {
 }
 
 const SYSTEM = {
-  env: getConfig('env') || {},
+  env: getConfig('system') || {},
   version: createVersion(),
 }
 // eslint-disable-next-line no-console

@@ -11,7 +11,7 @@ const webpack = require('webpack')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { GenerateSW } = require('workbox-webpack-plugin')
 
-const { getConfig, getFeaturesFlags, buildManifest } = require('./utils')
+const { getConfig, getFeaturesFlags, buildManifest, SYSTEM } = require('./utils')
 
 const config = getConfig('build')
 
@@ -254,7 +254,7 @@ module.exports = (env, argv) => {
     plugins: [
       new webpack.DefinePlugin({
         FEATURES_FLAGS: JSON.stringify(getFeaturesFlags(process.env.NODE_ENV)),
-        SYSTEM: JSON.stringify(getConfig('system')),
+        SYSTEM: JSON.stringify(SYSTEM),
       }),
       isProduction
         && new CopyWebpackPlugin({
