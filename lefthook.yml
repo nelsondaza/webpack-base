@@ -6,7 +6,7 @@ pre-commit:
       run: yarn prettier --write {staged_files} && git add {staged_files}
     2-lint:
       glob: '*.{js,jsx,ts,tsx}'
-      run: yarn lint --fix {staged_files} && git add {staged_files}
+      run: yarn eslint --cache --fix {staged_files} && git add {staged_files}
 
 pre-push:
   parallel: false

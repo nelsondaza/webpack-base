@@ -12,6 +12,7 @@ ehthumbs.db
 Thumbs.db
 
 # ide
+.eslintcache
 /.cache
 /.idea
 /.vscode

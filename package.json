@@ -22,7 +22,7 @@
     "compile": "yarn install && webpack --mode production --bail",
     "cy:open": "cypress open",
     "cy:run": "cypress run",
-    "lint": "eslint ./src ./cypress --ext .js,.jsx,.ts,.tsx",
+    "lint": "eslint ./src ./cypress --cache --ext .js,.jsx,.ts,.tsx",
     "pretty": "prettier --write ./src ./cypress && yarn lint --fix",
     "pre": "yarn lefthook run pre-commit && yarn lefthook run pre-push",
     "serve": "yarn install && yarn webpack serve --hot --no-open --cache --bail --mode development",
