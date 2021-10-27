@@ -23,9 +23,7 @@ export default ({ name }: Props) => (
         </span>
         <span className="block min-w-0 flex-1">
           <span className="block text-sm font-medium text-gray-900 truncate">Lindsay Walton</span>
-          <span className="block text-sm font-medium text-gray-500 truncate">
-            Front-end Developer
-          </span>
+          <span className="block text-sm font-medium text-gray-500 truncate">Front-end Developer</span>
         </span>
       </span>
       <span className="flex-shrink-0 h-10 w-10 inline-flex items-center justify-center">
@@ -71,6 +69,7 @@ export default ({ name }: Props) => (
     </div>
     <hr />
     <h1>Packages</h1>
-    <SimpleButton>test</SimpleButton>
+    {/* @ts-ignore */}
+    Value from System: <SimpleButton>{SYSTEM.appName}</SimpleButton>
   </Block>
 )

@@ -35,11 +35,11 @@ const common = {
 }
 
 const chunkInContext = (context) => (chunk) =>
-  !!context &&
-  (context.includes(`/${chunk}`) ||
-    context.includes(`/@${chunk}`) ||
-    context.includes(`\\${chunk}`) ||
-    context.includes(`\\@${chunk}`))
+  !!context
+  && (context.includes(`/${chunk}`)
+    || context.includes(`/@${chunk}`)
+    || context.includes(`\\${chunk}`)
+    || context.includes(`\\@${chunk}`))
 
 const capitalize = (result, word) => result + word.charAt(0).toUpperCase() + word.slice(1)
 
@@ -89,10 +89,8 @@ const globalCSSLoaders = (isProduction, useModules = false) => [
 ]
 
 module.exports = (env, argv) => {
-  const isProduction =
-    process.env.NODE_ENV === 'production' ||
-    argv.mode === 'production' ||
-    argv.nodeEnv === 'production'
+  const isProduction
+    = process.env.NODE_ENV === 'production' || argv.mode === 'production' || argv.nodeEnv === 'production'
   const useStats = !!argv.stats
   const showProgress = !!argv.progress
 
@@ -178,14 +176,12 @@ module.exports = (env, argv) => {
             name: 'clip',
             priority: 5,
             reuseExistingChunk: false,
-            test: ({ context }) =>
-              !!context && /[/\\]src[/\\]packages[/\\]app[/\\]src[/\\]App/.test(context),
+            test: ({ context }) => !!context && /[/\\]src[/\\]packages[/\\]app[/\\]src[/\\]App/.test(context),
           },
           base: {
             chunks: 'all',
             enforce: true,
-            name: ({ context }) =>
-              `vendors-${config.fixedChunksPackages.find(chunkInContext(context))}`,
+            name: ({ context }) => `vendors-${config.fixedChunksPackages.find(chunkInContext(context))}`,
             priority: 4,
             reuseExistingChunk: false,
             test: ({ context }) => !!context && context.includes('tailwind'),
@@ -193,8 +189,7 @@ module.exports = (env, argv) => {
           primary: {
             chunks: 'all',
             enforce: true,
-            name: ({ context }) =>
-              `vendors-${config.fixedChunksPackages.find(chunkInContext(context))}`,
+            name: ({ context }) => `vendors-${config.fixedChunksPackages.find(chunkInContext(context))}`,
             priority: 3,
             reuseExistingChunk: false,
             test: ({ context }) => !!context && context.includes('semantic'),
@@ -202,22 +197,18 @@ module.exports = (env, argv) => {
           secondary: {
             chunks: 'all',
             enforce: true,
-            name: ({ context }) =>
-              context.replace(/.+[\\/]src[\\/]packages[\\/]([^\\/]+)[\\/].+/, 'pkg-$1'),
+            name: ({ context }) => context.replace(/.+[\\/]src[\\/]packages[\\/]([^\\/]+)[\\/].+/, 'pkg-$1'),
             priority: 2,
             reuseExistingChunk: false,
-            test: ({ context }) =>
-              !!context && /[/\\]src[/\\]packages[/\\](images|form|ui)[/\\]/.test(context),
+            test: ({ context }) => !!context && /[/\\]src[/\\]packages[/\\](images|form|ui)[/\\]/.test(context),
           },
           vendors: {
             chunks: 'all',
             enforce: true,
-            name: ({ context }) =>
-              `vendors-${config.fixedChunksPackages.find(chunkInContext(context))}`,
+            name: ({ context }) => `vendors-${config.fixedChunksPackages.find(chunkInContext(context))}`,
             priority: 1.1,
             reuseExistingChunk: false,
-            test: ({ context }) =>
-              !!context && config.fixedChunksPackages.some(chunkInContext(context)),
+            test: ({ context }) => !!context && config.fixedChunksPackages.some(chunkInContext(context)),
           },
           node_modules: {
             chunks: 'all',
@@ -230,8 +221,7 @@ module.exports = (env, argv) => {
           pkg: {
             chunks: 'all',
             enforce: true,
-            name: ({ context }) =>
-              context.replace(/.+[\\/]src[\\/]packages[\\/]([^\\/]+)[\\/].+/, 'pkg-$1'),
+            name: ({ context }) => context.replace(/.+[\\/]src[\\/]packages[\\/]([^\\/]+)[\\/].+/, 'pkg-$1'),
             priority: 0,
             reuseExistingChunk: true,
             test: ({ context }) => !!context && /[/\\]src[/\\]packages[/\\]/.test(context),
@@ -264,9 +254,10 @@ module.exports = (env, argv) => {
     plugins: [
       new webpack.DefinePlugin({
         FEATURES_FLAGS: JSON.stringify(getFeaturesFlags(process.env.NODE_ENV)),
+        SYSTEM: JSON.stringify(getConfig('system')),
       }),
-      isProduction &&
-        new CopyWebpackPlugin({
+      isProduction
+        && new CopyWebpackPlugin({
           patterns: [
             { from: common.staticPath, to: '' },
             {
@@ -286,15 +277,12 @@ module.exports = (env, argv) => {
       }),
       new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en/),
       new LodashModuleReplacementPlugin(),
-      useStats &&
-        new BundleAnalyzerPlugin({
+      useStats
+        && new BundleAnalyzerPlugin({
           analyzerMode: 'static',
           defaultSizes: 'parsed',
           openAnalyzer: false,
-          reportFilename: path.join(
-            common.appDist,
-            `bundleAnalyzer${isProduction ? 'Prod' : 'Dev'}.html`,
-          ),
+          reportFilename: path.join(common.appDist, `bundleAnalyzer${isProduction ? 'Prod' : 'Dev'}.html`),
         }),
       new MiniCssExtractPlugin({
         chunkFilename: 'css/[name].[contenthash].css',
@@ -302,16 +290,16 @@ module.exports = (env, argv) => {
         ignoreOrder: true,
       }),
       !isProduction && new ReactRefreshWebpackPlugin(),
-      isProduction &&
-        new GenerateSW({
+      isProduction
+        && new GenerateSW({
           clientsClaim: true,
           exclude: [/\.map$/, /\.txt$/, /asset-manifest\.json$/, /indexTemplate\.html$/],
           navigateFallback: `${publicPath}index.html`,
           skipWaiting: true,
           swDest: 'sw.js',
         }),
-      showProgress &&
-        new webpack.ProgressPlugin({
+      showProgress
+        && new webpack.ProgressPlugin({
           activeModules: true,
           entries: true,
           modules: true,
