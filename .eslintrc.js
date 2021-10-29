@@ -20,7 +20,6 @@ module.exports = {
     FEATURES_FLAGS: true,
     SYSTEM: true,
   },
-  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
     project: './tsconfig.json',
@@ -33,10 +32,11 @@ module.exports = {
     '@typescript-eslint/no-implied-eval': 'off',
     'arrow-parens': ['error', 'always'],
     'comma-dangle': ['error', 'always-multiline'],
+    curly: ['error', 'all'],
     'global-require': 'off',
+    'import/no-cycle': 'off',
     'import/no-extraneous-dependencies': 'off',
     'import/no-unresolved': 'off',
-    'import/no-cycle': 'off',
     'import/prefer-default-export': 'off',
     'jsx-a11y/control-has-associated-label': 'off',
     'max-classes-per-file': ['error', 2],
@@ -69,6 +69,7 @@ module.exports = {
     'react/jsx-one-expression-per-line': 'off',
     'react/jsx-props-no-spreading': 'off',
     'react/jsx-uses-react': 'off',
+    'react/no-deprecated': 'off',
     'react/react-in-jsx-scope': 'off',
     'react/require-default-props': 'off',
     'react/sort-comp': [
