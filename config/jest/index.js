@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+const glob = require('glob')
 
 // For a detailed explanation regarding each configuration property, visit:
 // https://jestjs.io/docs/en/configuration.html
@@ -6,6 +7,11 @@
 const { getConfig, getFeaturesFlags, SYSTEM } = require('../utils')
 
 const config = getConfig('jest')
+
+if (config.collectCoverageFrom === undefined) {
+  const testFiles = glob.sync('{src,cypress}/**/*.{test,tests,spec,specs}.{js,jsx,ts,tsx}', {})
+  config.collectCoverageFrom = testFiles.map((file) => file.replace(/\.(tests?|specs?)\./, '.'))
+}
 
 module.exports = {
   // All imported modules in your tests should be mocked automatically
