@@ -52,6 +52,9 @@ const createVersion = () => {
 
 const SYSTEM = {
   env: getConfig('system') || {},
+  sentry: {
+    dns: getConfig('sentry').SENTRY_DSN,
+  },
   version: createVersion(),
 }
 // eslint-disable-next-line no-console

@@ -2,7 +2,6 @@
 import { createEpicMiddleware } from 'redux-observable'
 import { createStore, applyMiddleware } from 'redux'
 import { routerMiddleware } from 'connected-react-router'
-import { BehaviorSubject, switchMap } from 'rxjs'
 
 import history from './history'
 import rootReducerCreator, { epics } from '../src/reducers'
@@ -33,6 +32,8 @@ const store = createStore(
 
 /* istanbul ignore next */
 if (module.hot) {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { BehaviorSubject, switchMap } = require('rxjs')
   const epic$ = new BehaviorSubject(epics)
   // Every time a new epic is given to epic$ it
   // will unsubscribe from the previous one then

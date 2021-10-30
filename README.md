@@ -44,3 +44,5 @@ This is my basic webpack configuration
  - Size Limit (GitHub actions)
  - Cypress
  - CircleCI (GitHub/Bitbucket actions)
+ - Sentry (Not included in dev mode)
+

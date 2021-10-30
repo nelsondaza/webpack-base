@@ -7,13 +7,15 @@ const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
+const SentryCliPlugin = require('@sentry/webpack-plugin')
 const webpack = require('webpack')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { GenerateSW } = require('workbox-webpack-plugin')
 
 const { getConfig, getFeaturesFlags, buildManifest, SYSTEM } = require('./utils')
 
-const config = getConfig('build')
+const configBuild = getConfig('build')
+const configSentry = getConfig('sentry')
 
 const projectRoot = path.resolve(__dirname, '../')
 const appConfig = path.join(projectRoot, 'config')
@@ -21,14 +23,14 @@ const appDist = path.join(projectRoot, 'dist')
 const appEntry = path.join(projectRoot, 'src')
 const appNodeModules = path.join(projectRoot, 'node_modules')
 const packages = path.join(appEntry, 'packages')
-const { publicPath } = config
+const { publicPath } = configBuild
 
 const common = {
   appConfig,
   appDist,
   appEntry,
   appNodeModules,
-  outputPath: path.join(appDist, config.outputPath),
+  outputPath: path.join(appDist, configBuild.outputPath),
   packages,
   projectRoot,
   staticPath: path.join(projectRoot, 'static'),
@@ -93,8 +95,16 @@ module.exports = (env, argv) => {
     = process.env.NODE_ENV === 'production' || argv.mode === 'production' || argv.nodeEnv === 'production'
   const useStats = !!argv.stats
   const showProgress = !!argv.progress
+  const publicEnv = {
+    NODE_ENV: isProduction ? 'production' : 'development',
+    SENTRY_ENABLED: configSentry.enabled,
+  }
 
-  process.env.NODE_ENV = isProduction ? 'production' : 'development'
+  Object.assign(process.env, publicEnv, {
+    SENTRY_AUTH_TOKEN: configSentry.SENTRY_AUTH_TOKEN,
+    SENTRY_ORG: configSentry.SENTRY_ORG,
+    SENTRY_PROJECT: configSentry.SENTRY_PROJECT,
+  })
 
   return {
     devServer: {
@@ -106,7 +116,7 @@ module.exports = (env, argv) => {
       host: '0.0.0.0',
       hot: true,
       liveReload: true,
-      port: config.devServer.port,
+      port: configBuild.devServer.port,
       static: {
         directory: common.staticPath,
       },
@@ -181,7 +191,7 @@ module.exports = (env, argv) => {
           base: {
             chunks: 'all',
             enforce: true,
-            name: ({ context }) => `vendors-${config.fixedChunksPackages.find(chunkInContext(context))}`,
+            name: ({ context }) => `vendors-${configBuild.fixedChunksPackages.find(chunkInContext(context))}`,
             priority: 4,
             reuseExistingChunk: false,
             test: ({ context }) => !!context && context.includes('tailwind'),
@@ -189,7 +199,7 @@ module.exports = (env, argv) => {
           primary: {
             chunks: 'all',
             enforce: true,
-            name: ({ context }) => `vendors-${config.fixedChunksPackages.find(chunkInContext(context))}`,
+            name: ({ context }) => `vendors-${configBuild.fixedChunksPackages.find(chunkInContext(context))}`,
             priority: 3,
             reuseExistingChunk: false,
             test: ({ context }) => !!context && context.includes('semantic'),
@@ -205,10 +215,10 @@ module.exports = (env, argv) => {
           vendors: {
             chunks: 'all',
             enforce: true,
-            name: ({ context }) => `vendors-${config.fixedChunksPackages.find(chunkInContext(context))}`,
+            name: ({ context }) => `vendors-${configBuild.fixedChunksPackages.find(chunkInContext(context))}`,
             priority: 1.1,
             reuseExistingChunk: false,
-            test: ({ context }) => !!context && config.fixedChunksPackages.some(chunkInContext(context)),
+            test: ({ context }) => !!context && configBuild.fixedChunksPackages.some(chunkInContext(context)),
           },
           node_modules: {
             chunks: 'all',
@@ -253,6 +263,7 @@ module.exports = (env, argv) => {
     },
     plugins: [
       new webpack.DefinePlugin({
+        process: JSON.stringify({ env: publicEnv }),
         FEATURES_FLAGS: JSON.stringify(getFeaturesFlags(process.env.NODE_ENV)),
         SYSTEM: JSON.stringify(SYSTEM),
       }),
@@ -305,6 +316,14 @@ module.exports = (env, argv) => {
           modules: true,
           modulesCount: 1,
           profile: true,
+        }),
+      isProduction
+        && configSentry.enabled
+        && env.SENTRY
+        && new SentryCliPlugin({
+          include: common.outputPath,
+          ignore: ['sw.js'],
+          release: SYSTEM.version,
         }),
     ].filter(Boolean),
     resolve: {
