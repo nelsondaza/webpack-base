@@ -36,7 +36,6 @@ module.exports = {
     'global-require': 'off',
     'import/no-cycle': 'off',
     'import/no-extraneous-dependencies': 'off',
-    'import/no-unresolved': 'off',
     'import/prefer-default-export': 'off',
     'jsx-a11y/control-has-associated-label': 'off',
     'max-classes-per-file': ['error', 2],
