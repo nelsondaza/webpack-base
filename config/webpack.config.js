@@ -327,6 +327,10 @@ module.exports = (env, argv) => {
         }),
     ].filter(Boolean),
     resolve: {
+      alias: {
+        'core-js/es6': 'core-js/es',
+        'core-js/library/fn': 'core-js/features',
+      },
       extensions: ['.ts', '.tsx', '.js', '.jsx', '.css', '.scss', '.sass'],
       modules: [common.appEntry, common.packages, common.appNodeModules],
     },
