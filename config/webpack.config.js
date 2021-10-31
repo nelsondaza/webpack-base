@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
@@ -159,21 +158,9 @@ module.exports = (env, argv) => {
       ],
     },
     optimization: {
-      chunkIds: 'named',
+      chunkIds: 'deterministic',
       emitOnErrors: false,
       minimize: isProduction,
-      minimizer: [
-        new CssMinimizerPlugin({
-          minimizerOptions: {
-            preset: [
-              'default',
-              {
-                discardComments: { removeAll: true },
-              },
-            ],
-          },
-        }),
-      ],
       moduleIds: 'deterministic',
       nodeEnv: process.env.NODE_ENV,
       splitChunks: {
