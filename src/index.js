@@ -1,3 +1,5 @@
+import 'regenerator-runtime/runtime'
+
 import Provider from 'react-redux/es/components/Provider'
 import { ConnectedRouter } from 'connected-react-router'
 import { render } from 'react-dom'
