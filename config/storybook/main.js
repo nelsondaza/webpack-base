@@ -37,6 +37,7 @@ module.exports = {
         // https://github.com/storybookjs/storybook/issues/14856
         path: require.resolve('path-browserify'),
       },
+      modules: [...config.resolve.modules, ...localConfig.resolve.modules],
     })
 
     config.plugins.push(
