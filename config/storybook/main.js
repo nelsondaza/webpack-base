@@ -41,6 +41,7 @@ module.exports = {
     })
 
     config.plugins.push(
+      localConfig.plugins[0], // DefinePlugin
       new MiniCssExtractPlugin({
         chunkFilename: 'css/[name].[contenthash].css',
         filename: 'css/[name].[contenthash].css',

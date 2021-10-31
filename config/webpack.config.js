@@ -262,6 +262,7 @@ module.exports = (env, argv) => {
       publicPath,
     },
     plugins: [
+      // DefinePlugin should be the first one
       new webpack.DefinePlugin({
         process: JSON.stringify({ env: publicEnv }),
         FEATURES_FLAGS: JSON.stringify(getFeaturesFlags(process.env.NODE_ENV)),

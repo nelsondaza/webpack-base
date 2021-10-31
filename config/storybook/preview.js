@@ -18,6 +18,7 @@ const getTestName = (str) =>
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
   controls: {
+    expanded: false,
     matchers: {
       color: /(background|color)$/i,
       date: /Date$/,
