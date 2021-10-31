@@ -4,6 +4,7 @@
     "baseUrl": "src",
     "checkJs": false,
     "esModuleInterop": true,
+    "importHelpers": true,
     "jsx": "react-jsx",
     "module": "esnext",
     "moduleResolution": "node",

@@ -46,3 +46,8 @@ This is my basic webpack configuration
  - CircleCI (GitHub/Bitbucket actions)
  - Sentry (Not included in dev mode)
 
+## Todo
+
+ - enable/disable tailwind in conf
+ - enable/disable semantic ui in conf
+ 
