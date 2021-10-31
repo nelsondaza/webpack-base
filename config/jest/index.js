@@ -86,6 +86,7 @@ module.exports = {
   // moduleDirectories: [
   //   "node_modules"
   // ],
+  moduleDirectories: ['src', 'src/packages', 'node_modules'],
 
   // An array of file extensions your modules use
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
@@ -152,7 +153,7 @@ module.exports = {
 
   // The test environment that will be used for testing
   // testEnvironment: "jest-environment-jsdom",
-  testEnvironment: 'node',
+  testEnvironment: 'jsdom',
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},

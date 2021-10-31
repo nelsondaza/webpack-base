@@ -1,3 +1,4 @@
+import 'regenerator-runtime/runtime'
 import { createElement as createReactElement } from 'react'
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17'
 import Enzyme, { shallow, render, mount } from 'enzyme'
@@ -24,12 +25,22 @@ const fileReaderProps = {
 global.FileReader = () => fileReaderProps
 global.FileReader.prototype = fileReaderProps
 
-const createElementConnected = (Component, props) => 
+HTMLCanvasElement.prototype.getContext = () => ({
+  clearRect: jest.fn(),
+  drawImage: jest.fn(),
+  fillRect: jest.fn(),
+  putImageData: jest.fn(),
+  rotate: jest.fn(),
+  translate: jest.fn(),
+})
+
+HTMLCanvasElement.prototype.toBlob = jest.fn()
+
+HTMLCanvasElement.prototype.toDataURL = jest.fn()
+
+const createElementConnected = (Component, props) =>
   // store.dispatch(environmentSet())
-   createReactElement(
-    Component,
-    { ...props /* store */ },
-  )
+  createReactElement(Component, { ...props /* store */ })
 
 const createElement = (Component, props, connected) => {
   if (connected) {
@@ -111,11 +122,7 @@ global.createTestComponent = (Component, props = {}, options = {}) => {
   })
 
   Object.defineProperty(component, 'getProp', {
-    value: (key) => (
-      component.scope.instance()
-        ? component.scope.instance().props[key]
-        : undefined
-    ),
+    value: (key) => (component.scope.instance() ? component.scope.instance().props[key] : undefined),
   })
 
   Object.defineProperty(component, 'setProps', {
@@ -131,11 +138,8 @@ global.createTestComponent = (Component, props = {}, options = {}) => {
   })
 
   Object.defineProperty(component, 'setState', {
-    value: (state, callback) => (
-      callback
-        ? component.scope.setState(state, callback)
-        : component.scope.setState(state)
-    ),
+    value: (state, callback) =>
+      callback ? component.scope.setState(state, callback) : component.scope.setState(state),
   })
 
   const beforeAndAfterTests = () => {
@@ -167,20 +171,10 @@ global.createTestComponent = (Component, props = {}, options = {}) => {
   return component
 }
 
-global.createTestComponentConnected = (
-  Component,
-  props = {},
-  options = {},
-) => createTestComponent(Component, props, { ...options, connected: true })
+global.createTestComponentConnected = (Component, props = {}, options = {}) =>
+  createTestComponent(Component, props, { ...options, connected: true })
 
-global.expectChange = ({
-  async = false,
-  by = '_un1_set2_value3_',
-  fn,
-  from = '_un1_set2_value3_',
-  of,
-  to,
-}) => {
+global.expectChange = ({ async = false, by = '_un1_set2_value3_', fn, from = '_un1_set2_value3_', of, to }) => {
   if (by !== '_un1_set2_value3_') {
     const ini = of()
     fn()
@@ -251,28 +245,28 @@ global.expectNoChange = ({ async = false, fn, from = '_un1_set2_value3_', of }) 
       }
 
       // Final value
-      expect(of())
-        .toEqual(initial)
+      expect(of()).toEqual(initial)
       resolve()
     })
   })
 }
 
-global.expectBecameTrue = ({ fn, of, async }) => global.expectChange({
-  async,
-  callee: global.expectBecameTrue,
-  fn,
-  of,
-  to: true,
-})
+global.expectBecameTrue = ({ fn, of, async }) =>
+  global.expectChange({
+    async,
+    callee: global.expectBecameTrue,
+    fn,
+    of,
+    to: true,
+  })
 
-global.expectBecameFalse = ({ fn, of, async }) => global.expectChange({
-  async,
-  callee: global.expectBecameFalse,
-  fn,
-  of,
-  to: false,
-})
+global.expectBecameFalse = ({ fn, of, async }) =>
+  global.expectChange({
+    async,
+    callee: global.expectBecameFalse,
+    fn,
+    of,
+    to: false,
+  })
 
-global.expectKeys = (obj, keys) => expect(Object.keys(obj).sort())
-  .toEqual(keys.sort())
+global.expectKeys = (obj, keys) => expect(Object.keys(obj).sort()).toEqual(keys.sort())
