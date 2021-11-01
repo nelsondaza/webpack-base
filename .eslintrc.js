@@ -5,7 +5,7 @@ module.exports = {
     jest: true,
     node: true,
   },
-  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'airbnb', 'airbnb-typescript', 'prettier'],
+  extends: ['airbnb', 'plugin:@typescript-eslint/recommended', 'prettier'],
   globals: {
     ajaxIntercept: true,
     createTestComponent: true,
@@ -22,7 +22,6 @@ module.exports = {
   },
   parserOptions: {
     ecmaVersion: 'latest',
-    project: './tsconfig.json',
     createDefaultProgram: true,
   },
   plugins: ['react', 'react-hooks', '@typescript-eslint'],
@@ -30,6 +29,7 @@ module.exports = {
   rules: {
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/no-implied-eval': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
     'arrow-parens': ['error', 'always'],
     'comma-dangle': ['error', 'always-multiline'],
     curly: ['error', 'all'],
@@ -71,13 +71,7 @@ module.exports = {
     'react/no-deprecated': 'off',
     'react/react-in-jsx-scope': 'off',
     'react/require-default-props': 'off',
-    'react/sort-comp': [
-      'error',
-      {
-        order: ['static-methods', 'instance-variables', 'lifecycle', 'everything-else', 'sub-rendering', 'render'],
-        groups: { 'sub-rendering': ['/^(shouldRender|render).+$/'] },
-      },
-    ],
+    'react/sort-comp': 'off',
     'react/state-in-constructor': 'off',
     semi: ['error', 'never'],
   },

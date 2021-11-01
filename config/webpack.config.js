@@ -132,7 +132,7 @@ module.exports = (env, argv) => {
           use: globalCSSLoaders(isProduction),
         },
         {
-          include: [packages],
+          include: [common.packages],
           test: /\.s?[ac]ss$/i,
           use: globalCSSLoaders(isProduction, true),
         },
