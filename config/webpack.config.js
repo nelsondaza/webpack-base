@@ -275,7 +275,7 @@ module.exports = (env, argv) => {
         template: path.join(common.staticPath, 'indexTemplate.html'),
       }),
       new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en/),
-      new LodashModuleReplacementPlugin(),
+      new LodashModuleReplacementPlugin({ shorthands: true }),
       useStats
         && new BundleAnalyzerPlugin({
           analyzerMode: 'static',

@@ -21,8 +21,12 @@ module.exports = {
     SYSTEM: true,
   },
   parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
     ecmaVersion: 'latest',
     createDefaultProgram: true,
+    sourceType: 'module',
   },
   plugins: ['react', 'react-hooks', '@typescript-eslint'],
   root: true,
@@ -34,6 +38,16 @@ module.exports = {
     'comma-dangle': ['error', 'always-multiline'],
     curly: ['error', 'all'],
     'global-require': 'off',
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        js: 'never',
+        jsx: 'never',
+        ts: 'never',
+        tsx: 'never',
+      },
+    ],
     'import/no-cycle': 'off',
     'import/no-extraneous-dependencies': 'off',
     'import/prefer-default-export': 'off',
@@ -76,7 +90,7 @@ module.exports = {
     semi: ['error', 'never'],
   },
   settings: {
-    'import/resolver': { node: { paths: ['src', 'src/packages'] } },
+    'import/resolver': { node: { extensions: ['.js', '.ts', '.jsx', '.tsx'], paths: ['src', 'src/packages'] } },
     react: {
       pragma: 'React',
       version: '17',
