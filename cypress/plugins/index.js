@@ -17,14 +17,27 @@ const { getConfig } = require('../../config/utils')
 /**
  * @type {Cypress.PluginConfig}
  */
-// eslint-disable-next-line no-unused-vars
+
 module.exports = (on, config) => {
+  const {
+    env: { envGroup },
+  } = config
+  const cypressConf = getConfig('cypress')
+
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
-  const { devServer } = getConfig('build')
+  // `env` is the merged values, can be found at Cypress.env()
 
+  const env = {
+    ...config.env,
+    ...cypressConf.env,
+    ...(cypressConf.env[envGroup] || cypressConf.env.dev),
+  }
+  const baseUrl = cypressConf.env[envGroup].baseUrl || cypressConf.env.baseUrl || cypressConf.baseUrl || config.baseUrl
   return {
     ...config,
-    baseUrl: `http://localhost:${devServer.port}/`,
+    ...cypressConf,
+    baseUrl,
+    env,
   }
 }
