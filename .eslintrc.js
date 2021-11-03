@@ -11,6 +11,7 @@ module.exports = {
     createTestComponent: true,
     createTestComponentConnected: true,
     cy: true,
+    Cypress: true,
     epicToPromise: true,
     expectBecameFalse: true,
     expectBecameTrue: true,
