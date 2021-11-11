@@ -79,6 +79,7 @@ module.exports = {
     'react-hooks/rules-of-hooks': 'error',
     'react/destructuring-assignment': 'off',
     'react/forbid-prop-types': 'off',
+    'react/function-component-definition': 'off',
     'react/jsx-filename-extension': ['error', { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
     'react/jsx-one-expression-per-line': 'off',
     'react/jsx-props-no-spreading': 'off',
