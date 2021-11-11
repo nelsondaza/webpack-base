@@ -32,6 +32,7 @@
     "lint": "eslint ./src ./cypress --cache --ext .js,.jsx,.ts,.tsx",
     "pre": "yarn lefthook run pre-commit && yarn lefthook run pre-push",
     "pretty": "prettier --write ./src ./cypress && yarn lint --fix",
+    "publicate": "yarn build:sentry && yarn deploy",
     "serve": "yarn install && yarn webpack serve --hot --no-open --cache --bail --mode development",
     "serve:progress": "yarn serve --progress",
     "serve:public": "yarn http-server ./dist/public -p 7071 --push-state",

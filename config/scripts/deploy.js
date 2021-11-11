@@ -209,7 +209,10 @@ const postDeploy = () => {
 }
 
 const processAllTasks = (tasks) => {
-  const publicBasePath = `/${fileExistenceBaseURL.replace('://', '').split('/').slice(1).join('/')}`
+  const publicBasePath = `/${fileExistenceBaseURL.replace('://', '').split('/').slice(1).join('/')}`.replace(
+    /[/]+$/,
+    '',
+  )
   Promise.all(tasks)
     .then(() => {
       console.log('\n✅  All uploads successfully completed! 🏋')
