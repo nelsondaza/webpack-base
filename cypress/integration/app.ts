@@ -1,18 +1,28 @@
 describe('Navigation', () => {
-  it('Contains calendar', () => {
+  it.skip('Can login', () => {
+    cy.visit('/')
     // @ts-ignore 'login' is defined in cypress commands.js
     cy.login(Cypress.env().user, Cypress.env().password)
-    cy.contains('.rc-calendar-footer-btn')
+    cy.contains('User home')
+  })
+
+  it('Contains Tailwind', () => {
+    cy.visit('/')
+    cy.contains('Tailwind')
+  })
+
+  it('Contains Semantic', () => {
+    cy.contains('Semantic')
+  })
+
+  it('Contains Packages', () => {
+    cy.contains('Packages')
   })
 
   it('Navigates to somewhere else', () => {
-    cy.get(':nth-child(2) > > :nth-child(1)').click()
-    cy.url().should('contain', '/somewhere/else/')
+    cy.get('.header').click()
+    cy.url().should('contain', '/')
     cy.wait(200)
-  })
-
-  it('Some button shows a popup', () => {
-    cy.contains('Some').click()
-    cy.contains('Popup content')
+    cy.contains('Tailwind')
   })
 })
