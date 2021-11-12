@@ -1,7 +1,13 @@
 import { withTests } from '@storybook/addon-jest'
 
 import { withEnvironment } from './stories'
-import results from '../../dist/coverage/test-results.json'
+
+let results = {}
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires,import/no-unresolved
+  results = require('../../dist/coverage/test-results.json')
+  // eslint-disable-next-line no-empty
+} catch (e) {}
 
 console.log(['results', results])
 

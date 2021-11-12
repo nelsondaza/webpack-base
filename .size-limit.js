@@ -1,6 +1,6 @@
 module.exports = [
   {
-    limit: '100 kB',
+    limit: '200 kB',
     path: 'dist/public/**/*.js',
   },
 ]
