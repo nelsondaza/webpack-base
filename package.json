@@ -46,7 +46,7 @@
     "serve:stories": "yarn http-server ./dist/stories -p 7072 --push-state",
     "stories": "yarn install && yarn start-storybook -p 7074 -s ./static -c config/storybook --ci",
     "test": "yarn install && yarn test:base --maxWorkers=40% --json --outputFile=./dist/coverage/test-results.json",
-    "test:base": "jest --config=./config/jest/index.js -u",
+    "test:base": "yarn jest --config=./config/jest/index.js -u",
     "test:base:ci": "mkdir -p ./dist/coverage && node --expose-gc ./node_modules/.bin/jest --config=./config/jest/index.js -u --logHeapUsage --maxWorkers=2",
     "test:ci": "yarn test:base:ci --coverageReporters=text-summary --forceExit --ci -b",
     "test:w": "yarn test --watchAll",
