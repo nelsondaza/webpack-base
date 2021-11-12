@@ -12,6 +12,10 @@
     "not IE < 11",
     "not ExplorerMobile < 11"
   ],
+  "engines": {
+    "node": "16.x",
+    "yarn": "1.x"
+  },
   "scripts": {
     "build": "yarn clear:public && yarn compile",
     "build:progress": "yarn build --progress",
