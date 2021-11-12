@@ -7,9 +7,6 @@ if [ ! -f ./config/.env.yml ];
     cp ./config/.env.example.yml ./config/.env.yml;
 fi
 
-# test app
-# yarn test
-
 # build app
 yarn webpack --mode production --bail
 
