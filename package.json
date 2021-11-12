@@ -21,7 +21,7 @@
     "build:w": "yarn build -w",
     "clear": "rimraf ./dist",
     "clear:public": "rimraf ./dist/public",
-    "compile": "yarn install && webpack --mode production --bail",
+    "compile": "yarn install && yarn webpack --mode production --bail",
     "cy:build:open": "cypress open --env envGroup=build",
     "cy:build:run": "cypress run --env envGroup=build",
     "cy:open": "cypress open --env envGroup=dev",
