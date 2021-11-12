@@ -33,6 +33,7 @@
     "cy:public:run": "cypress run --env envGroup=public",
     "cy:run": "cypress run --env envGroup=dev",
     "deploy": "node config/scripts/deploy.js",
+    "heroku-postbuild": "sh ./config/scripts/heroku-build.sh",
     "lint": "eslint ./src ./cypress --cache --ext .js,.jsx,.ts,.tsx",
     "pre": "yarn lefthook run pre-commit && yarn lefthook run pre-push",
     "pretty": "prettier --write ./src ./cypress && yarn lint --fix",
