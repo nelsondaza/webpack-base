@@ -23,4 +23,6 @@ registerRoute(
   }),
 )
 
+// eslint-disable-next-line no-restricted-globals
+self.skipWaiting()
 clientsClaim()
