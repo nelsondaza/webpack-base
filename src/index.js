@@ -59,20 +59,9 @@ if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     const wb = new Workbox('/sw.js')
 
-    wb.addEventListener('activated', (event) => {
-      // `event.isUpdate` will be true if another version of the service
-      // worker was controlling the page when this version was registered.
-      if (!event.isUpdate) {
-        console.log('Service worker activated for the first time!', SYSTEM.version, event)
-
-        // If your service worker is configured to precache assets, those
-        // assets should all be available now.
-      } else {
-        console.log('Service worker activated again!', SYSTEM.version, event)
-        if (window.confirm('A new version of the app is available. Reload?')) {
-          window.location.reload()
-        }
-      }
+    // https://developers.google.com/web/tools/workbox/modules/workbox-window
+    wb.addEventListener('installed', (event) => {
+      console.log([`SW installed!`, SYSTEM.version, event])
     })
 
     wb.addEventListener('waiting', (event) => {
@@ -82,83 +71,38 @@ if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
         SYSTEM.version,
         event,
       )
-
-      // // `event.wasWaitingBeforeRegister` will be false if this is
-      // // the first time the updated service worker is waiting.
-      // // When `event.wasWaitingBeforeRegister` is true, a previously
-      // // updated service worker is still waiting.
-      // // You may want to customize the UI prompt accordingly.
-      //
-      // // Assumes your app has some sort of prompt UI element
-      // // that a user can either accept or reject.
-      // const prompt = createUIPrompt({
-      //   onAccept: () => {
-      //     // Assuming the user accepted the update, set up a listener
-      //     // that will reload the page as soon as the previously waiting
-      //     // service worker has taken control.
-      //     wb.addEventListener('controlling', (event) => {
-      //       window.location.reload();
-      //     });
-      //
-      //     wb.messageSkipWaiting();
-      //   },
-      //
-      //   onReject: () => {
-      //     prompt.dismiss();
-      //   }
-      // });
     })
 
-    wb.addEventListener('message', (event) => {
-      console.log(`message!`, event)
-      if (event.data.type === 'CACHE_UPDATED') {
-        const { updatedURL } = event.data.payload
+    wb.addEventListener('controlling', (event) => {
+      console.log([`SW controlling!`, SYSTEM.version, event])
+    })
 
-        console.log(`A newer version of ${updatedURL} is available!`, SYSTEM.version, event)
+    wb.addEventListener('activated', async (event) => {
+      // `event.isUpdate` will be true if another version of the service
+      // worker was controlling the page when this version was registered.
+      if (!event.isUpdate) {
+        console.log('Service worker activated for the first time!', SYSTEM.version, event)
+
+        // If your service worker is configured to precache assets, those
+        // assets should all be available now.
+      } else {
+        console.log('Service worker activated again!', SYSTEM.version, event)
+        const newVersion = await wb.messageSW({ type: 'GET_VERSION' })
+        if (window.confirm(`A new version "${newVersion}" is available.\n  Current: ${SYSTEM.version}.\nReload?`)) {
+          window.location.reload()
+        }
       }
     })
 
-    wb.addEventListener('installed', SYSTEM.version, (event) => {
-      if (!event.isUpdate) {
-        console.log(`NO UPDATE!`, SYSTEM.version, event)
-      } else {
-        console.log(`UPDATE!`, SYSTEM.version, event)
+    wb.addEventListener('message', (event) => {
+      console.log([`SW message!`, SYSTEM.version, event])
+      if (event.data.type === 'GET_VERSION') {
+        event.ports[0].postMessage(SYSTEM.version)
       }
     })
 
     wb.register()
   })
-
-  // window.addEventListener('load', () => {
-  //   navigator.serviceWorker
-  //     .register('/sw.js')
-  //     .then((registration) => {
-  //       // eslint-disable-next-line no-console
-  //       console.log('SW registered: ', registration)
-  //       console.log('SW registered: ', registration)
-  //       console.log('SW registered: ', registration)
-  //
-  //       navigator.serviceWorker.addEventListener('message', async (event) => {
-  //         console.log('index sw' ,event.data.meta)
-  //         // Optional: ensure the message came from workbox-broadcast-update
-  //         if (event.data.meta === 'workbox-broadcast-update') {
-  //           // const { cacheName, updatedURL } = event.data.payload
-  //
-  //           // Do something with cacheName and updatedURL.
-  //           // For example, get the cached content and update
-  //           // the content on the page.
-  //           // const cache = await caches.open(cacheName)
-  //           // const updatedResponse = await cache.match(updatedURL)
-  //           // const updatedText = await updatedResponse.text()
-  //         }
-  //       })
-  //
-  //     })
-  //     .catch((registrationError) => {
-  //       // eslint-disable-next-line no-console
-  //       console.log('SW registration failed: ', registrationError)
-  //     })
-  // })
 }
 
 renderApp()
