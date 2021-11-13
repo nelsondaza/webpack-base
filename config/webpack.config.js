@@ -9,7 +9,7 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 const SentryCliPlugin = require('@sentry/webpack-plugin')
 const webpack = require('webpack')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
-const { GenerateSW } = require('workbox-webpack-plugin')
+const { InjectManifest } = require('workbox-webpack-plugin')
 
 const { getConfig, getFeaturesFlags, buildManifest, SYSTEM } = require('./utils')
 
@@ -290,12 +290,10 @@ module.exports = (env, argv) => {
       }),
       !isProduction && new ReactRefreshWebpackPlugin(),
       isProduction
-        && new GenerateSW({
-          clientsClaim: true,
+        && new InjectManifest({
           exclude: [/\.map$/, /\.txt$/, /asset-manifest\.json$/, /indexTemplate\.html$/],
-          navigateFallback: `${publicPath}index.html`,
-          skipWaiting: true,
           swDest: 'sw.js',
+          swSrc: './config/sw.js',
         }),
       showProgress
         && new webpack.ProgressPlugin({
