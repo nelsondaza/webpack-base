@@ -4356,10 +4356,10 @@ autoprefixer@^9.8.6:
     postcss "^7.0.32"
     postcss-value-parser "^4.1.0"
 
-aws-sdk@^2.1027.0:
-  version "2.1027.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1027.0.tgz#64688b27607aade2df8de380f5852d67855f1f9b"
-  integrity sha512-j3UjPV9hzyCvkmfcbhRscMggdmrPqlhvo8QzkXCGFfPXjZMh1OJd4HkCEH2NaunzLOyF2Y3QzxKrGOLMT7sNzg==
+aws-sdk@^2.1028.0:
+  version "2.1028.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1028.0.tgz#ce076076174afa9bd311406b8186ea90163e3331"
+  integrity sha512-OmR0NcpU8zsDcUOZhM+eZ6CzlUFtuaEuRyjm6mxDO0KI7lJAp7/NzB6tcellRrgWxL+NO7b5TSxi+m28qu5ocQ==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -15790,10 +15790,10 @@ webpack-dev-middleware@^5.2.1:
     range-parser "^1.2.1"
     schema-utils "^3.1.0"
 
-webpack-dev-server@^4.4.0:
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-4.4.0.tgz#10ec17088f840c9ccb2ebb0b43c49ec293206f7e"
-  integrity sha512-+S0XRIbsopVjPFjCO8I07FXYBWYqkFmuP56ucGMTs2hA/gV4q2M9xTmNo5Tg4o8ffRR+Nm3AsXnQXxKRyYovrA==
+webpack-dev-server@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-4.5.0.tgz#614b5112cfa4730a4801bb4ddebb3be5b0d70497"
+  integrity sha512-Ss4WptsUjYa+3hPI4iYZYEc8FrtnfkaPrm5WTjk9ux5kiCS718836srs0ppKMHRaCHP5mQ6g4JZGcfDdGbCjpQ==
   dependencies:
     ansi-html-community "^0.0.8"
     bonjour "^3.5.0"
