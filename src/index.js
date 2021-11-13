@@ -63,12 +63,12 @@ if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
       // `event.isUpdate` will be true if another version of the service
       // worker was controlling the page when this version was registered.
       if (!event.isUpdate) {
-        console.log('Service worker activated for the first time!', event)
+        console.log('Service worker activated for the first time!', SYSTEM.version, event)
 
         // If your service worker is configured to precache assets, those
         // assets should all be available now.
       } else {
-        console.log('Service worker activated again!', event)
+        console.log('Service worker activated again!', SYSTEM.version, event)
       }
     })
 
@@ -76,6 +76,7 @@ if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
       console.log(
         `A new service worker has installed, but it can't activate`
           + `until all tabs running the current version have fully unloaded.`,
+        SYSTEM.version,
         event,
       )
 
@@ -110,15 +111,15 @@ if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
       if (event.data.type === 'CACHE_UPDATED') {
         const { updatedURL } = event.data.payload
 
-        console.log(`A newer version of ${updatedURL} is available!`, event)
+        console.log(`A newer version of ${updatedURL} is available!`, SYSTEM.version, event)
       }
     })
 
-    wb.addEventListener('installed', (event) => {
+    wb.addEventListener('installed', SYSTEM.version, (event) => {
       if (!event.isUpdate) {
-        console.log(`NO UPDATE!`, event)
+        console.log(`NO UPDATE!`, SYSTEM.version, event)
       } else {
-        console.log(`UPDATE!`, event)
+        console.log(`UPDATE!`, SYSTEM.version, event)
       }
     })
 
