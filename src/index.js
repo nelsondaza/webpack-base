@@ -69,6 +69,9 @@ if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
         // assets should all be available now.
       } else {
         console.log('Service worker activated again!', SYSTEM.version, event)
+        if (window.confirm('A new version of the app is available. Reload?')) {
+          window.location.reload()
+        }
       }
     })
 
