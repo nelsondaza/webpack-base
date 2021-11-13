@@ -4,11 +4,12 @@ import Block from './components/ui/Block'
 
 interface Props {
   name: string
+  version: string
 }
 
-export default ({ name }: Props) => (
+export default ({ name, version }: Props) => (
   <Block>
-    <h1 className="text-4xl">Tailwind 4 {name}</h1>
+    <h1 className="text-4xl">Tailwind {name}</h1>
     <button
       type="button"
       className="group p-2 w-full flex items-center justify-between rounded-full border border-gray-300 shadow-sm space-x-3 text-left hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -70,6 +71,6 @@ export default ({ name }: Props) => (
     <hr />
     <h1>Packages</h1>
     {/* @ts-ignore */}
-    Value from System: <SimpleButton>{SYSTEM.appName}</SimpleButton>
+    Value from System: <SimpleButton>{version}</SimpleButton>
   </Block>
 )

@@ -16,7 +16,7 @@ const renderApp = () => {
   render(
     <Provider store={store}>
       <ConnectedRouter history={history}>
-        <App />
+        <App name={SYSTEM.appName} version={SYSTEM.version} />
       </ConnectedRouter>
     </Provider>,
     document.getElementById('app'),
