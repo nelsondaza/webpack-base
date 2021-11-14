@@ -65,6 +65,8 @@ if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     })
 
     wb.addEventListener('waiting', (event) => {
+      console.log([`SW waiting!`, SYSTEM.version, event])
+
       console.log(
         `A new service worker has installed, but it can't activate`
           + `until all tabs running the current version have fully unloaded.`,
@@ -78,6 +80,8 @@ if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     })
 
     wb.addEventListener('activated', async (event) => {
+      console.log([`SW activated!`, SYSTEM.version, event])
+
       // `event.isUpdate` will be true if another version of the service
       // worker was controlling the page when this version was registered.
       if (!event.isUpdate) {
@@ -96,6 +100,7 @@ if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
 
     wb.addEventListener('message', (event) => {
       console.log([`SW message!`, SYSTEM.version, event])
+
       if (event.data.type === 'GET_VERSION') {
         event.ports[0].postMessage(SYSTEM.version)
       }
