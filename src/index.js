@@ -123,27 +123,11 @@ if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
       }
     })
 
-    wb.addEventListener('message', (event) => {
-      // @todo define actions
-      // eslint-disable-next-line no-console
-      console.log(['SW message!', SYSTEM.version, event])
-
-      if (event.data.type === 'GET_VERSION') {
-        event.ports[0].postMessage(SYSTEM.version)
-      }
-    })
-
-    wb.addEventListener('updatefound', (event) => {
-      // @todo define actions
-      // eslint-disable-next-line no-console
-      console.log(['SW updatefound!', SYSTEM.version, event, wb.installing])
-    })
-
     wb.register()
 
-    swUpdateInterval = setInterval(() => {
-      console.log('SW update!')
-      wb.update()
+    swUpdateInterval = setInterval(async () => {
+      const res = await wb.update()
+      console.log(['SW update 0422!', res, wb])
     }, 1000 * 60)
   })
 
