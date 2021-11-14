@@ -133,6 +133,12 @@ if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
       }
     })
 
+    wb.addEventListener('updatefound', (event) => {
+      // @todo define actions
+      // eslint-disable-next-line no-console
+      console.log(['SW updatefound!', SYSTEM.version, event, wb.installing])
+    })
+
     wb.register()
 
     swUpdateInterval = setInterval(wb.update, 1000 * 60)
