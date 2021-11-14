@@ -13,6 +13,7 @@ import '../config/assets/tailwind/tailwind.css'
 import '../config/assets/semantic-ui/semantic.css'
 
 const renderApp = () => {
+  console.log(SYSTEM)
   render(
     <Provider store={store}>
       <ConnectedRouter history={history}>
@@ -63,18 +64,18 @@ if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     wb.addEventListener('installed', (event) => {
       // @todo define actions
       // eslint-disable-next-line no-console
-      console.log([`SW installed!`, SYSTEM.version, event])
+      console.log(['SW installed!', SYSTEM.version, event])
     })
 
     wb.addEventListener('waiting', (event) => {
       // @todo define actions
       // eslint-disable-next-line no-console
-      console.log([`SW waiting!`, SYSTEM.version, event])
+      console.log(['SW waiting!', SYSTEM.version, event])
 
       // eslint-disable-next-line no-console
       console.log(
-        `A new service worker has installed, but it can't activate`
-          + `until all tabs running the current version have fully unloaded.`,
+        "A new service worker has installed, but it can't activate"
+          + 'until all tabs running the current version have fully unloaded.',
         SYSTEM.version,
         event,
       )
@@ -83,13 +84,13 @@ if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     wb.addEventListener('controlling', (event) => {
       // @todo define actions
       // eslint-disable-next-line no-console
-      console.log([`SW controlling!`, SYSTEM.version, event])
+      console.log(['SW controlling!', SYSTEM.version, event])
     })
 
     wb.addEventListener('activated', async (event) => {
       // @todo define actions
       // eslint-disable-next-line no-console
-      console.log([`SW activated!`, SYSTEM.version, event])
+      console.log(['SW activated!', SYSTEM.version, event])
 
       // `event.isUpdate` will be true if another version of the service
       // worker was controlling the page when this version was registered.
@@ -105,16 +106,17 @@ if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
         // eslint-disable-next-line no-console
         console.log('Service worker activated again!')
 
-        let newVersion = 'undefined'
+        let newVersion = ''
         try {
           newVersion = await wb.messageSW({ type: 'GET_VERSION' })
         } catch (e) {
           // eslint-disable-next-line no-console
           console.log(['Error messageSW', e])
         }
+
         // @todo define actions
         // eslint-disable-next-line no-alert
-        if (window.confirm(`Version "${newVersion}" is available.\n Current: ${SYSTEM.version}.\nReload?`)) {
+        if (window.confirm(`${newVersion ? `Version "${newVersion}"` : 'New version '} is available.\n Current: ${SYSTEM.version}.\nReload?`)) {
           window.location.reload()
         }
       }
