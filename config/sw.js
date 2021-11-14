@@ -32,7 +32,7 @@ self.skipWaiting()
 self.addEventListener('message', (event) => {
   // @todo message registration
   // eslint-disable-next-line no-console
-  console.log([`internal SW message!`, SYSTEM.version, event])
+  console.log(['Internal SW message!', SYSTEM.version, event])
 
   if (event.data.type === 'GET_VERSION') {
     event.ports[0].postMessage(SYSTEM.version)

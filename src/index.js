@@ -13,11 +13,10 @@ import '../config/assets/tailwind/tailwind.css'
 import '../config/assets/semantic-ui/semantic.css'
 
 const renderApp = () => {
-  console.log(SYSTEM)
   render(
     <Provider store={store}>
       <ConnectedRouter history={history}>
-        <App name={SYSTEM.appName} version={SYSTEM.version} />
+        <App name={SYSTEM.env.appName} version={SYSTEM.version} />
       </ConnectedRouter>
     </Provider>,
     document.getElementById('app'),
@@ -125,7 +124,7 @@ if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     wb.addEventListener('message', (event) => {
       // @todo define actions
       // eslint-disable-next-line no-console
-      console.log([`SW message!`, SYSTEM.version, event])
+      console.log(['SW message!', SYSTEM.version, event])
 
       if (event.data.type === 'GET_VERSION') {
         event.ports[0].postMessage(SYSTEM.version)
