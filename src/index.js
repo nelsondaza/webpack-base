@@ -91,8 +91,7 @@ if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
         // assets should all be available now.
       } else {
         console.log('Service worker activated again!', SYSTEM.version, event)
-        const newVersion = await wb.messageSW({ type: 'GET_VERSION' })
-        if (window.confirm(`A new version "${newVersion}" is available.\n  Current: ${SYSTEM.version}.\nReload?`)) {
+        if (window.confirm(`A new version is available.\n  Current: ${SYSTEM.version}.\nReload?`)) {
           window.location.reload()
         }
       }
