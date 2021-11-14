@@ -143,7 +143,8 @@ if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     swUpdateInterval = setInterval(async () => {
       console.log('updating...')
       await wb.update()
-    }, 1000 * 60 * 5)
+      console.log('...end')
+    }, 1000 * 60)
   })
 }
 
