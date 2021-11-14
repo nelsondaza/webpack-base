@@ -61,12 +61,17 @@ if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
 
     // https://developers.google.com/web/tools/workbox/modules/workbox-window
     wb.addEventListener('installed', (event) => {
+      // @todo define actions
+      // eslint-disable-next-line no-console
       console.log([`SW installed!`, SYSTEM.version, event])
     })
 
     wb.addEventListener('waiting', (event) => {
+      // @todo define actions
+      // eslint-disable-next-line no-console
       console.log([`SW waiting!`, SYSTEM.version, event])
 
+      // eslint-disable-next-line no-console
       console.log(
         `A new service worker has installed, but it can't activate`
           + `until all tabs running the current version have fully unloaded.`,
@@ -76,34 +81,48 @@ if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     })
 
     wb.addEventListener('controlling', (event) => {
+      // @todo define actions
+      // eslint-disable-next-line no-console
       console.log([`SW controlling!`, SYSTEM.version, event])
     })
 
     wb.addEventListener('activated', async (event) => {
+      // @todo define actions
+      // eslint-disable-next-line no-console
       console.log([`SW activated!`, SYSTEM.version, event])
 
       // `event.isUpdate` will be true if another version of the service
       // worker was controlling the page when this version was registered.
       if (!event.isUpdate) {
-        console.log('Service worker activated for the first time!', SYSTEM.version, event)
+        // @todo define actions
+        // eslint-disable-next-line no-console
+        console.log('Service worker activated for the first time!')
 
         // If your service worker is configured to precache assets, those
         // assets should all be available now.
       } else {
-        console.log('Service worker activated again!', SYSTEM.version, event)
+        // @todo define actions
+        // eslint-disable-next-line no-console
+        console.log('Service worker activated again!')
+
         let newVersion = 'undefined'
         try {
           newVersion = await wb.messageSW({ type: 'GET_VERSION' })
         } catch (e) {
+          // eslint-disable-next-line no-console
           console.log(['Error messageSW', e])
         }
-        if (window.confirm(`A new version "${newVersion}" is available.\n  Current: ${SYSTEM.version}.\nReload?`)) {
+        // @todo define actions
+        // eslint-disable-next-line no-alert
+        if (window.confirm(`Version "${newVersion}" is available.\n Current: ${SYSTEM.version}.\nReload?`)) {
           window.location.reload()
         }
       }
     })
 
     wb.addEventListener('message', (event) => {
+      // @todo define actions
+      // eslint-disable-next-line no-console
       console.log([`SW message!`, SYSTEM.version, event])
 
       if (event.data.type === 'GET_VERSION') {
