@@ -58,11 +58,6 @@ if (process.env.NODE_ENV === 'production' && process.env.SENTRY_ENABLED) {
 if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
   let swUpdateInterval
 
-  window.addEventListener('unload', () => {
-    console.log('unload')
-    clearInterval(swUpdateInterval)
-  })
-
   window.addEventListener('load', () => {
     const wb = new Workbox('/sw.js')
 
@@ -140,12 +135,10 @@ if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
 
     wb.register()
 
-    swUpdateInterval = setInterval(async () => {
-      console.log('updating...')
-      await wb.update()
-      console.log('...end')
-    }, 1000 * 60)
+    swUpdateInterval = setInterval(wb.update, 1000 * 60)
   })
+
+  window.addEventListener('unload', () => clearInterval(swUpdateInterval))
 }
 
 renderApp()
