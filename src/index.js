@@ -141,7 +141,10 @@ if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
 
     wb.register()
 
-    swUpdateInterval = setInterval(wb.update, 1000 * 60)
+    swUpdateInterval = setInterval(() => {
+      console.log('SW update!')
+      wb.update()
+    }, 1000 * 60)
   })
 
   window.addEventListener('unload', () => clearInterval(swUpdateInterval))
