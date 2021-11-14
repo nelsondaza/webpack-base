@@ -17,12 +17,24 @@ imageCache()
 offlineFallback({ pageFallback: 'index.html' })
 
 registerRoute(
-  ({ url }) => console.log(url) || url.pathname.startsWith('/manifest.json'),
+  ({ url }) => url.pathname.startsWith('/manifest.json'),
   new StaleWhileRevalidate({
     plugins: [new BroadcastUpdatePlugin()],
   }),
 )
 
+clientsClaim()
+
 // eslint-disable-next-line no-restricted-globals
 self.skipWaiting()
-clientsClaim()
+
+// eslint-disable-next-line no-restricted-globals
+self.addEventListener('message', (event) => {
+  // @todo message registration
+  // eslint-disable-next-line no-console
+  console.log([`internal SW message!`, SYSTEM.version, event])
+
+  if (event.data.type === 'GET_VERSION') {
+    event.ports[0].postMessage(SYSTEM.version)
+  }
+})
