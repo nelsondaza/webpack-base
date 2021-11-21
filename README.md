@@ -45,9 +45,12 @@ This is my basic webpack configuration
  - Cypress
  - CircleCI (GitHub/Bitbucket actions)
  - Sentry (Not included in dev mode)
+ - enable/disable tailwind in conf
+ - enable/disable semantic ui in conf
 
 ## Todo
 
- - enable/disable tailwind in conf
- - enable/disable semantic ui in conf
+ - move service worker to a separate file
+ - move SYSTEM config to it own chunk so every build will only modify 1 file
+ - update libs to latest versions
  

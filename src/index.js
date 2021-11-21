@@ -55,80 +55,59 @@ if (process.env.NODE_ENV === 'production' && process.env.SENTRY_ENABLED) {
   })
 }
 
+// @todo move service worker to a separate file
 if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
   let swUpdateInterval
+  let newVersionFound = false
 
-  window.addEventListener('load', () => {
+  window.addEventListener('load', async () => {
     const wb = new Workbox('/sw.js')
 
     // https://developers.google.com/web/tools/workbox/modules/workbox-window
-    wb.addEventListener('installed', (event) => {
-      // @todo define actions
-      // eslint-disable-next-line no-console
-      console.log(['SW installed!', SYSTEM.version, event])
+    wb.addEventListener('installed', async (event) => {
+      // Resources are into the Cache Storage
     })
 
     wb.addEventListener('waiting', (event) => {
-      // @todo define actions
-      // eslint-disable-next-line no-console
-      console.log(['SW waiting!', SYSTEM.version, event])
-
-      // eslint-disable-next-line no-console
-      console.log(
-        "A new service worker has installed, but it can't activate"
-          + 'until all tabs running the current version have fully unloaded.',
-        SYSTEM.version,
-        event,
-      )
+      // A new service worker has installed, but it can't activate
+      // until all tabs running the current version have fully unloaded.
     })
 
-    wb.addEventListener('controlling', (event) => {
-      // @todo define actions
-      // eslint-disable-next-line no-console
-      console.log(['SW controlling!', SYSTEM.version, event])
+    wb.addEventListener('controlling', async (event) => {
+      // Page is been controlled by a service worker
+
+      // event.isUpdate === true => New version controlled after page refresh
+      // event.isUpdate === false => New version controlled after manual SW update
+      newVersionFound = true
     })
 
     wb.addEventListener('activated', async (event) => {
-      // @todo define actions
-      // eslint-disable-next-line no-console
-      console.log(['SW activated!', SYSTEM.version, event])
+      // Service worker is managing the page
 
-      // `event.isUpdate` will be true if another version of the service
-      // worker was controlling the page when this version was registered.
-      if (!event.isUpdate) {
-        // @todo define actions
-        // eslint-disable-next-line no-console
-        console.log('Service worker activated for the first time!')
+      // @todo add custom message or notification on new version
+      // newVersionFound && !event.isUpdate
 
-        // If your service worker is configured to precache assets, those
-        // assets should all be available now.
+      if (newVersionFound || event.isUpdate) {
+        // force all client to reload for new version
+        await wb.messageSW({ type: 'RELOAD_CLIENTS' })
       } else {
-        // @todo define actions
-        // eslint-disable-next-line no-console
-        console.log('Service worker activated again!')
-
-        let newVersion = ''
-        try {
-          newVersion = await wb.messageSW({ type: 'GET_VERSION' })
-        } catch (e) {
-          // eslint-disable-next-line no-console
-          console.log(['Error messageSW', e])
-        }
-
-        // @todo define actions
-        // eslint-disable-next-line no-alert
-        if (window.confirm(`${newVersion ? `Version "${newVersion}"` : 'New version '} is available.\n Current: ${SYSTEM.version}.\nReload?`)) {
-          window.location.reload()
-        }
+        // Cached assets should all be available now.
       }
     })
 
-    wb.register()
+    await wb.register()
 
     swUpdateInterval = setInterval(async () => {
-      const res = await wb.update()
-      console.log(['SW update 0422!', res, wb])
-    }, 1000 * 60)
+      await wb.update()
+    }, 1000 * 60) // check every minute for new version
+
+    if (
+      !!window?.Notification?.permission
+      && window.Notification.permission !== 'granted'
+      && window.Notification.permission !== 'blocked'
+    ) {
+      window.Notification.requestPermission()
+    }
   })
 
   window.addEventListener('unload', () => clearInterval(swUpdateInterval))
