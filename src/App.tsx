@@ -4,11 +4,13 @@ import Block from './components/ui/Block'
 
 interface Props {
   name: string
+  version: string
 }
 
-export default ({ name }: Props) => (
+export default ({ name, version }: Props) => (
   <Block>
-    <h1 className="text-4xl">Tailwind {name}</h1>
+    <h1 className="text-4xl">{name}</h1>
+    <h2 className="text-4xl">Tailwind</h2>
     <button
       type="button"
       className="group p-2 w-full flex items-center justify-between rounded-full border border-gray-300 shadow-sm space-x-3 text-left hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -42,8 +44,9 @@ export default ({ name }: Props) => (
         </svg>
       </span>
     </button>
+    <br />
     <hr />
-    <h1 className="text-4xl">Semantic</h1>
+    <h2 className="text-4xl">Semantic</h2>
     <div className="ui card">
       <div className="image">
         <img
@@ -68,8 +71,7 @@ export default ({ name }: Props) => (
       </div>
     </div>
     <hr />
-    <h1>Packages</h1>
-    {/* @ts-ignore */}
-    Value from System: <SimpleButton>{SYSTEM.appName}</SimpleButton>
+    <h2>Using Packages</h2>
+    Value from System: <SimpleButton>Version: {version}</SimpleButton>
   </Block>
 )

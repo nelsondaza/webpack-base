@@ -1,57 +1,165 @@
-import { precacheAndRoute } from 'workbox-precaching/precacheAndRoute'
-import { CacheableResponsePlugin } from 'workbox-cacheable-response'
-import { CacheFirst, StaleWhileRevalidate } from 'workbox-strategies'
-import { ExpirationPlugin } from 'workbox-expiration'
+import { BroadcastUpdatePlugin } from 'workbox-broadcast-update'
+import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching'
+import { clientsClaim } from 'workbox-core'
+import { googleFontsCache, imageCache, offlineFallback, pageCache, staticResourceCache } from 'workbox-recipes'
 import { registerRoute } from 'workbox-routing'
+import { StaleWhileRevalidate } from 'workbox-strategies'
 
 // eslint-disable-next-line no-restricted-globals,no-underscore-dangle
-precacheAndRoute(self.__WB_MANIFEST)
+const swManifest = self.__WB_MANIFEST
+const currentAppVersion = SYSTEM.version
 
-// Cache Google Fonts with a stale-while-revalidate strategy, with
-// a maximum number of entries.
+// eslint-disable-next-line no-restricted-globals
+const { addEventListener, clients, registration, skipWaiting } = self
+
+// Claiming control to start runtime caching asap
+clientsClaim()
+
+// Cache and serve resources from __WB_MANIFEST array
+precacheAndRoute(swManifest)
+cleanupOutdatedCaches()
+
+pageCache()
+googleFontsCache()
+staticResourceCache()
+imageCache()
+
+offlineFallback({ pageFallback: 'index.html' })
+
 registerRoute(
-  ({ url }) =>
-    url.origin === 'https://fonts.googleapis.com' || url.origin === 'https://fonts.gstatic.com',
+  ({ url }) => url.pathname.startsWith('/sw.js'),
   new StaleWhileRevalidate({
-    cacheName: 'google-fonts',
-    plugins: [new ExpirationPlugin({ maxEntries: 20 })],
+    plugins: [new BroadcastUpdatePlugin()],
   }),
 )
 
-registerRoute(
-  ({ request }) => request.destination === 'script' || request.destination === 'style',
-  new StaleWhileRevalidate(),
-)
+addEventListener('install', (event) => {
+  // Putting resources into the Cache Storage
 
-registerRoute(
-  ({ request }) => request.destination === 'image',
-  new CacheFirst({
-    cacheName: 'images',
-    plugins: [
-      new CacheableResponsePlugin({
-        statuses: [0, 200],
-      }),
-      new ExpirationPlugin({
-        maxEntries: 60,
-        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
-      }),
-    ],
-  }),
-)
+  event.waitUntil(skipWaiting())
+})
 
-// workbox.core.skipWaiting()
-// workbox.core.clientsClaim()
-//
-// workbox.routing.registerRoute(
-//   new RegExp('http://localhost:7070/'),
-//   new workbox.strategies.StaleWhileRevalidate(),
-// )
-//
-// self.addEventListener('push', (event) => {
-//   const title = 'Get Started With Workbox'
-//   const options = {
-//     body: event.data.text(),
-//   }
-//   event.waitUntil(self.registration.showNotification(title, options))
-// })
-//
+addEventListener('activate', (event) => {
+  // Managing versions
+})
+
+addEventListener('fetch', (event) => {
+  // Extracting from the cache and serving the resources
+})
+
+addEventListener('message', (event) => {
+  // Messages from clients
+
+  if (event.data?.type === 'GET_VERSION') {
+    event.ports[0].postMessage(currentAppVersion)
+  } else if (event.data?.type === 'SKIP_WAITING') {
+    event.waitUntil(skipWaiting())
+  } else if (event.data?.type === 'RELOAD_CLIENTS') {
+    clients
+      .matchAll({
+        includeUncontrolled: true,
+        type: 'window',
+      })
+      .then((clientList) => {
+        clientList.forEach((client) => {
+          try {
+            client.navigate(client.url)
+            // eslint-disable-next-line no-empty
+          } catch (e) {}
+        })
+        return null
+      })
+  }
+})
+
+addEventListener('sync', (event) => {
+  // Background sync
+})
+
+// PUSH NOTIFICATIONS
+
+addEventListener('push', async (event) => {
+  // Receive push notification and show a notification
+
+  let notification = {
+    // actions: [
+    //   {
+    //     action: 'explore',
+    //     icon: '/icon-16x16.png',
+    //     placeholder: '',
+    //     title: 'Explore this new world',
+    //   },
+    //   {
+    //     action: 'close',
+    //     icon: '/icon-32x32.png',
+    //     placeholder: '',
+    //     title: 'Close',
+    //   },
+    // ],
+    badge: undefined,
+    body: 'Something you might want to check out.',
+    data: { arrivalAt: Date.now() },
+    icon: '/icon-32x32.png',
+    image: '/icon-180x180.png',
+    lang: undefined,
+    renotify: false,
+    requireInteraction: false,
+    silent: false,
+    tag: undefined,
+    timestamp: Date.now(),
+    title: 'New notification',
+    vibrate: [100, 50, 100],
+  }
+
+  try {
+    const json = event.data.json()
+    notification = {
+      ...notification,
+      ...json,
+    }
+  } catch (e1) {
+    try {
+      notification.body = event.data.text()
+      // eslint-disable-next-line no-empty
+    } catch (e2) {}
+  }
+
+  try {
+    await registration.showNotification(notification.title, notification)
+    // eslint-disable-next-line no-empty
+  } catch (e) {}
+})
+
+addEventListener('notificationclick', (event) => {
+  // Custom notification actions
+
+  const { action, data } = event.notification
+
+  event.notification.close()
+
+  event.waitUntil(
+    clients
+      .matchAll({
+        includeUncontrolled: true,
+        type: 'window',
+      })
+      .then((clientList) => {
+        const client = clientList.find((c) => c.visibilityState === 'visible')
+        if (client) {
+          if (!action && data?.redirectURL) {
+            client.navigate(data.redirectURL)
+          }
+          client.focus()
+        } else {
+          // there are no visible windows. Open one.
+          clients.openWindow(data?.redirectURL || '/')
+        }
+
+        return null
+      }),
+  )
+})
+
+addEventListener('notificationclose', (event) => {
+  // Closing notification action
+})
