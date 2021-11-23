@@ -4,20 +4,24 @@ import Provider from 'react-redux/es/components/Provider'
 import { ConnectedRouter } from 'connected-react-router'
 import { render } from 'react-dom'
 
+import System from 'system'
+
 import App from './App'
 import history from '../config/history'
+import sentryRegistration from "./sentryRegistration"
+import serviceWorkerRegistration from "./serviceWorkerRegistration"
 import store from '../config/store'
 
 import '../config/assets/tailwind/tailwind.css'
 import '../config/assets/semantic-ui/semantic.css'
-import serviceWorkerRegistration from "./serviceWorkerRegistration"
-import sentryRegistration from "./sentryRegistration"
+
+console.log(System)
 
 const renderApp = () => {
   render(
     <Provider store={store}>
       <ConnectedRouter history={history}>
-        <App name={SYSTEM.env.appName} version={SYSTEM.version} />
+        <App name={System.env.appName} version={System.version} />
       </ConnectedRouter>
     </Provider>,
     document.getElementById('app'),

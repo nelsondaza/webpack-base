@@ -1,3 +1,5 @@
+import System from 'system'
+
 export default () => {
   if (process.env.NODE_ENV === 'production' && process.env.SENTRY_ENABLED) {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -6,8 +8,8 @@ export default () => {
     const { Integrations } = require('@sentry/tracing')
 
     init({
-      dsn: SYSTEM.sentry.dns,
-      release: SYSTEM.version,
+      dsn: System.sentry.dns,
+      release: System.version,
       integrations: [new Integrations.BrowserTracing()],
       tracesSampleRate: 1.0,
     })

@@ -49,9 +49,6 @@ This is my basic webpack configuration
  - enable/disable semantic ui in conf
  - move service worker to a separate file
  - move sentry to a separate file
+ - move SYSTEM config to it own chunk so every build will only modify 1 file
 
 ## Todo
-
- - move SYSTEM config to it own chunk so every build will only modify 1 file
- - update libs to latest versions
- 
