@@ -1,6 +1,7 @@
 /* eslint-disable no-console,@typescript-eslint/no-var-requires */
 
 const AWS = require('aws-sdk')
+const deepmerge = require('deepmerge')
 const fs = require('fs')
 const moment = require('moment')
 const path = require('path')
@@ -8,7 +9,22 @@ const request = require('node-fetch')
 const s3StreamFactory = require('s3-upload-stream')
 const { getConfig } = require('../utils')
 
-const deployConfig = getConfig('deploy')
+const deployEnvironment = process.argv[2]
+
+let deployConfig = getConfig('deploy')
+if (deployEnvironment) {
+  console.log('')
+  console.log(`🥷  deploying to ${deployEnvironment}`)
+
+  if(deployConfig[deployEnvironment]) {
+    deployConfig = deepmerge(deployConfig, deployConfig[deployEnvironment])
+  } else {
+    console.log('')
+    console.error(`⛑  Deploy environment ${deployEnvironment} not found in config.`)
+    process.exit(1)
+  }
+}
+
 const buildConfig = getConfig('build')
 
 const fileExistenceBaseURL = deployConfig.aws.publicBaseURL
@@ -131,7 +147,7 @@ const uploadFile = (directory, filename, extraConfig = {}) =>
 
     // Handle errors.
     upload.on('error', (error) => {
-      console.log(error)
+      console.error(error)
       reject(error)
     })
 
