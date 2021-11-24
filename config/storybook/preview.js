@@ -30,7 +30,7 @@ export const parameters = {
       date: /Date$/,
     },
   },
-  jest: results.testResults.map((t) => getTestName(t.name)),
+  jest: (results.testResults || []).map((t) => getTestName(t.name)),
 }
 
 export const decorators = [
