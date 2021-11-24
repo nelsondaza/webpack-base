@@ -21,7 +21,7 @@ const getConfig = (key = undefined) => {
 }
 
 const getFeaturesFlags = (environment) => {
-  const ffPath = `./feature_flags/${environment}.yml`
+  const ffPath = path.resolve(__dirname, `feature_flags/${environment}.yml`)
   let flags = {}
 
   if (fs.existsSync(ffPath)) {
@@ -29,6 +29,7 @@ const getFeaturesFlags = (environment) => {
     flags.feature_flags = flags.feature_flags || 'on'
   }
 
+  // for security reasons Feature flags are on in production unless explicitly turned off
   flags.feature_flags = flags.feature_flags || (environment === 'production' ? 'on' : 'off')
 
   // eslint-disable-next-line no-console

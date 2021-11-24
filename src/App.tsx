@@ -1,3 +1,4 @@
+import { Feature } from "system"
 import { SimpleButton } from 'ui'
 
 import Block from './components/ui/Block'
@@ -73,5 +74,8 @@ export default ({ name, version }: Props) => (
     <hr />
     <h2>Using Packages</h2>
     Value from System: <SimpleButton>Version: {version}</SimpleButton>
+    <hr />
+    <h2>Feature Flags</h2>
+    ff_red_theme: <b>{Feature.isEnabled('ff_red_theme') ? 'ON' : 'OFF'}</b>
   </Block>
 )

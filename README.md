@@ -50,5 +50,6 @@ This is my basic webpack configuration
  - move service worker to a separate file
  - move sentry to a separate file
  - move SYSTEM config to it own chunk so every build will only modify 1 file
+ - Use Feature Flags per environment
 
 ## Todo

@@ -1,4 +1,7 @@
+import Features from './Features'
+
 const System = SYSTEM
+const FeatureFlags = FEATURES_FLAGS
 
 const def = { ...(window.APP || {}), ...System }
 
@@ -51,5 +54,12 @@ if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
   // eslint-disable-next-line no-console
   console.info('ENV: ', process.env.NODE_ENV || 'no-environment')
 }
+
+export const Feature = new Features()
+Feature.set(FeatureFlags)
+
+def.Feature = Feature
+
+console.log(FeatureFlags)
 
 export default def

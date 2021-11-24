@@ -1,0 +1,10 @@
+{
+  "name": "utils",
+  "private": true,
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "engines": {
+    "node": "^16",
+    "yarn": "1.x"
+  }
+}

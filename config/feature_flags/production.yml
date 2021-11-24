@@ -4,3 +4,5 @@ features_flags: on
 dark_mode: # Dark Mode (aka High Contrast Mode)
   users:
     - username: email@test.co
+
+ff_red_theme: on
