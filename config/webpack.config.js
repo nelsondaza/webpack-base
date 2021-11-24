@@ -173,7 +173,7 @@ module.exports = (env, argv) => {
             name: 'clip',
             priority: 5,
             reuseExistingChunk: false,
-            test: ({ context }) => !!context && /[/\\]src[/\\]packages[/\\]app[/\\]src[/\\]App/.test(context),
+            test: ({ context }) => !!context && /[/\\]src[/\\]packages[/\\]system/.test(context),
           },
           base: {
             chunks: 'all',
