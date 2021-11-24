@@ -1,6 +1,6 @@
 const System = SYSTEM
 
-const def = { ...System }
+const def = { ...(window.APP || {}), ...System }
 
 def.device = {
   os: '',
@@ -9,6 +9,15 @@ def.device = {
   model: '',
   token: '',
   ...def.device,
+}
+
+def.api_url = `${def.env.api.host}/${def.env.api.base_url || ''}`.replace(/[/]+$/, '')
+def.static_url = `${def.env.static.host}/${def.env.static.base_url || ''}`.replace(/[/]+$/, '')
+def.url = `${def.env.host}/${def.env.base_url || ''}`.replace(/[/]+$/, '')
+
+def.history = {
+  push: Function.prototype,
+  replace: Function.prototype,
 }
 
 const callAction = (key, value) => {
@@ -30,10 +39,17 @@ Object.keys(def).forEach(
   (key) => !key.indexOf('c.') && callAction(key.replace(/^c\./, ''), def[key]),
 )
 
-def.addNotification = (...args) => def.notificationsAdd && def.notificationsAdd(...args)
+def.addNotification = (...args) => def.notificationsAdd?.(...args)
 def.notificationsAdd = null
 
 window.APP = window.APP || {}
 window.APP.call = def.call
+
+if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
+  // eslint-disable-next-line no-console
+  console.info('VERSION: ', def.version)
+  // eslint-disable-next-line no-console
+  console.info('ENV: ', process.env.NODE_ENV || 'no-environment')
+}
 
 export default def
