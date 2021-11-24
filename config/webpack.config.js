@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const deepmerge = require('deepmerge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
@@ -14,7 +15,7 @@ const { InjectManifest } = require('workbox-webpack-plugin')
 const { getConfig, getFeaturesFlags, buildManifest, SYSTEM } = require('./utils')
 
 const configBuild = getConfig('build')
-const configSentry = getConfig('sentry')
+let configSentry = getConfig('sentry')
 
 const projectRoot = path.resolve(__dirname, '../')
 const appConfig = path.join(projectRoot, 'config')
@@ -94,6 +95,14 @@ module.exports = (env, argv) => {
     = process.env.NODE_ENV === 'production' || argv.mode === 'production' || argv.nodeEnv === 'production'
   const useStats = !!argv.stats
   const showProgress = !!argv.progress
+
+  const currentEnvironment = isProduction ? 'production' : process.env.NODE_ENV
+  if (currentEnvironment) {
+    if (configSentry[currentEnvironment]) {
+      configSentry = deepmerge(configSentry, configSentry[currentEnvironment])
+    }
+  }
+
   const publicEnv = {
     NODE_ENV: isProduction ? 'production' : 'development',
     SENTRY_ENABLED: configSentry.enabled,
