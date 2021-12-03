@@ -8,8 +8,8 @@ import System from 'system'
 
 import App from './App'
 import history from '../config/history'
-import sentryRegistration from "./sentryRegistration"
-import serviceWorkerRegistration from "./serviceWorkerRegistration"
+import sentryRegistration from './sentryRegistration'
+import serviceWorkerRegistration from './serviceWorkerRegistration'
 import store from '../config/store'
 
 import '../config/assets/tailwind/tailwind.css'

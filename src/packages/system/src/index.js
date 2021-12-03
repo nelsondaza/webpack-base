@@ -60,6 +60,4 @@ Feature.set(FeatureFlags)
 
 def.Feature = Feature
 
-console.log(FeatureFlags)
-
 export default def
