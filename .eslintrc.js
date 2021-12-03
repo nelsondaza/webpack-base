@@ -51,6 +51,7 @@ module.exports = {
     ],
     'import/no-cycle': 'off',
     'import/no-extraneous-dependencies': 'off',
+    'import/no-import-module-exports': 'off',
     'import/prefer-default-export': 'off',
     'jsx-a11y/control-has-associated-label': 'off',
     'max-classes-per-file': ['error', 2],

@@ -1,4 +1,4 @@
-// we'll use 'history' that is been used by 'react-router-dom'
+// we'll use 'history' that is being used by 'react-router-dom'
 import { createEpicMiddleware } from 'redux-observable'
 import { createStore, applyMiddleware } from 'redux'
 import { routerMiddleware } from 'connected-react-router'
