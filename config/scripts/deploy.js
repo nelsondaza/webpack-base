@@ -16,7 +16,7 @@ if (deployEnvironment) {
   console.log('')
   console.log(`🥷  deploying to ${deployEnvironment}`)
 
-  if(deployConfig[deployEnvironment]) {
+  if (deployConfig[deployEnvironment]) {
     deployConfig = deepmerge(deployConfig, deployConfig[deployEnvironment])
   } else {
     console.log('')
@@ -134,7 +134,9 @@ const getTasksFromFilteredFiles = (files) => {
 const uploadFile = (directory, filename, extraConfig = {}) =>
   new Promise((resolve, reject) => {
     const config = {
-      Key: `${deployConfig.aws.s3.path}${filename.replace(/\\/g, '/').substring(directory.length + 1)}`,
+      Key: `${deployConfig.aws.s3.path}${filename.replace(/\\/g, '/').substring(directory.length + 1)}`
+        .replace(/[/]{2,}/g, '/')
+        .replace(/^\//, ''),
       ...extraConfig,
     }
 
@@ -206,13 +208,7 @@ const getTasksFromFiles = (files) => {
     } else if (/\.(html)$/.test(file)) {
       tasks.push(uploadFile(workingDirectory, file, { ...s3bucketConfig, ...htmlMetaTags }))
     } else if (/\.(map)$/.test(file)) {
-      /*
-         tasks.push(uploadFile(
-         workingDirectory,
-         file,
-         { ...s3bucketConfig, ...jsMetaTags },
-         ))
-         */
+      tasks.push(uploadFile(workingDirectory, file, { ...s3bucketConfig, ...jsMetaTags }))
     } else {
       tasks.push(uploadFile(workingDirectory, file, { ...s3bucketConfig, ...globalMetaTags }))
     }

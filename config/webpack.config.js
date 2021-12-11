@@ -96,12 +96,21 @@ module.exports = (env, argv) => {
   const useStats = !!argv.stats
   const showProgress = !!argv.progress
 
-  const currentEnvironment = isProduction ? 'production' : process.env.NODE_ENV
-  if (currentEnvironment) {
-    if (configSentry[currentEnvironment]) {
-      configSentry = deepmerge(configSentry, configSentry[currentEnvironment])
+  const sentryEnvironment = Object.keys(env).some((key) => key.startsWith('SENTRY'))
+    && (
+      Object.keys(env)
+        .filter((key) => !!key.startsWith('SENTRY-'))?.[0]
+        ?.replace(/^SENTRY-/, '')
+        || 'production'
+    )
+
+  if (sentryEnvironment) {
+    if (configSentry[sentryEnvironment]) {
+      configSentry = deepmerge(configSentry, configSentry[sentryEnvironment])
     }
   }
+
+  configSentry.enabled = !!configSentry.enabled && !!sentryEnvironment
 
   const publicEnv = {
     NODE_ENV: isProduction ? 'production' : 'development',
@@ -300,7 +309,15 @@ module.exports = (env, argv) => {
       !isProduction && new ReactRefreshWebpackPlugin(),
       isProduction
         && new InjectManifest({
-          exclude: [/\.map$/, /\.txt$/, /asset-manifest\.json$/, /indexTemplate\.html$/],
+          exclude: [
+            /\.DS_Store$/,
+            /\.gitignore$/,
+            /\.map$/,
+            /\.txt$/,
+            /asset-manifest\.json$/,
+            /indexTemplate\.html$/,
+            /Thumbs\.db$/,
+          ],
           swDest: 'sw.js',
           swSrc: './config/sw.js',
         }),
@@ -314,7 +331,6 @@ module.exports = (env, argv) => {
         }),
       isProduction
         && configSentry.enabled
-        && env.SENTRY
         && new SentryCliPlugin({
           include: common.outputPath,
           ignore: ['sw.js'],
