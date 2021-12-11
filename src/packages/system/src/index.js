@@ -14,9 +14,9 @@ def.device = {
   ...def.device,
 }
 
-def.api_url = `${def.env.api.host}/${def.env.api.base_url || ''}`.replace(/[/]+$/, '')
-def.static_url = `${def.env.static.host}/${def.env.static.base_url || ''}`.replace(/[/]+$/, '')
-def.url = `${def.env.host}/${def.env.base_url || ''}`.replace(/[/]+$/, '')
+def.api_url = `${def.env.api.host}${def.env.api.base_url || ''}`.replace(/[/]+$/, '')
+def.static_url = `${def.env.static.host}${def.env.static.base_url || ''}`.replace(/[/]+$/, '')
+def.url = `${def.env.host}${def.env.base_url || ''}`.replace(/[/]+$/, '')
 
 def.history = {
   push: Function.prototype,
