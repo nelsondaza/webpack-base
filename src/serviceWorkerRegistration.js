@@ -12,16 +12,16 @@ export default () => {
       const wb = new Workbox('/sw.js')
 
       // https://developers.google.com/web/tools/workbox/modules/workbox-window
-      wb.addEventListener('installed', async (event) => {
+      wb.addEventListener('installed', async (/* event */) => {
         // Resources are into the Cache Storage
       })
 
-      wb.addEventListener('waiting', (event) => {
+      wb.addEventListener('waiting', (/* event */) => {
         // A new service worker has installed, but it can't activate
         // until all tabs running the current version have fully unloaded.
       })
 
-      wb.addEventListener('controlling', async (event) => {
+      wb.addEventListener('controlling', async (/* event */) => {
         // Page is been controlled by a service worker
 
         // event.isUpdate === true => New version controlled after page refresh
@@ -43,11 +43,16 @@ export default () => {
         }
       })
 
-      await wb.register()
+      try {
+        await wb.register()
 
-      swUpdateInterval = setInterval(async () => {
-        await wb.update()
-      }, SERVICE_WORKER_CHECK_INTERVAL) // check every minute for new version
+        swUpdateInterval = setInterval(async () => {
+          await wb.update()
+        }, SERVICE_WORKER_CHECK_INTERVAL) // check every minute for new version
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error("Service Worker Failed to Register", e)
+      }
 
       if (
         !!window?.Notification?.permission
