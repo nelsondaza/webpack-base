@@ -51,7 +51,7 @@ export default () => {
         }, SERVICE_WORKER_CHECK_INTERVAL) // check every minute for new version
       } catch (e) {
         // eslint-disable-next-line no-console
-        console.error("Service Worker Failed to Register", e)
+        console.error('Service Worker Failed to Register', e)
       }
 
       if (

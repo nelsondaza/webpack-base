@@ -15,6 +15,8 @@ import store from '../config/store'
 import '../config/assets/tailwind/tailwind.css'
 import '../config/assets/semantic-ui/semantic.css'
 
+System.history = history
+
 const renderApp = () => {
   render(
     <Provider store={store}>
