@@ -86,7 +86,9 @@ const readDirectory = (directory) => {
 
 const filteredFiles = []
 const fileExists = (file) =>
-  request(`${fileExistenceBaseURL}${file.replace(publicDirectory, '')}`, { method: 'GET' })
+  request(`${fileExistenceBaseURL.replace(/\/$/, '')}/${file.replace(publicDirectory, '').replace(/^\//, '')}`, {
+    method: 'GET',
+  })
     .then((response) => {
       if (
         !deployConfig.files.smartUpload
