@@ -2,8 +2,9 @@
   "compilerOptions": {
     "allowJs": true,
     "checkJs": false,
-    "target": "es5",
     "lib": ["es5", "dom"],
+    "noEmit": true,
+    "target": "es5",
     "types": ["cypress"]
   },
   "include": ["./**/*"]

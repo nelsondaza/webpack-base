@@ -8,6 +8,7 @@
     "jsx": "react-jsx",
     "module": "esnext",
     "moduleResolution": "node",
+    "noEmit": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
@@ -19,5 +20,5 @@
     "target": "es5"
   },
   "exclude": ["./node_modules/**/*", "**/.*/"],
-  "include": ["./src/**/*", "./cypress/**/*"]
+  "include": ["./src/**/*"]
 }
