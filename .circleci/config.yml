@@ -33,6 +33,9 @@ commands:
       - checkout
       - load_dependencies
       - run:
+          name: Set .evn.yml file
+          command: echo "$ENV_FILE" | base64 --decode > ./config/.env.yml
+      - run:
           command: yarn install
           no_output_timeout: 120s
       - save_dependencies
@@ -44,7 +47,7 @@ commands:
           no_output_timeout: 120s
       - run:
           command: yarn test:ci
-          no_output_timeout: 120s
+          no_output_timeout: 180s
 
   run_build:
     steps:
@@ -59,16 +62,90 @@ jobs:
       - setup
       - run_tests
       # https://circleci.com/developer/orbs/orb/circleci/slack
-      - slack/approval:
-          color: '#2ea44f'
-          include_job_number_field: false
-          include_project_field: false
-          message: ':woot: hey $CIRCLE_USERNAME, your changes are ready for review \nhttps://bitbucket.org/medsystem_front/medsystemweb1x/commits/$CIRCLE_SHA1'
-      - slack/status:
-          fail_only: true
-          include_job_number_field: false
-          include_project_field: false
-          failure_message: ':doh: $CIRCLE_USERNAME :pandaomg: *$CIRCLE_JOB* failed \nhttps://bitbucket.org/medsystem_front/medsystemweb1x/commits/$CIRCLE_SHA1'
+      - slack/notify:
+          event: 'fail'
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":doh: $CIRCLE_USERNAME :pandaomg: failed job :rotating_light:"
+                  }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": ":code: BitBucket",
+                        "emoji": true
+                      },
+                      "value": "bitbucket",
+                      "url": "https://bitbucket.org/medsystem_front/medsystemweb1x/commits/$CIRCLE_SHA1"
+                    },
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": ":computer: CircleCI",
+                        "emoji": true
+                      },
+                      "value": "circleci",
+                      "url": "$CIRCLE_BUILD_URL"
+                    }
+                  ]
+                },
+                {
+                    "type": "divider"
+                }
+              ]
+            }
+      - slack/notify:
+          event: 'pass'
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":woot: hey $CIRCLE_USERNAME, your changes are ready for review."
+                  }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": ":code: BitBucket",
+                        "emoji": true
+                      },
+                      "value": "bitbucket",
+                      "url": "https://bitbucket.org/medsystem_front/medsystemweb1x/commits/$CIRCLE_SHA1"
+                    },
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": ":computer: CircleCI",
+                        "emoji": true
+                      },
+                      "value": "circleci",
+                      "url": "$CIRCLE_BUILD_URL"
+                    }
+                  ]
+                },
+                {
+                    "type": "divider"
+                }
+              ]
+            }
 
   'Production build':
     executor: node_16
@@ -76,21 +153,96 @@ jobs:
       - setup
       - run_tests
       - run_build
-      - slack/approval:
-          color: '#6f42c1'
-          include_job_number_field: false
-          include_project_field: false
-          message: ':woot: changes from $CIRCLE_USERNAME were merged! :allthethings: \nhttps://bitbucket.org/medsystem_front/medsystemweb1x/commits/$CIRCLE_SHA1'
-      - slack/status:
-          fail_only: true
-          include_job_number_field: false
-          include_project_field: false
-          failure_message: ':rotating_light: somebody call $CIRCLE_USERNAME :omg-onoz: :omgomgomg: *$CIRCLE_JOB* failed \nhttps://bitbucket.org/medsystem_front/medsystemweb1x/commits/$CIRCLE_SHA1'
+      - slack/notify:
+          event: 'fail'
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":rotating_light: somebody call $CIRCLE_USERNAME :omg-onoz: :omgomgomg: *$CIRCLE_JOB* failed :rotating_light:"
+                  }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": ":code: BitBucket",
+                        "emoji": true
+                      },
+                      "value": "bitbucket",
+                      "url": "https://bitbucket.org/medsystem_front/medsystemweb1x/commits/$CIRCLE_SHA1"
+                    },
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": ":computer: CircleCI",
+                        "emoji": true
+                      },
+                      "value": "circleci",
+                      "url": "$CIRCLE_BUILD_URL"
+                    }
+                  ]
+                },
+                {
+                    "type": "divider"
+                }
+              ]
+            }
+      - slack/notify:
+          event: 'pass'
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":woot: changes from $CIRCLE_USERNAME were merged! :allthethings:"
+                  }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": ":code: BitBucket",
+                        "emoji": true
+                      },
+                      "value": "bitbucket",
+                      "url": "https://bitbucket.org/medsystem_front/medsystemweb1x/commits/$CIRCLE_SHA1"
+                    },
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": ":computer: CircleCI",
+                        "emoji": true
+                      },
+                      "value": "circleci",
+                      "url": "$CIRCLE_BUILD_URL"
+                    }
+                  ]
+                },
+                {
+                    "type": "divider"
+                }
+              ]
+            }
 
 workflows:
   pr-tests:
     jobs:
       - 'Tests and Coverage':
+          context: custom-context
           filters:
             branches:
               ignore: master
@@ -98,6 +250,7 @@ workflows:
   merge-build:
     jobs:
       - 'Production build':
+          context: custom-context
           filters:
             branches:
               only: master
