@@ -3,7 +3,6 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const deepmerge = require('deepmerge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
@@ -293,7 +292,6 @@ module.exports = (env, argv) => {
         template: path.join(common.staticPath, 'indexTemplate.html'),
       }),
       new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en/),
-      new LodashModuleReplacementPlugin({ shorthands: true }),
       useStats
         && new BundleAnalyzerPlugin({
           analyzerMode: 'static',
