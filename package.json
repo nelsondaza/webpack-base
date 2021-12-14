@@ -35,6 +35,7 @@
     "deploy": "node config/scripts/deploy.js",
     "heroku-postbuild": "sh ./config/scripts/heroku-build.sh",
     "lint": "eslint ./src ./cypress --cache --ext .js,.jsx,.ts,.tsx",
+    "lint:tsc": "tsc --noEmit && tsc -p ./cypress/tsconfig.json --noEmit",
     "pre": "yarn lefthook run pre-commit && yarn lefthook run pre-push",
     "pretty": "prettier --write ./src ./cypress && yarn lint --fix",
     "publicate:production": "yarn build --env SENTRY-production && yarn deploy production",
@@ -51,7 +52,6 @@
     "test:base:ci": "mkdir -p ./dist/coverage && node --expose-gc ./node_modules/.bin/jest --config=./config/jest/index.js -u --logHeapUsage --maxWorkers=2",
     "test:ci": "yarn test:base:ci --coverageReporters=text-summary --forceExit --ci -b",
     "test:w": "yarn test --watchAll",
-    "tsc": "tsc && tsc -p ./cypress/tsconfig.json",
     "up": "yarn lint && yarn compile && yarn build:stories && yarn test && yarn serve"
   },
   "dependencies": {
