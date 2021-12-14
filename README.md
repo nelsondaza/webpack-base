@@ -52,5 +52,8 @@ This is my basic webpack configuration
  - move SYSTEM config to it own chunk so every build will only modify 1 file
  - Use Feature Flags per environment
  - Allow different publication environments
+ - Adds default Heroku deployment
+ - Adds Heroku deployment with storybook at HEROKU_HOST/stories
+ - Adds TS coverage report script
 
 ## Todo
