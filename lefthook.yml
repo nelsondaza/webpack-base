@@ -11,7 +11,7 @@ pre-commit:
       run: yarn lint:tsc
 
 pre-push:
-  parallel: false
+  parallel: yes
   commands:
     1-lint-tsc:
       run: yarn lint:tsc
