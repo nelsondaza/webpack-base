@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "checkJs": false,
-    "lib": ["es5", "dom"],
-    "noEmit": true,
-    "target": "es5",
-    "types": ["cypress"]
+    "baseUrl": "cypress",
+    // "lib": ["es5", "dom"],
+    "outDir": "./dist/cypress/tsc",
+    "paths": {
+      "*": ["cypress/*"]
+    },
+    "types": ["cypress", "node"]
   },
-  "include": ["./**/*"]
+  "extends": "../tsconfig.json",
+  "include": ["**/*"]
 }
