@@ -1,6 +1,5 @@
 *.log
 /node_modules
-/.husky/prepare-commit-msg
 
 # OS generated files
 ._*
