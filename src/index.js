@@ -36,6 +36,20 @@ if (module.hot) {
 // If you are not using sentry remove this complete if to reduce the bundle size
 sentryRegistration()
 
-serviceWorkerRegistration()
+serviceWorkerRegistration({
+  onNewVersionFound: ({ isIntervalFoundUpdate, isPageLoadUpdate, reloadClients }) => {
+    if (isPageLoadUpdate) {
+      reloadClients()
+    } else if (isIntervalFoundUpdate) {
+      // eslint-disable-next-line no-restricted-globals,no-alert
+      if (confirm('Hay una nueva versión disponible, ¿deseas actualizar?')) {
+        reloadClients()
+      }
+    }
+  },
+  // onRegistered: ({ reloadClients, workbox }) => {
+  //   console.log('Service worker registered', workbox, reloadClients)
+  // },
+})
 
 renderApp()

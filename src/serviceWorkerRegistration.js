@@ -1,15 +1,32 @@
 import { Workbox } from 'workbox-window'
 
 const SERVICE_WORKER_CHECK_INTERVAL = 1000 * 60 * 60 * 3 // every 3 hours
+const UPDATE_RETRY_INTERVAL = 1000 * 60 * 30 // every 30 min
 
-export default () => {
+export default ({ onNewVersionFound, onRegistered }) => {
   // @todo move service worker to a separate file
   if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     let swUpdateInterval
+    let retryUpdateInterval
     let newVersionFound = false
+    let pendingUpdate = false
 
     window.addEventListener('load', async () => {
       const wb = new Workbox('/sw.js')
+
+      const reloadClients = async () => {
+        setTimeout(() => {
+          setTimeout(() => {
+            document.location.reload()
+          }, 3000)
+          if (navigator.serviceWorker.controller) {
+            navigator.serviceWorker.controller.postMessage({
+              type: 'RELOAD_CLIENTS',
+            })
+          }
+        }, 1000)
+        await wb.messageSW({ type: 'RELOAD_CLIENTS' })
+      }
 
       // https://developers.google.com/web/tools/workbox/modules/workbox-window
       wb.addEventListener('installed', async (/* event */) => {
@@ -22,7 +39,7 @@ export default () => {
       })
 
       wb.addEventListener('controlling', async (/* event */) => {
-        // Page is been controlled by a service worker
+        // Page is being controlled by a service worker
 
         // event.isUpdate === true => New version controlled after page refresh
         // event.isUpdate === false => New version controlled after manual SW update
@@ -31,20 +48,43 @@ export default () => {
 
       wb.addEventListener('activated', async (event) => {
         // Service worker is managing the page
+        pendingUpdate = true
+        clearInterval(retryUpdateInterval)
 
-        // @todo add custom message or notification on new version
-        // newVersionFound && !event.isUpdate
+        if (onNewVersionFound) {
+          onNewVersionFound({
+            event,
+            isIntervalFoundUpdate: newVersionFound && !event.isUpdate,
+            isPageLoadUpdate: newVersionFound && !!event.isUpdate,
+            reloadClients,
+            workbox: wb,
+          })
 
-        if (newVersionFound || event.isUpdate) {
-          // force all client to reload for new version
-          await wb.messageSW({ type: 'RELOAD_CLIENTS' })
-        } else {
-          // Cached assets should all be available now.
+          retryUpdateInterval = setInterval(
+            () =>
+              onNewVersionFound({
+                event,
+                isIntervalFoundUpdate: newVersionFound && !event.isUpdate,
+                isPageLoadUpdate: newVersionFound && !!event.isUpdate,
+                reloadClients,
+                workbox: wb,
+              }),
+            UPDATE_RETRY_INTERVAL,
+          )
+        } else if (newVersionFound || event.isUpdate) {
+          await reloadClients()
+          retryUpdateInterval = setInterval(() => reloadClients(), UPDATE_RETRY_INTERVAL)
         }
       })
 
       try {
         await wb.register()
+        if (onRegistered) {
+          onRegistered({
+            reloadClients,
+            workbox: wb,
+          })
+        }
 
         swUpdateInterval = setInterval(async () => {
           await wb.update()
@@ -63,6 +103,9 @@ export default () => {
       }
     })
 
-    window.addEventListener('unload', () => clearInterval(swUpdateInterval))
+    window.addEventListener('unload', () => {
+      clearInterval(retryUpdateInterval)
+      clearInterval(swUpdateInterval)
+    })
   }
 }
