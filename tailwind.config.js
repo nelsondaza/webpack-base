@@ -1,8 +1,10 @@
 module.exports = {
-  darkMode: false, // or 'media' or 'class'
-  mode: 'jit',
+  // darkMode: false, // or 'media' or 'class'
+  content: ['./src/**/*.{js,jsx,ts,tsx}', './config/**/*.{js,jsx,ts,tsx}'],
+  corePlugins: {
+    // preflight: false,
+  },
   plugins: [],
-  purge: ['./src/**/*.{js,jsx,ts,tsx}', './config/**/*.{js,jsx,ts,tsx}'],
   theme: { extend: {} },
-  variants: {},
+  variants: { extend: {} },
 }
