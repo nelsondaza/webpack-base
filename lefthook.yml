@@ -18,4 +18,4 @@ pre-push:
     2-test:
       files: git diff --name-only origin/main
       glob: '*.{js,ts,jsx,tsx,json,css,scss,sass,yaml}'
-      run: yarn test --findRelatedTests --bail --coverage=false {files}
+      run: yarn test:ci --findRelatedTests --bail --coverage=false {files}
