@@ -57,3 +57,11 @@ This is my basic webpack configuration
  - Adds TS coverage report script
 
 ## Todo
+
+ ~ nothing pending in the list
+
+## Run it
+
+ - Copy config/.env.example.yml to config/.env.yml 
+ - Edit config/.env.yml as you wish
+ - Run `yarn serve`

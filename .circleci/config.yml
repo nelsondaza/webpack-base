@@ -50,7 +50,7 @@ commands:
           no_output_timeout: 120s
       - run:
           name: Test changed files only
-          command: yarn test:ci --coverage=false $(git diff --name-only --diff-filter=ACMR origin/main.. | grep -i -E '\.([jt]sx?)$' | grep -v -i '.stories.')
+          command: yarn test:ci --passWithNoTests --coverage=false $((git diff --name-only --diff-filter=ACMR origin/main.. | grep -i -E '\.([jt]sx?)$' | grep -v -i '.stories.') || echo 'no-files')
           no_output_timeout: 180s
 
   run_publicate_staging:
@@ -88,42 +88,11 @@ jobs:
                   }
                 },
                 {
-                  "type": "actions",
-                  "elements": [
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": ":code: BitBucket",
-                        "emoji": true
-                      },
-                      "value": "bitbucket",
-                      "url": "https://bitbucket.org/TEAM/PROJECT/commits/$CIRCLE_SHA1"
-                    },
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": ":code: Githhub",
-                        "emoji": true
-                      },
-                      "value": "github",
-                      "url": "https://github.com/USER/PROJECT/pull/$CIRCLE_SHA1"
-                    },
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": ":computer: CircleCI",
-                        "emoji": true
-                      },
-                      "value": "circleci",
-                      "url": "$CIRCLE_BUILD_URL"
-                    }
-                  ]
-                },
-                {
-                    "type": "divider"
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "`<$CIRCLE_BUILD_URL|:circleci-fail: CircleCI>`  |  `<https://bitbucket.org/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/commits/$CIRCLE_SHA1|:bitbucket: BitBucket>`  |  `<https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/commit/$CIRCLE_SHA1|:github: GithHub>`"
+                  }
                 }
               ]
             }
@@ -140,42 +109,11 @@ jobs:
                   }
                 },
                 {
-                  "type": "actions",
-                  "elements": [
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": ":code: BitBucket",
-                        "emoji": true
-                      },
-                      "value": "bitbucket",
-                      "url": "https://bitbucket.org/TEAM/PROJECT/commits/$CIRCLE_SHA1"
-                    },
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": ":code: Github",
-                        "emoji": true
-                      },
-                      "value": "github",
-                      "url": "https://github.com/USER/PROJECT/pull/$CIRCLE_SHA1"
-                    },
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": ":computer: CircleCI",
-                        "emoji": true
-                      },
-                      "value": "circleci",
-                      "url": "$CIRCLE_BUILD_URL"
-                    }
-                  ]
-                },
-                {
-                    "type": "divider"
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "`<$CIRCLE_BUILD_URL|:circleci-pass: CircleCI>`  |  `<https://bitbucket.org/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/commits/$CIRCLE_SHA1|:bitbucket: BitBucket>`  |  `<https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/commit/$CIRCLE_SHA1|:github: GithHub>`"
+                  }
                 }
               ]
             }
@@ -195,46 +133,15 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":rotating_light: somebody call $CIRCLE_USERNAME :omg-onoz: :omgomgomg: *$CIRCLE_JOB* failed :rotating_light:"
+                    "text": ":rotating_light: somebody call $CIRCLE_USERNAME @$CIRCLE_USERNAME :omg-onoz: :omgomgomg: *$CIRCLE_JOB* failed :rotating_light:"
                   }
                 },
                 {
-                  "type": "actions",
-                  "elements": [
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": ":code: BitBucket",
-                        "emoji": true
-                      },
-                      "value": "bitbucket",
-                      "url": "https://bitbucket.org/TEAM/PROJECT/commits/$CIRCLE_SHA1"
-                    },
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": ":code: Githhub",
-                        "emoji": true
-                      },
-                      "value": "github",
-                      "url": "https://github.com/USER/PROJECT/pull/$CIRCLE_SHA1"
-                    },
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": ":computer: CircleCI",
-                        "emoji": true
-                      },
-                      "value": "circleci",
-                      "url": "$CIRCLE_BUILD_URL"
-                    }
-                  ]
-                },
-                {
-                    "type": "divider"
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "`<$CIRCLE_BUILD_URL|:circleci-fail: CircleCI>`  |  `<https://bitbucket.org/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/commits/$CIRCLE_SHA1|:bitbucket: BitBucket>`  |  `<https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/commit/$CIRCLE_SHA1|:github: GithHub>`"
+                  }
                 }
               ]
             }
@@ -251,32 +158,11 @@ jobs:
                   }
                 },
                 {
-                  "type": "actions",
-                  "elements": [
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": ":code: BitBucket",
-                        "emoji": true
-                      },
-                      "value": "bitbucket",
-                      "url": "https://bitbucket.org/TEAM/PROJECT/commits/$CIRCLE_SHA1"
-                    },
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": ":computer: CircleCI",
-                        "emoji": true
-                      },
-                      "value": "circleci",
-                      "url": "$CIRCLE_BUILD_URL"
-                    }
-                  ]
-                },
-                {
-                    "type": "divider"
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "`<$CIRCLE_BUILD_URL|:circleci-pass: CircleCI>`  |  `<https://bitbucket.org/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/commits/$CIRCLE_SHA1|:bitbucket: BitBucket>`  |  `<https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/commit/$CIRCLE_SHA1|:github: GithHub>`"
+                  }
                 }
               ]
             }
