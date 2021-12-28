@@ -59,5 +59,11 @@ export const Feature = new Features()
 Feature.set(FeatureFlags)
 
 def.Feature = Feature
+def.workbox = {
+  reloadClients: () =>
+    setTimeout(() => {
+      document.location.href = '/'
+    }, 0),
+}
 
 export default def

@@ -47,9 +47,10 @@ serviceWorkerRegistration({
       }
     }
   },
-  // onRegistered: ({ reloadClients, workbox }) => {
-  //   console.log('Service worker registered', workbox, reloadClients)
-  // },
+  onRegistered: ({ reloadClients, workbox }) => {
+    System.workbox = workbox || {}
+    System.workbox.reloadClients = reloadClients
+  },
 })
 
 renderApp()

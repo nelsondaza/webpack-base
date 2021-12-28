@@ -14,18 +14,25 @@ export default ({ onNewVersionFound, onRegistered }) => {
     window.addEventListener('load', async () => {
       const wb = new Workbox('/sw.js')
 
-      const reloadClients = async () => {
+      const reloadClients = async (includeCurrent = true) => {
+        const type = includeCurrent ? 'RELOAD_CLIENTS' : 'RELOAD_OTHER_CLIENTS'
+        let reloadDone = false
+
+        // first fallback to reload all clients
         setTimeout(() => {
-          setTimeout(() => {
-            document.location.reload()
-          }, 3000)
-          if (navigator.serviceWorker.controller) {
-            navigator.serviceWorker.controller.postMessage({
-              type: 'RELOAD_CLIENTS',
-            })
+          if (!reloadDone) {
+            if (type === 'RELOAD_CLIENTS') {
+              // last fallback to reload current client
+              setTimeout(() => {
+                if (!reloadDone) {
+                  document.location.reload()
+                }
+              }, 1500)
+            }
+            navigator.serviceWorker?.controller?.postMessage({ type })
           }
-        }, 1000)
-        await wb.messageSW({ type: 'RELOAD_CLIENTS' })
+        }, 1500)
+        reloadDone = await wb.messageSW({ type })
       }
 
       // https://developers.google.com/web/tools/workbox/modules/workbox-window

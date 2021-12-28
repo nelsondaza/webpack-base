@@ -39,11 +39,11 @@ addEventListener('install', (event) => {
   event.waitUntil(skipWaiting())
 })
 
-addEventListener('activate', (event) => {
+addEventListener('activate', (/* event */) => {
   // Managing versions
 })
 
-addEventListener('fetch', (event) => {
+addEventListener('fetch', (/* event */) => {
   // Extracting from the cache and serving the resources
 })
 
@@ -51,28 +51,33 @@ addEventListener('message', (event) => {
   // Messages from clients
 
   if (event.data?.type === 'GET_VERSION') {
-    event.ports[0].postMessage(currentAppVersion)
+    event.ports[0]?.postMessage(currentAppVersion)
+  } else if (event.data?.type === 'GET_CLIENTS') {
+    event.ports[0]?.postMessage(clients)
   } else if (event.data?.type === 'SKIP_WAITING') {
     event.waitUntil(skipWaiting())
-  } else if (event.data?.type === 'RELOAD_CLIENTS') {
+  } else if (event.data?.type === 'RELOAD_CLIENTS' || event.data?.type === 'RELOAD_OTHER_CLIENTS') {
     clients
       .matchAll({
         includeUncontrolled: true,
         type: 'window',
       })
       .then((clientList) => {
-        clientList.forEach((client) => {
-          try {
-            client.navigate(client.url)
-            // eslint-disable-next-line no-empty
-          } catch (e) {}
-        })
-        return null
+        clientList
+          .filter((client) => event.data.type === 'RELOAD_CLIENTS' || client.id !== event.source?.id)
+          .forEach((client) => {
+            try {
+              client.navigate(client.url)
+              // eslint-disable-next-line no-empty
+            } catch (e) {}
+          })
+        event.ports[0]?.postMessage(true)
+        return true
       })
   }
 })
 
-addEventListener('sync', (event) => {
+addEventListener('sync', (/* event */) => {
   // Background sync
 })
 
@@ -160,6 +165,6 @@ addEventListener('notificationclick', (event) => {
   )
 })
 
-addEventListener('notificationclose', (event) => {
+addEventListener('notificationclose', (/* event */) => {
   // Closing notification action
 })
