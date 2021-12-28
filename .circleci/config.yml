@@ -98,7 +98,17 @@ jobs:
                         "emoji": true
                       },
                       "value": "bitbucket",
-                      "url": "https://bitbucket.org/medsystem_front/medsystemweb1x/commits/$CIRCLE_SHA1"
+                      "url": "https://bitbucket.org/TEAM/PROJECT/commits/$CIRCLE_SHA1"
+                    },
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": ":code: Githhub",
+                        "emoji": true
+                      },
+                      "value": "github",
+                      "url": "https://github.com/USER/PROJECT/pull/$CIRCLE_SHA1"
                     },
                     {
                       "type": "button",
@@ -140,7 +150,17 @@ jobs:
                         "emoji": true
                       },
                       "value": "bitbucket",
-                      "url": "https://bitbucket.org/medsystem_front/medsystemweb1x/commits/$CIRCLE_SHA1"
+                      "url": "https://bitbucket.org/TEAM/PROJECT/commits/$CIRCLE_SHA1"
+                    },
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": ":code: Github",
+                        "emoji": true
+                      },
+                      "value": "github",
+                      "url": "https://github.com/USER/PROJECT/pull/$CIRCLE_SHA1"
                     },
                     {
                       "type": "button",
@@ -189,7 +209,17 @@ jobs:
                         "emoji": true
                       },
                       "value": "bitbucket",
-                      "url": "https://bitbucket.org/medsystem_front/medsystemweb1x/commits/$CIRCLE_SHA1"
+                      "url": "https://bitbucket.org/TEAM/PROJECT/commits/$CIRCLE_SHA1"
+                    },
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": ":code: Githhub",
+                        "emoji": true
+                      },
+                      "value": "github",
+                      "url": "https://github.com/USER/PROJECT/pull/$CIRCLE_SHA1"
                     },
                     {
                       "type": "button",
@@ -231,7 +261,7 @@ jobs:
                         "emoji": true
                       },
                       "value": "bitbucket",
-                      "url": "https://bitbucket.org/medsystem_front/medsystemweb1x/commits/$CIRCLE_SHA1"
+                      "url": "https://bitbucket.org/TEAM/PROJECT/commits/$CIRCLE_SHA1"
                     },
                     {
                       "type": "button",
