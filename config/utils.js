@@ -15,7 +15,7 @@ if (fs.existsSync(filePath)) {
 
 const getConfig = (key = undefined) => {
   if (key) {
-    return config[key] || undefined
+    return config[key] || { empty: true }
   }
   return config
 }
@@ -52,9 +52,9 @@ const createVersion = () => {
 }
 
 const SYSTEM = {
-  env: getConfig('system') || {},
+  env: getConfig('system'),
   sentry: {
-    dns: getConfig('sentry')?.SENTRY_DSN,
+    dns: getConfig('sentry').SENTRY_DSN,
   },
   version: createVersion(),
 }

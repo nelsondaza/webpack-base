@@ -33,7 +33,7 @@ commands:
       - checkout
       - load_dependencies
       - run:
-          name: Set .evn.yml file
+          name: Set .evn.yml file from CI "ENV_FILE" (base64 env variable)
           command: echo "$ENV_FILE" | base64 --decode > ./config/.env.yml
       - run:
           command: yarn install

@@ -6,7 +6,7 @@ const glob = require('glob')
 
 const { getConfig, getFeaturesFlags, SYSTEM } = require('../utils')
 
-const config = getConfig('jest') || {}
+const config = getConfig('jest')
 
 if (config.collectCoverageFrom === undefined) {
   const testFiles = glob.sync('{src,cypress}/**/*.{test,tests,spec,specs}.{js,jsx,ts,tsx}', {})
