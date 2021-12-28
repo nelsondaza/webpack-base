@@ -54,7 +54,7 @@ const createVersion = () => {
 const SYSTEM = {
   env: getConfig('system') || {},
   sentry: {
-    dns: getConfig('sentry').SENTRY_DSN,
+    dns: getConfig('sentry')?.SENTRY_DSN,
   },
   version: createVersion(),
 }
