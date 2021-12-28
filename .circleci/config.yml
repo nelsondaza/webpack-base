@@ -46,8 +46,21 @@ commands:
           command: yarn lint
           no_output_timeout: 120s
       - run:
-          command: yarn test:ci
+          command: yarn lint:tsc
+          no_output_timeout: 120s
+      - run:
+          name: Test changed files only
+          command: yarn test:ci --coverage=false $(git diff --name-only --diff-filter=ACMR origin/main.. | grep -i -E '\.([jt]sx?)$' | grep -v -i '.stories.')
           no_output_timeout: 180s
+
+  run_publicate_staging:
+    steps:
+      - run:
+          command: yarn build:progress --env SENTRY-staging
+          no_output_timeout: 120s
+      - run:
+          command: yarn deploy staging
+          no_output_timeout: 120s
 
   run_build:
     steps:
@@ -245,7 +258,8 @@ workflows:
           context: custom-context
           filters:
             branches:
-              ignore: master
+              ignore:
+                - main
 
   merge-build:
     jobs:
@@ -253,4 +267,5 @@ workflows:
           context: custom-context
           filters:
             branches:
-              only: master
+              only:
+                - main
