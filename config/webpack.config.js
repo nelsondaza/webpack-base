@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const deepmerge = require('deepmerge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
@@ -11,10 +9,9 @@ const webpack = require('webpack')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { InjectManifest } = require('workbox-webpack-plugin')
 
-const { getConfig, getFeaturesFlags, buildManifest, SYSTEM } = require('./utils')
+const { buildManifest, getConfig, getFeaturesFlags, getSystemVars, setConfigEnvironment } = require('./utils')
 
 const configBuild = getConfig('build')
-let configSentry = getConfig('sentry')
 
 const projectRoot = path.resolve(__dirname, '../')
 const appConfig = path.join(projectRoot, 'config')
@@ -22,7 +19,6 @@ const appDist = path.join(projectRoot, 'dist')
 const appEntry = path.join(projectRoot, 'src')
 const appNodeModules = path.join(projectRoot, 'node_modules')
 const packages = path.join(appEntry, 'packages')
-const { publicPath } = configBuild
 
 const common = {
   appConfig,
@@ -92,27 +88,24 @@ const globalCSSLoaders = (isProduction, useModules = false) => [
 module.exports = (env, argv) => {
   const isProduction
     = process.env.NODE_ENV === 'production' || argv.mode === 'production' || argv.nodeEnv === 'production'
+  process.env.NODE_ENV = isProduction ? 'production' : 'development'
+
   const useStats = !!argv.stats
   const showProgress = !!argv.progress
 
-  const sentryEnvironment = Object.keys(env).some((key) => key.startsWith('SENTRY'))
-    && (
-      Object.keys(env)
-        .filter((key) => !!key.startsWith('SENTRY-'))?.[0]
-        ?.replace(/^SENTRY-/, '')
-        || 'production'
-    )
+  const sentryEnvironment
+    = Object.keys(env).some((key) => key.startsWith('SENTRY'))
+    && Object.keys(env)
+      .filter((key) => !!key.startsWith('SENTRY-'))?.[0]
+      ?.replace(/^SENTRY-/, '')
 
-  if (sentryEnvironment) {
-    if (configSentry[sentryEnvironment]) {
-      configSentry = deepmerge(configSentry, configSentry[sentryEnvironment])
-    }
-  }
+  setConfigEnvironment(sentryEnvironment || process.env.NODE_ENV)
 
+  const configSentry = getConfig('sentry')
   configSentry.enabled = !!configSentry.enabled && !!sentryEnvironment
 
   const publicEnv = {
-    NODE_ENV: isProduction ? 'production' : 'development',
+    NODE_ENV: process.env.NODE_ENV,
     SENTRY_ENABLED: configSentry.enabled,
   }
 
@@ -263,14 +256,14 @@ module.exports = (env, argv) => {
       chunkFilename: 'js/[name].[chunkhash].js',
       filename: 'js/[name].[chunkhash].js',
       path: common.outputPath,
-      publicPath,
+      publicPath: configBuild.publicPath,
     },
     plugins: [
       // DefinePlugin should be the first one
       new webpack.DefinePlugin({
-        process: JSON.stringify({ env: publicEnv }),
         FEATURES_FLAGS: JSON.stringify(getFeaturesFlags(process.env.NODE_ENV)),
-        SYSTEM: JSON.stringify(SYSTEM),
+        process: JSON.stringify({ env: publicEnv }),
+        SYSTEM: JSON.stringify(getSystemVars()),
       }),
       isProduction
         && new CopyWebpackPlugin({
@@ -332,7 +325,7 @@ module.exports = (env, argv) => {
         && new SentryCliPlugin({
           include: common.outputPath,
           ignore: ['sw.js'],
-          release: SYSTEM.version,
+          release: getSystemVars().version,
         }),
     ].filter(Boolean),
     resolve: {

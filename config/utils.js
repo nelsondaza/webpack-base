@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-
+const deepmerge = require('deepmerge')
 const fs = require('fs')
 const path = require('path')
 const { load } = require('js-yaml')
@@ -9,15 +9,28 @@ const filePath = path.resolve(__dirname, '.env.yml')
 let config
 if (fs.existsSync(filePath)) {
   config = load(fs.readFileSync(filePath, 'utf8')) || {}
+  if (!config.build) {
+    throw new Error("Main config file empty at '/config/.env.yml'")
+  }
 } else {
   throw new Error("Main config file not found '/config/.env.yml'")
 }
 
-const getConfig = (key = undefined) => {
+let configEnv = process.env.NODE_ENV || 'development'
+const setConfigEnvironment = (env) => {
+  configEnv = env
+}
+const getConfigEnvironment = () => configEnv
+
+const getConfig = (key = undefined, env = configEnv) => {
+  let configGroup = config
   if (key) {
-    return config[key] || { empty: true }
+    configGroup = configGroup[key] || undefined
+    if (env && configGroup?.[env]) {
+      configGroup = deepmerge(configGroup, configGroup[env])
+    }
   }
-  return config
+  return configGroup
 }
 
 const getFeaturesFlags = (environment) => {
@@ -51,15 +64,24 @@ const createVersion = () => {
   ].join('.')
 }
 
-const SYSTEM = {
-  env: getConfig('system'),
+const systemVars = {
+  env: getConfig('system') || {},
   sentry: {
-    dns: getConfig('sentry').SENTRY_DSN,
+    dns: getConfig('sentry')?.SENTRY_DSN,
   },
   version: createVersion(),
 }
 // eslint-disable-next-line no-console
-console.log('VERSION: ', SYSTEM.version)
+console.log('VERSION: ', systemVars.version)
+
+const getSystemVars = () => ({
+  ...systemVars,
+  env: getConfig('system') || {},
+  sentry: {
+    ...systemVars.sentry,
+    dns: getConfig('sentry')?.SENTRY_DSN,
+  },
+})
 
 const buildManifest = (buffer) => {
   const manifest = JSON.parse(buffer.toString())
@@ -68,7 +90,7 @@ const buildManifest = (buffer) => {
   return JSON.stringify({
     ...manifest,
     ...configManifest,
-    version: SYSTEM.version,
+    version: getSystemVars().version,
   })
 }
 
@@ -76,6 +98,8 @@ module.exports = {
   buildManifest,
   createVersion,
   getConfig,
+  getConfigEnvironment,
   getFeaturesFlags,
-  SYSTEM,
+  setConfigEnvironment,
+  getSystemVars,
 }

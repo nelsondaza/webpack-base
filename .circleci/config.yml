@@ -56,8 +56,8 @@ commands:
   run_publicate_staging:
     steps:
       - run:
-          command: yarn build:progress --env SENTRY-staging
-          no_output_timeout: 120s
+          command: yarn build --env SENTRY-staging
+          no_output_timeout: 180s
       - run:
           command: yarn deploy staging
           no_output_timeout: 120s

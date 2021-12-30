@@ -1,26 +1,30 @@
 /* eslint-disable no-console,@typescript-eslint/no-var-requires */
-
 const AWS = require('aws-sdk')
-const deepmerge = require('deepmerge')
 const fs = require('fs')
 const moment = require('moment')
 const path = require('path')
 const request = require('node-fetch')
 const s3StreamFactory = require('s3-upload-stream')
-const { getConfig } = require('../utils')
+const { getConfig, setConfigEnvironment } = require('../utils')
 
 const deployEnvironment = process.argv[2]
 
-let deployConfig = getConfig('deploy')
 if (deployEnvironment) {
-  console.log('')
-  console.log(`🥷  deploying to ${deployEnvironment}`)
+  setConfigEnvironment(deployEnvironment)
+}
 
-  if (deployConfig[deployEnvironment]) {
-    deployConfig = deepmerge(deployConfig, deployConfig[deployEnvironment])
-  } else {
+const deployConfig = getConfig('deploy')
+if (!deployConfig) {
+  console.error(`⛑  Deploy not found in config.`)
+  console.log('')
+  process.exit(1)
+}
+if (deployEnvironment) {
+  console.log(`🥷  Deploying to ${deployEnvironment}`)
+
+  if (!getConfig('deploy', null)?.[deployEnvironment]) {
+    console.error(`⛑  Deploy environment "${deployEnvironment}" not found in config.`)
     console.log('')
-    console.error(`⛑  Deploy environment ${deployEnvironment} not found in config.`)
     process.exit(1)
   }
 }
