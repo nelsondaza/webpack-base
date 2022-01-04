@@ -24,9 +24,21 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-Cypress.Commands.add('login', (email, password) => {
-  cy.visit('/')
-  cy.get('input[placeholder="E-mail"]').type(email)
-  cy.get('input[placeholder="Password"]').type(password)
-  cy.get('button[type="submit"]').click()
+Cypress.Commands.add('login', ({ user, password, cacheSession = true }) => {
+  // https://docs.cypress.io/api/commands/session#Updating-an-existing-login-custom-command
+  const login = () => {
+    cy.intercept('https://auth.serviceco/auth').as('login')
+
+    cy.visit('/')
+    cy.get('input[placeholder="E-mail"]').type(user)
+    cy.get('input[placeholder="Password"]').type(password)
+    cy.get('button[type="submit"]').click()
+
+    cy.wait('@login')
+  }
+  if (cacheSession) {
+    cy.session([user, password], login)
+  } else {
+    login()
+  }
 })

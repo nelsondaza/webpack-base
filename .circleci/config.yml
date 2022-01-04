@@ -4,6 +4,11 @@ executors:
   node_16:
     docker:
       - image: circleci/node:16
+  ubuntu:
+    machine:
+      image: ubuntu-2004:202101-01
+    resource_class: arm.medium
+
 orbs:
   slack: circleci/slack@4
 
@@ -37,7 +42,7 @@ commands:
           command: echo "$ENV_FILE" | base64 --decode > ./config/.env.yml
       - run:
           command: yarn install
-          no_output_timeout: 120s
+          no_output_timeout: 180s
       - save_dependencies
 
   run_tests:
@@ -56,6 +61,7 @@ commands:
   run_publicate_staging:
     steps:
       - run:
+          name: Build staging witn Sentry
           command: yarn build --env SENTRY-staging
           no_output_timeout: 180s
       - run:
@@ -119,8 +125,12 @@ jobs:
             }
 
   'Production build':
-    executor: node_16
+    executor: ubuntu
     steps:
+      - run:
+          name: Node 16
+          command: nvm install v16 && nvm alias default 16
+          no_output_timeout: 120s
       - setup
       - run_tests
       - run_build
