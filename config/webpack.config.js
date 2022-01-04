@@ -258,6 +258,10 @@ module.exports = (env, argv) => {
       path: common.outputPath,
       publicPath: configBuild.publicPath,
     },
+    performance: {
+      maxEntrypointSize: 1024 * 1024 * 0.5,
+      maxAssetSize: 1024 * 1024 * 0.25,
+    },
     plugins: [
       // DefinePlugin should be the first one
       new webpack.DefinePlugin({
