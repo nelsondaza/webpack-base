@@ -33,6 +33,17 @@ commands:
           keys:
             - yarn-deps-v1-{{ checksum "./yarn.lock" }}
 
+  shape_ubuntu:
+    steps:
+      #      - run:
+      #          name: Chromium
+      #          command: sudo apt install --assume-yes chromium-browser
+      #          no_output_timeout: 120s
+      - run:
+          name: Node 16
+          command: nvm install v16 && nvm alias default 16
+          no_output_timeout: 120s
+
   setup:
     steps:
       - checkout
@@ -40,6 +51,7 @@ commands:
       - run:
           name: Set .evn.yml file from CI "ENV_FILE" (base64 env variable)
           command: echo "$ENV_FILE" | base64 --decode > ./config/.env.yml
+      #      - shape_ubuntu
       - run:
           command: yarn install
           no_output_timeout: 180s
@@ -65,6 +77,7 @@ commands:
           command: yarn build --env SENTRY-staging
           no_output_timeout: 180s
       - run:
+          name: Deploy staging files
           command: yarn deploy staging
           no_output_timeout: 120s
 
@@ -125,12 +138,8 @@ jobs:
             }
 
   'Production build':
-    executor: ubuntu
+    executor: node_16
     steps:
-      - run:
-          name: Node 16
-          command: nvm install v16 && nvm alias default 16
-          no_output_timeout: 120s
       - setup
       - run_tests
       - run_build
