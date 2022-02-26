@@ -89,7 +89,7 @@ commands:
 
 jobs:
   'Tests and Coverage':
-    executor: node_16
+    executor: ubuntu
     steps:
       - setup
       - run_tests
@@ -138,7 +138,7 @@ jobs:
             }
 
   'Production build':
-    executor: node_16
+    executor: ubuntu
     steps:
       - setup
       - run_tests
