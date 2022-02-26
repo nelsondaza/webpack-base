@@ -9,7 +9,14 @@ const webpack = require('webpack')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { InjectManifest } = require('workbox-webpack-plugin')
 
-const { buildManifest, getConfig, getFeaturesFlags, getSystemVars, setConfigEnvironment } = require('./utils')
+const {
+  buildManifest,
+  getConfig,
+  getFeaturesFlags,
+  getSystemVars,
+  setConfigEnvironment,
+  getConfigEnvironment,
+} = require('./utils')
 
 const configBuild = getConfig('build')
 
@@ -265,7 +272,7 @@ module.exports = (env, argv) => {
     plugins: [
       // DefinePlugin should be the first one
       new webpack.DefinePlugin({
-        FEATURES_FLAGS: JSON.stringify(getFeaturesFlags(process.env.NODE_ENV)),
+        FEATURES_FLAGS: JSON.stringify(getFeaturesFlags(getConfigEnvironment())),
         process: JSON.stringify({ env: publicEnv }),
         SYSTEM: JSON.stringify(getSystemVars()),
       }),
