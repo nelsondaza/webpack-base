@@ -60,8 +60,9 @@ Feature.set(FeatureFlags)
 
 def.Feature = Feature
 def.workbox = {
-  reloadClients: () =>
-    setTimeout(() => {
+  reloadClients: (includeCurrent = true) =>
+    includeCurrent
+    && setTimeout(() => {
       document.location.href = '/'
     }, 0),
 }

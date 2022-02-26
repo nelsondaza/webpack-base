@@ -37,14 +37,10 @@ if (module.hot) {
 sentryRegistration()
 
 serviceWorkerRegistration({
-  onNewVersionFound: ({ isIntervalFoundUpdate, isPageLoadUpdate, reloadClients }) => {
-    if (isPageLoadUpdate) {
+  onNewVersionFound: ({ reloadClients }) => {
+    // eslint-disable-next-line no-restricted-globals,no-alert
+    if (confirm('Hay una nueva versión disponible, ¿deseas actualizar?')) {
       reloadClients()
-    } else if (isIntervalFoundUpdate) {
-      // eslint-disable-next-line no-restricted-globals,no-alert
-      if (confirm('Hay una nueva versión disponible, ¿deseas actualizar?')) {
-        reloadClients()
-      }
     }
   },
   onRegistered: ({ reloadClients, workbox }) => {

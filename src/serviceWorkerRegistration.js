@@ -8,31 +8,24 @@ export default ({ onNewVersionFound, onRegistered }) => {
   if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     let swUpdateInterval
     let retryUpdateInterval
-    let newVersionFound = false
-    let pendingUpdate = false
 
     window.addEventListener('load', async () => {
       const wb = new Workbox('/sw.js')
 
       const reloadClients = async (includeCurrent = true) => {
         const type = includeCurrent ? 'RELOAD_CLIENTS' : 'RELOAD_OTHER_CLIENTS'
-        let reloadDone = false
 
         // first fallback to reload all clients
         setTimeout(() => {
-          if (!reloadDone) {
+          setTimeout(() => {
             if (type === 'RELOAD_CLIENTS') {
               // last fallback to reload current client
-              setTimeout(() => {
-                if (!reloadDone) {
-                  document.location.reload()
-                }
-              }, 1500)
+              document.location.reload()
             }
-            navigator.serviceWorker?.controller?.postMessage({ type })
-          }
-        }, 1500)
-        reloadDone = await wb.messageSW({ type })
+          }, 600)
+          navigator.serviceWorker?.controller?.postMessage({ type })
+        }, 600)
+        await wb.messageSW({ type })
       }
 
       // https://developers.google.com/web/tools/workbox/modules/workbox-window
@@ -47,22 +40,17 @@ export default ({ onNewVersionFound, onRegistered }) => {
 
       wb.addEventListener('controlling', async (/* event */) => {
         // Page is being controlled by a service worker
-
         // event.isUpdate === true => New version controlled after page refresh
         // event.isUpdate === false => New version controlled after manual SW update
-        newVersionFound = true
       })
 
       wb.addEventListener('activated', async (event) => {
         // Service worker is managing the page
-        pendingUpdate = true
         clearInterval(retryUpdateInterval)
 
         if (onNewVersionFound) {
           onNewVersionFound({
             event,
-            isIntervalFoundUpdate: newVersionFound && !event.isUpdate,
-            isPageLoadUpdate: newVersionFound && !!event.isUpdate,
             reloadClients,
             workbox: wb,
           })
@@ -71,14 +59,12 @@ export default ({ onNewVersionFound, onRegistered }) => {
             () =>
               onNewVersionFound({
                 event,
-                isIntervalFoundUpdate: newVersionFound && !event.isUpdate,
-                isPageLoadUpdate: newVersionFound && !!event.isUpdate,
                 reloadClients,
                 workbox: wb,
               }),
             UPDATE_RETRY_INTERVAL,
           )
-        } else if (newVersionFound || event.isUpdate) {
+        } else if (event.isUpdate) {
           await reloadClients()
           retryUpdateInterval = setInterval(() => reloadClients(), UPDATE_RETRY_INTERVAL)
         }

@@ -59,7 +59,6 @@ addEventListener('message', (event) => {
   } else if (event.data?.type === 'RELOAD_CLIENTS' || event.data?.type === 'RELOAD_OTHER_CLIENTS') {
     clients
       .matchAll({
-        includeUncontrolled: true,
         type: 'window',
       })
       .then((clientList) => {
@@ -67,7 +66,9 @@ addEventListener('message', (event) => {
           .filter((client) => event.data.type === 'RELOAD_CLIENTS' || client.id !== event.source?.id)
           .forEach((client) => {
             try {
-              client.navigate(client.url)
+              if (client.navigate) {
+                client.navigate(client.url)
+              }
               // eslint-disable-next-line no-empty
             } catch (e) {}
           })
@@ -145,14 +146,18 @@ addEventListener('notificationclick', (event) => {
   event.waitUntil(
     clients
       .matchAll({
-        includeUncontrolled: true,
         type: 'window',
       })
       .then((clientList) => {
         const client = clientList.find((c) => c.visibilityState === 'visible')
         if (client) {
           if (!action && data?.redirectURL) {
-            client.navigate(data.redirectURL)
+            try {
+              if (client.navigate) {
+                client.navigate(data.redirectURL)
+              }
+              // eslint-disable-next-line no-empty
+            } catch (e) {}
           }
           client.focus()
         } else {
