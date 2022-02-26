@@ -35,10 +35,10 @@ commands:
 
   shape_ubuntu:
     steps:
-      #      - run:
-      #          name: Chromium
-      #          command: sudo apt install --assume-yes chromium-browser
-      #          no_output_timeout: 120s
+      - run:
+          name: Chromium
+          command: sudo apt install --assume-yes chromium-browser
+          no_output_timeout: 120s
       - run:
           name: Node 16
           command: nvm install v16 && nvm alias default 16
@@ -51,7 +51,7 @@ commands:
       - run:
           name: Set .evn.yml file from CI "ENV_FILE" (base64 env variable)
           command: echo "$ENV_FILE" | base64 --decode > ./config/.env.yml
-      #      - shape_ubuntu
+      - shape_ubuntu
       - run:
           command: yarn install
           no_output_timeout: 180s
