@@ -54,6 +54,7 @@ module.exports = {
     'import/no-import-module-exports': 'off',
     'import/prefer-default-export': 'off',
     'jsx-a11y/control-has-associated-label': 'off',
+    'jsx-quotes': ['error', 'prefer-double'],
     'max-classes-per-file': ['error', 2],
     'max-len': [
       'error',
@@ -76,6 +77,7 @@ module.exports = {
       },
     ],
     'operator-linebreak': ['error', 'before'],
+    quotes: ['error', 'single', { avoidEscape: true }],
     'react-hooks/exhaustive-deps': 'error',
     'react-hooks/rules-of-hooks': 'error',
     'react/destructuring-assignment': 'off',

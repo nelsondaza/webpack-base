@@ -1,4 +1,4 @@
-import { Feature } from "system"
+import { Feature } from 'system'
 import { SimpleButton } from 'ui'
 
 import Block from './components/ui/Block'
