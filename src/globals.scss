@@ -1,0 +1,233 @@
+:root {
+  color: var(--textColor);
+
+  /*---   Neutrals  ---*/
+  --whiteLCM: #{$white};
+  --greyLightLCM: #{$greyLight};
+  --greyLightestLCM: #{$greyLightest};
+  --greyLightMedLCM: #{$greyLightMed};
+  --greyLCM: #{$grey};
+  --greyDarkLCM: #{$greyDark};
+  --greyDarkBlueLCM: #{$greyDarkBlue};
+  --greyDarkestBlueLCM: #{$greyDarkestBlue};
+  --navyLCM: #{$navy};
+  --blackLCM: #{$black};
+
+  /*---  Colors  ---*/
+  --blueLCM: #{$blue};
+  --blueLightLCM: #{$blueLight};
+  --blueLightestLCM: #{$blueLightest};
+  --greenLCM: #{$green};
+  --greenLightLCM: #{$greenLight};
+  --greenLightestLCM: #{$greenLightest};
+  --orangeLCM: #{$orange};
+  --orangeLightLCM: #{$orangeLight};
+  --orangeLightestLCM: #{$orangeLightest};
+  --redLCM: #{$red};
+  --redLightLCM: #{$redLight};
+  --redLightestLCM: #{$redLightest};
+  --tealLCM: #{$teal};
+  --tealLightLCM: #{$tealLight};
+  --yellowLCM: #{$yellow};
+
+  /*---  Shadow  ---*/
+  --shadow05LCM: #{rgba($black, 0.05)};
+  --shadow10LCM: #{rgba($black, 0.1)};
+  --shadow25LCM: #{rgba($black, 0.25)};
+  --shadow50LCM: #{rgba($black, 0.5)};
+  --shadow75LCM: #{rgba($black, 0.75)};
+
+  /*-------------------
+          Page
+  --------------------*/
+
+  --backgroundLCM: #{$greyLightest};
+  --textColorLCM: #{$textColor};
+  --primaryColorLCM: #{$primaryColor};
+  --secondaryColorLCM: #{$secondaryColor};
+  --tertiaryColorLCM: #{$tertiaryColor};
+
+  /*---   Neutrals  ---*/
+  --whiteHCM: #{$navy};
+  --greyLightHCM: #{$greyDarkestBlue};
+  --greyLightestHCM: #{$greyDarkBlue};
+  --greyLightMedHCM: #{$greyDark};
+  --greyHCM: #{$grey};
+  --greyDarkHCM: #{$greyLightMed};
+  --greyDarkBlueHCM: #{$greyLightest};
+  --greyDarkestBlueHCM: #{$greyLight};
+  --navyHCM: #{$white};
+  --blackHCM: #{$white};
+
+  /*---  Colors  ---*/
+  --blueHCM: #{$blueLight};
+  --blueLightHCM: #{$blueLightest};
+  --blueLightestHCM: #{$blue};
+  --greenHCM: #{$greenLight};
+  --greenLightHCM: #{$greenLightest};
+  --greenLightestHCM: #{$green};
+  --orangeHCM: #{$orangeLight};
+  --orangeLightHCM: #{$orangeLightest};
+  --orangeLightestHCM: #{$orange};
+  --redHCM: #{$redLight};
+  --redLightHCM: #{$redLightest};
+  --redLightestHCM: #{$red};
+  --tealHCM: #{$tealLight};
+  --tealLightHCM: #{$tealLight};
+  --yellowHCM: #{$yellow};
+
+  /*---  Shadow  ---*/
+  --shadow05HCM: none;
+  --shadow10HCM: none;
+  --shadow25HCM: none;
+  --shadow50HCM: none;
+  --shadow75HCM: none;
+
+  /*-------------------
+          Page
+  --------------------*/
+
+  --backgroundHCM: #{$navy};
+  --textColorHCM: #{$white};
+  --primaryColorHCM: #{$greenLight};
+  --secondaryColorHCM: #{$grey};
+  --tertiaryColorHCM: #{$blueLight};
+
+  /*---   Neutrals  ---*/
+  --white: var(--whiteLCM);
+  --greyLight: var(--greyLightLCM);
+  --greyLightest: var(--greyLightestLCM);
+  --greyLightMed: var(--greyLightMedLCM);
+  --grey: var(--greyLCM);
+  --greyDark: var(--greyDarkLCM);
+  --greyDarkBlue: var(--greyDarkBlueLCM);
+  --greyDarkestBlue: var(--greyDarkestBlueLCM);
+  --navy: var(--navyLCM);
+  --black: var(--blackLCM);
+
+  /*---  Colors  ---*/
+  --blue: var(--blueLCM);
+  --blueLight: var(--blueLightLCM);
+  --blueLightest: var(--blueLightestLCM);
+  --green: var(--greenLCM);
+  --greenLight: var(--greenLightLCM);
+  --greenLightest: var(--greenLightestLCM);
+  --orange: var(--orangeLCM);
+  --orangeLight: var(--orangeLightLCM);
+  --orangeLightest: var(--orangeLightestLCM);
+  --red: var(--redLCM);
+  --redLight: var(--redLightLCM);
+  --redLightest: var(--redLightestLCM);
+  --teal: var(--tealLCM);
+  --tealLight: var(--tealLightLCM);
+  --yellow: var(--yellowLCM);
+
+  /*---  Shadow  ---*/
+  --shadow05: var(--shadow05LCM);
+  --shadow10: var(--shadow10LCM);
+  --shadow25: var(--shadow25LCM);
+  --shadow50: var(--shadow50LCM);
+  --shadow75: var(--shadow75LCM);
+
+  /*-------------------
+          Page
+  --------------------*/
+
+  --background: var(--backgroundLCM);
+  --textColor: var(--textColorLCM);
+  --primaryColor: var(--primaryColorLCM);
+  --secondaryColor: var(--secondaryColorLCM);
+  --tertiaryColor: var(--tertiaryColorLCM);
+}
+
+[data-dark-mode] {
+  color: var(--textColor);
+
+  /*---   Neutrals  ---*/
+  --white: var(--whiteHCM);
+  --greyLight: var(--greyLightHCM);
+  --greyLightest: var(--greyLightestHCM);
+  --greyLightMed: var(--greyLightMedHCM);
+  --grey: var(--greyHCM);
+  --greyDark: var(--greyDarkHCM);
+  --greyDarkBlue: var(--greyDarkBlueHCM);
+  --greyDarkestBlue: var(--greyDarkestBlueHCM);
+  --navy: var(--navyHCM);
+  --black: var(--blackHCM);
+
+  /*---  Colors  ---*/
+  --blue: var(--blueHCM);
+  --blueLight: var(--blueLightHCM);
+  --blueLightest: var(--blueLightestHCM);
+  --green: var(--greenHCM);
+  --greenLight: var(--greenLightHCM);
+  --greenLightest: var(--greenLightestHCM);
+  --orange: var(--orangeHCM);
+  --orangeLight: var(--orangeLightHCM);
+  --orangeLightest: var(--orangeLightestHCM);
+  --red: var(--redHCM);
+  --redLight: var(--redLightHCM);
+  --redLightest: var(--redLightestHCM);
+  --teal: var(--tealHCM);
+  --tealLight: var(--tealLightHCM);
+  --yellow: var(--yellowHCM);
+
+  /*---  Shadow  ---*/
+  --shadow05: var(--shadow05HCM);
+  --shadow10: var(--shadow10HCM);
+  --shadow25: var(--shadow25HCM);
+  --shadow50: var(--shadow50HCM);
+  --shadow75: var(--shadow75HCM);
+
+  /*-------------------
+          Page
+  --------------------*/
+
+  --background: var(--backgroundHCM);
+  --textColor: var(--textColorHCM);
+  --primaryColor: var(--primaryColorHCM);
+  --secondaryColor: var(--secondaryColorHCM);
+  --tertiaryColor: var(--tertiaryColorHCM);
+}
+
+.body-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@page {
+  size: letter;
+  margin: 1cm 1cm 1cm 1cm;
+}
+
+@font-face {
+  font-family: appleLogo;
+  src: local('Lucida Grande');
+  unicode-range: U+f8ff;
+}
+
+html {
+  line-height: em(20);
+  scroll-behavior: smooth;
+
+  @media print {
+    font-size: $printFontSize; // fixed for print mode
+    line-height: normal;
+  }
+}
+
+img {
+  user-drag: none;
+}
+
+@media print {
+  *::placeholder {
+    display: none !important;
+    color: transparent !important;
+  }
+}
+
+// webpack error overlay
+#react-refresh-overlay {
+  display: none;
+}

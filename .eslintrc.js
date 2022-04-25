@@ -4,8 +4,18 @@ module.exports = {
     es6: true,
     jest: true,
     node: true,
+    'cypress/globals': true,
   },
-  extends: ['airbnb', 'plugin:@typescript-eslint/recommended', 'prettier'],
+  extends: [
+    'airbnb',
+    'prettier',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:jest-dom/recommended',
+    'plugin:jest/recommended',
+    'plugin:jest/style',
+    'plugin:testing-library/react',
+    'plugin:cypress/recommended',
+  ],
   globals: {
     ajaxIntercept: true,
     createTestComponent: true,
@@ -21,6 +31,14 @@ module.exports = {
     FEATURES_FLAGS: true,
     SYSTEM: true,
   },
+  overrides: [
+    {
+      files: ['**/*.{ts,tsx}'],
+      rules: {
+        'react/prop-types': 'off',
+      },
+    },
+  ],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -29,7 +47,7 @@ module.exports = {
     createDefaultProgram: true,
     sourceType: 'module',
   },
-  plugins: ['react', 'react-hooks', '@typescript-eslint'],
+  plugins: ['react', 'react-hooks', '@typescript-eslint', 'import', 'jest', 'jest-dom', 'testing-library', 'cypress'],
   root: true,
   rules: {
     '@typescript-eslint/ban-ts-comment': 'off',
@@ -53,6 +71,7 @@ module.exports = {
     'import/no-extraneous-dependencies': 'off',
     'import/no-import-module-exports': 'off',
     'import/prefer-default-export': 'off',
+    indent: ['error', 2, { SwitchCase: 1 }],
     'jsx-a11y/control-has-associated-label': 'off',
     'jsx-quotes': ['error', 'prefer-double'],
     'max-classes-per-file': ['error', 2],
@@ -68,6 +87,7 @@ module.exports = {
       },
     ],
     'no-multiple-empty-lines': ['error', { max: 1, maxBOF: 1, maxEOF: 1 }],
+    'react/no-string-refs': 'off',
     'object-curly-newline': [
       'error',
       {
@@ -90,15 +110,19 @@ module.exports = {
     'react/no-deprecated': 'off',
     'react/react-in-jsx-scope': 'off',
     'react/require-default-props': 'off',
+    'react/static-property-placement': 'off',
     'react/sort-comp': 'off',
     'react/state-in-constructor': 'off',
     semi: ['error', 'never'],
+
+    'jest/expect-expect': 'off',
+    'jest/no-disabled-tests': 'off',
   },
   settings: {
     'import/resolver': { node: { extensions: ['.js', '.ts', '.jsx', '.tsx'], paths: ['src', 'src/packages'] } },
     react: {
       pragma: 'React',
-      version: '17',
+      version: '18',
     },
   },
 }

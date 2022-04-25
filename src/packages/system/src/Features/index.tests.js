@@ -156,13 +156,13 @@ describe('system::Features', () => {
         Object.keys(values).forEach((key) => {
           it(`when value is "${key}"`, () => {
             Feature.set({ feature: values[key] })
-            expect(Feature.value('feature')).toBe(undefined)
+            expect(Feature.value('feature')).toBeUndefined()
           })
         })
 
         it('when value is a disabled Feature', () => {
           Feature.set({ feature: m.Feature({ enabled: false }) })
-          expect(Feature.value('feature')).toBe(undefined)
+          expect(Feature.value('feature')).toBeUndefined()
         })
       })
     })

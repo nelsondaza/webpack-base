@@ -9,16 +9,17 @@ try {
   // eslint-disable-next-line no-empty
 } catch (e) {}
 
+// eslint-disable-next-line no-console
 console.log(['results', results])
 
 const getTestName = (str) =>
   typeof str === 'string'
     ? str
-        .split('/src/')
-        .slice(1)
-        .join('/')
-        .replace(/^packages\//, '')
-        .replace(/\/?(index)?\.(tests|stories)?\.[jt]sx?$/, '')
+      .split('/src/')
+      .slice(1)
+      .join('/')
+      .replace(/^packages\//, '')
+      .replace(/\/?(index)?\.(tests|stories)?\.[jt]sx?$/, '')
     : ''
 
 export const parameters = {
@@ -36,6 +37,7 @@ export const parameters = {
 export const decorators = [
   withEnvironment,
   (Story, config) => {
+    // eslint-disable-next-line no-console
     console.log(['config', config])
     const jest = [getTestName(config.parameters.fileName)]
 

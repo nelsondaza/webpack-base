@@ -30,7 +30,6 @@ describe('Navigation', () => {
     cy.visit('/')
     cy.get('.header').click()
     cy.url().should('contain', '/')
-    cy.wait(200)
     cy.contains('Tailwind')
   })
 })

@@ -55,28 +55,28 @@ const globalCSSLoaders = (isProduction, useModules = false) => [
       importLoaders: 3,
       modules: useModules
         ? {
-            getLocalIdent: (context, localIdentName, localName) => {
-              if (localName.match(/^(GLOBAL_|KEEP_|_)/g)) {
-                return localName.replace(/^(GLOBAL_|KEEP_|_)/g, '')
-              }
-              const local = context.resourcePath.substring(context.context.length).split('.')[0]
-              let localPath = context.context
-                .substring(context.rootContext.length)
-                .replace(/([/\\]+)/g, '/')
-                .replace(/(\/?)(src|packages|components)(\/)/gi, '$1')
-              if (local !== '/index') {
-                localPath += local.replace(/[^A-Za-z0-9_]+/gi, '_')
-              }
+          getLocalIdent: (context, localIdentName, localName) => {
+            if (localName.match(/^(GLOBAL_|KEEP_|_)/g)) {
+              return localName.replace(/^(GLOBAL_|KEEP_|_)/g, '')
+            }
+            const local = context.resourcePath.substring(context.context.length).split('.')[0]
+            let localPath = context.context
+              .substring(context.rootContext.length)
+              .replace(/([/\\]+)/g, '/')
+              .replace(/(\/?)(src|packages|components)(\/)/gi, '$1')
+            if (local !== '/index') {
+              localPath += local.replace(/[^A-Za-z0-9_]+/gi, '_')
+            }
 
-              const localScope = localPath
-                .replace(/[^A-Za-z0-9_]+/gi, ' ')
-                .split(' ')
-                .reduce(capitalize)
+            const localScope = localPath
+              .replace(/[^A-Za-z0-9_]+/gi, ' ')
+              .split(' ')
+              .reduce(capitalize)
 
-              return `${localScope}_${localName}`
-            },
-            localIdentName: '[folder]_[local]_[hash:base64:5]',
-          }
+            return `${localScope}_${localName}`
+          },
+          localIdentName: '[folder]_[local]_[hash:base64:5]',
+        }
         : undefined,
       sourceMap: !isProduction,
     },

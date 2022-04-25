@@ -1,0 +1,38 @@
+#!/bin/sh
+
+cd "$(git rev-parse --show-toplevel)"
+
+STAGED_FILES=($(git diff --name-only --diff-filter=ACMR origin/HEAD..))
+STAGED_FILES_PRETTIER=($(git diff --name-only --diff-filter=ACMR origin/HEAD.. | grep -i -E '\.(yml|s?css|json|[jt]sx?)$'))
+STAGED_FILES_ESLINT=($(git diff --name-only --diff-filter=ACMR origin/HEAD.. | grep -i -E '\.([jt]sx?)$'))
+STAGED_FILES_JEST=($(git diff --name-only --diff-filter=ACMR origin/HEAD.. | grep -i -E '\.([jt]sx?)$' | grep -v -i '.stories.'))
+
+set -be
+
+echo "Prettier: ${#STAGED_FILES_PRETTIER[@]} file(s)."
+if [[ "$STAGED_FILES_PRETTIER" = "" ]]; then
+  echo "    Prettier not required"
+else
+  yarn prettier "${STAGED_FILES_PRETTIER[@]}" --write
+fi
+
+echo "ESLint: ${#STAGED_FILES_ESLINT[@]} file(s)"
+if [[ "$STAGED_FILES_ESLINT" = "" ]]; then
+  echo "    ESLint not required"
+else
+  yarn lint "${STAGED_FILES_ESLINT[@]}" --fix
+fi
+
+# Re-add files since they may have been fixed
+git add "${STAGED_FILES[@]}"
+
+yarn lint:tsc
+
+echo "Jest: ${#STAGED_FILES_JEST[@]} file(s)"
+if [[ "$STAGED_FILES_JEST" = "" ]]; then
+  echo "    Jest not required"
+else
+  yarn test --findRelatedTests --bail --coverage=false "${STAGED_FILES_JEST[@]}"
+fi
+
+exit 0

@@ -20,6 +20,7 @@ module.exports = {
   core: {
     builder: 'webpack5',
   },
+  staticDirs: ['../../static'],
   webpackFinal: (config) => {
     const localConfig = baseConfig({}, config.mode)
 

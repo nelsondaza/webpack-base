@@ -12,9 +12,9 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "outDir": "./dist/tsc",
-    "paths": {
-      "*": ["*", "packages/*"]
-    },
+    "paths": { "*": ["*", "packages/*"] },
+    "sourceMap": true,
+    "skipLibCheck": true,
     "strict": true,
     "target": "es5"
   },

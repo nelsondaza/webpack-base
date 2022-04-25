@@ -26,7 +26,7 @@
 
 Cypress.Commands.add('login', ({ user, password, cacheSession = true }) => {
   // https://docs.cypress.io/api/commands/session#Updating-an-existing-login-custom-command
-  const login = () => {
+  const login = async () => {
     cy.intercept('https://auth.serviceco/auth').as('login')
 
     cy.visit('/')
@@ -34,7 +34,7 @@ Cypress.Commands.add('login', ({ user, password, cacheSession = true }) => {
     cy.get('input[placeholder="Password"]').type(password)
     cy.get('button[type="submit"]').click()
 
-    cy.wait('@login')
+    await cy.wait('@login')
   }
   if (cacheSession) {
     cy.session([user, password], login)

@@ -7,6 +7,7 @@ import store from '../store'
 
 import '../assets/tailwind/tailwind.css'
 import '../assets/semantic-ui/semantic.css'
+import '../../src/globals.scss'
 import './stories.css'
 
 type StoriesHolderProps = {

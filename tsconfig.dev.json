@@ -1,7 +1,4 @@
 {
-  "compilerOptions": {
-    "sourceMap": true,
-    "jsx": "react-jsxdev"
-  },
+  "compilerOptions": { "jsx": "react-jsxdev" },
   "extends": "./tsconfig.json"
 }

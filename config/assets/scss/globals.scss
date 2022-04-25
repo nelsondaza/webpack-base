@@ -1,4 +1,3 @@
-
 $header-height: 65px;
 $header-mobile-height: 40px;
 $header-width: 11rem;
@@ -6,6 +5,7 @@ $header-mobile-width: 11rem;
 
 $responsive-w-320: 320px;
 $responsive-w-375: 375px;
+$responsive-w-424: 424px;
 $responsive-w-480: 480px;
 $responsive-w-600: 600px;
 $responsive-w-640: 640px;
@@ -13,27 +13,31 @@ $responsive-w-768: 768px;
 $responsive-w-800: 800px;
 $responsive-w-1024: 1024px;
 $responsive-w-1280: 1280px;
-$responsive-w-1300: 1366px;
+$responsive-w-1366: 1366px;
 $responsive-w-1600: 1600px;
 $responsive-w-1920: 1920px;
+$responsive-w-2560: 2560px;
+$responsive-w-3008: 3008px;
+$responsive-w-3360: 3360px;
+$responsive-w-3840: 3840px;
 
 /*-------------------
         Page
 --------------------*/
 
-$pageOverflowX       : hidden;
-$lineHeight          : 1.4285em;
+$pageOverflowX: hidden;
+$lineHeight: 1.4285em;
 
 /* This is the single variable that controls them all */
-$emSize   : 16px;
+$emSize: 16px;
 
 /* The size of page text  */
-$fontSize : 16px;
+$fontSize: 16px;
 
-$printFontSize : 13px;
+$printFontSize: 13px;
 
 @function num($value) {
-  @return ( $value / ($value * 0 + 1))
+  @return ($value / ($value * 0 + 1));
 }
 
 @function em($pixels, $context: $emSize) {

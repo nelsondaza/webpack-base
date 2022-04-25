@@ -15,7 +15,7 @@ if (deployEnvironment) {
 
 const deployConfig = getConfig('deploy')
 if (!deployConfig) {
-  console.error(`⛑  Deploy not found in config.`)
+  console.error('⛑  Deploy not found in config.')
   console.log('')
   process.exit(1)
 }

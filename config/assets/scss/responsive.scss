@@ -16,14 +16,38 @@
   }
 }
 
+@mixin screen-min-480 {
+  @media (min-width: rem(480)) {
+    @content;
+  }
+}
+
 @mixin screen-min-600 {
   @media (min-width: rem(600)) {
     @content;
   }
 }
 
+@mixin screen-min-640 {
+  @media (min-width: rem(640)) {
+    @content;
+  }
+}
+
+@mixin screen-min-768 {
+  @media (min-width: rem(768)) {
+    @content;
+  }
+}
+
 @mixin screen-min-800 {
   @media (min-width: rem(800)) {
+    @content;
+  }
+}
+
+@mixin screen-min-1024 {
+  @media (min-width: rem(1024)) {
     @content;
   }
 }

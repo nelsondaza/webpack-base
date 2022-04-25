@@ -7,8 +7,8 @@ import styles from './index.scss'
 class SimpleButton extends PureComponent {
   render() {
     const {
- ariaLabel, className, children, icon, itemsDirection, primary, secondary, tertiary, value, ...props 
-}
+      ariaLabel, className, children, icon, itemsDirection, primary, secondary, tertiary, value, ...props
+    }
       = this.props
     const iconButton = !!icon && !(children || value)
 
