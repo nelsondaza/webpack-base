@@ -56,10 +56,10 @@ module.exports = {
   //  },
   coverageThreshold: {
     global: {
-      statements: 40,
-      branches: 40,
-      functions: 40,
-      lines: 40,
+      statements: 30,
+      branches: 30,
+      functions: 30,
+      lines: 30,
     },
   },
 
@@ -109,7 +109,6 @@ module.exports = {
 
   // A preset that is used as a base for Jest's configuration
   // preset: null,
-  preset: 'ts-jest',
 
   // Run tests from one or more projects
   // projects: null,
@@ -157,6 +156,9 @@ module.exports = {
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},
+  testEnvironmentOptions: {
+    url: 'http://localhost',
+  },
 
   // Adds a location field to test results
   // testLocationInResults: false,
@@ -184,20 +186,27 @@ module.exports = {
   // This option sets the URL for the jsdom environment.
   // It is reflected in properties such as location.href
   // testURL: "about:blank",
-  testURL: 'http://localhost',
 
   // Setting this value to "fake" allows the use of fake timers for functions such as "setTimeout"
   // timers: "real",
 
   // A map from regular expressions to paths to transformers
   // transform: null,
-  transform: { '\\.[jt]sx?$': 'ts-jest' },
+  transform: {
+    '^.+\\.[tj]sx?$': [
+      'ts-jest',
+      {
+        isolatedModules: true,
+      },
+    ],
+  },
 
   // An array of regexp pattern strings that are matched against
   // all source file paths, matched files will skip transformation
   // transformIgnorePatterns: [
   //   "/node_modules/"
   // ],
+  transformIgnorePatterns: ['node_modules/(?!rxjs|uuid|d3|internmap|@aws)'],
 
   // An array of regexp pattern strings that are matched against
   // all modules before the module loader will automatically return a mock for them

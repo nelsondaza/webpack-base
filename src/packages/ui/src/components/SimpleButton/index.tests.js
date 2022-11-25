@@ -1,6 +1,6 @@
-import Component from './index'
-
 import styles from './index.scss'
+
+import Component from './index'
 
 describe('ui::components::SimpleButton', () => {
   const tc = createTestComponent(Component, {

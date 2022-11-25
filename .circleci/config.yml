@@ -6,11 +6,8 @@ executors:
       - image: circleci/node:16
   ubuntu:
     machine:
-      image: ubuntu-2004:202101-01
-    resource_class: arm.medium
-
-orbs:
-  slack: circleci/slack@4
+      image: ubuntu-2204:2022.07.1
+    resource_class: arm.large
 
 commands:
   # debug only
@@ -36,22 +33,20 @@ commands:
   shape_ubuntu:
     steps:
       - run:
-          name: Chromium
-          command: sudo apt install --assume-yes chromium-browser
-          no_output_timeout: 120s
-      - run:
-          name: Node 16
-          command: nvm install v16 && nvm alias default 16
+          name: Install Yarn lib
+          command: |
+            curl -o- -L https://yarnpkg.com/install.sh | bash
+            echo 'export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"' >> $BASH_ENV
           no_output_timeout: 120s
 
   setup:
     steps:
+      - shape_ubuntu
       - checkout
       - load_dependencies
       - run:
           name: Set .evn.yml file from CI "ENV_FILE" (base64 env variable)
           command: echo "$ENV_FILE" | base64 --decode > ./config/.env.yml
-      - shape_ubuntu
       - run:
           command: yarn install
           no_output_timeout: 180s
@@ -73,7 +68,7 @@ commands:
   run_publicate_staging:
     steps:
       - run:
-          name: Build staging witn Sentry
+          name: Build staging with Sentry
           command: yarn build --env SENTRY-staging
           no_output_timeout: 180s
       - run:
@@ -81,10 +76,15 @@ commands:
           command: yarn deploy staging
           no_output_timeout: 120s
 
-  run_build:
+  run_publicate_production:
     steps:
       - run:
-          command: yarn build:progress
+          name: Build production with Sentry
+          command: yarn build --env SENTRY-production
+          no_output_timeout: 180s
+      - run:
+          name: Deploy production files
+          command: yarn deploy production
           no_output_timeout: 120s
 
 jobs:
@@ -93,98 +93,18 @@ jobs:
     steps:
       - setup
       - run_tests
-      # https://circleci.com/developer/orbs/orb/circleci/slack
-      - slack/notify:
-          event: 'fail'
-          custom: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": ":doh: $CIRCLE_USERNAME :pandaomg: failed job :rotating_light:"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "`<$CIRCLE_BUILD_URL|:circleci-fail: CircleCI>`  |  `<https://bitbucket.org/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/commits/$CIRCLE_SHA1|:bitbucket: BitBucket>`  |  `<https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/commit/$CIRCLE_SHA1|:github: GithHub>`"
-                  }
-                }
-              ]
-            }
-      - slack/notify:
-          event: 'pass'
-          custom: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": ":woot: hey $CIRCLE_USERNAME, your changes are ready for review."
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "`<$CIRCLE_BUILD_URL|:circleci-pass: CircleCI>`  |  `<https://bitbucket.org/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/commits/$CIRCLE_SHA1|:bitbucket: BitBucket>`  |  `<https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/commit/$CIRCLE_SHA1|:github: GithHub>`"
-                  }
-                }
-              ]
-            }
-
+  'Canary build':
+    executor: ubuntu
+    steps:
+      - setup
+      - run_tests
+      - run_publicate_staging
   'Production build':
     executor: ubuntu
     steps:
       - setup
       - run_tests
-      - run_build
-      - slack/notify:
-          event: 'fail'
-          custom: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": ":rotating_light: somebody call $CIRCLE_USERNAME @$CIRCLE_USERNAME :omg-onoz: :omgomgomg: *$CIRCLE_JOB* failed :rotating_light:"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "`<$CIRCLE_BUILD_URL|:circleci-fail: CircleCI>`  |  `<https://bitbucket.org/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/commits/$CIRCLE_SHA1|:bitbucket: BitBucket>`  |  `<https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/commit/$CIRCLE_SHA1|:github: GithHub>`"
-                  }
-                }
-              ]
-            }
-      - slack/notify:
-          event: 'pass'
-          custom: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": ":woot: changes from $CIRCLE_USERNAME were merged! :allthethings:"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "`<$CIRCLE_BUILD_URL|:circleci-pass: CircleCI>`  |  `<https://bitbucket.org/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/commits/$CIRCLE_SHA1|:bitbucket: BitBucket>`  |  `<https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/commit/$CIRCLE_SHA1|:github: GithHub>`"
-                  }
-                }
-              ]
-            }
+      - run_publicate_production
 
 workflows:
   pr-tests:

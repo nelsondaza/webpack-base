@@ -1,13 +1,3 @@
 {
-  "compilerOptions": {
-    "baseUrl": "cypress",
-    // "lib": ["es5", "dom"],
-    "outDir": "./dist/cypress/tsc",
-    "paths": {
-      "*": ["cypress/*"]
-    },
-    "types": ["cypress", "node"]
-  },
-  "extends": "../tsconfig.json",
-  "include": ["**/*"]
+  "extends": "../tsconfig.json"
 }

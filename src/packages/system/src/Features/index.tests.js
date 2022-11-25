@@ -1,11 +1,12 @@
-import Features from './index'
 import m from '../mocks'
+
+import Features from './index'
 
 describe('system::Features', () => {
   const Feature = new Features()
   beforeEach(() => {
     Feature.resetFeatures()
-    Feature.set({ features_flags: 'on' })
+    Feature.set({ feature_flags: 'on' })
   })
 
   const expectFeatureMatch = (name, match) => {
@@ -33,7 +34,7 @@ describe('system::Features', () => {
   })
 
   it('has all features enabled by default', () => {
-    Feature.set({ a: 'on', b: 1, c: true, d: 'off', features_flags: 'off' })
+    Feature.set({ a: 'on', b: 1, c: true, d: 'off', feature_flags: 'off' })
 
     expect(Feature.isEnabled('a')).toBe(true)
     expect(Feature.isEnabled('b')).toBe(true)
@@ -45,7 +46,7 @@ describe('system::Features', () => {
   })
 
   it('flags are enabled/disabled after main flag is set to ON', () => {
-    Feature.set({ a: 'on', b: 1, c: true, d: 'off', features_flags: 'on' })
+    Feature.set({ a: 'on', b: 1, c: true, d: 'off', feature_flags: 'on' })
 
     expect(Feature.isEnabled('a')).toBe(true)
     expect(Feature.isEnabled('b')).toBe(true)

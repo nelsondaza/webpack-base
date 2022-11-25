@@ -1,16 +1,46 @@
 import 'regenerator-runtime/runtime'
+import Enzyme, { mount, render, shallow } from 'enzyme'
 import { createElement as createReactElement } from 'react'
+
+import store from '../store'
+
+import { ajaxInterceptor, epicToPromise } from './suiteEpics'
+
+// enzyme-adapter-react-17 requires polyfills before importing
+// eslint-disable-next-line import/newline-after-import,import/order
+import { TextDecoder, TextEncoder } from 'node:util'
+global.TextEncoder = TextEncoder
+window.TextEncoder = TextEncoder
+global.TextDecoder = TextDecoder
+window.TextDecoder = TextDecoder
+// eslint-disable-next-line import/first,import/order
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17'
-import Enzyme, { shallow, render, mount } from 'enzyme'
 
 Enzyme.configure({ adapter: new Adapter() })
 
-// global.ajaxIntercept = ajaxInterceptor.intercept
-// global.ajaxInterceptor = ajaxInterceptor
-// global.epicToPromise = epicToPromise
+global.ajaxIntercept = ajaxInterceptor.intercept
+global.ajaxInterceptor = ajaxInterceptor
+global.epicToPromise = epicToPromise
 global.mount = mount
 global.render = render
 global.shallow = shallow
+
+jest.mock('rxjs/ajax', () => ({
+  ajax: {
+    get: (...args) => global.ajaxInterceptor.get(...args),
+    post: (...args) => global.ajaxInterceptor.post(...args),
+    delete: (...args) => global.ajaxInterceptor.delete(...args),
+    put: (...args) => global.ajaxInterceptor.put(...args),
+    patch: (...args) => global.ajaxInterceptor.patch(...args),
+  },
+}))
+
+/*
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({ t: key => key }),
+  withTranslation: () => Component => Component,
+}))
+*/
 
 const fileReaderProps = {
   abort: jest.fn(),
@@ -38,9 +68,7 @@ HTMLCanvasElement.prototype.toBlob = jest.fn()
 
 HTMLCanvasElement.prototype.toDataURL = jest.fn()
 
-const createElementConnected = (Component, props) =>
-  // store.dispatch(environmentSet())
-  createReactElement(Component, { ...props /* store */ })
+const createElementConnected = (Component, props) => createReactElement(Component, { ...props, store })
 
 const createElement = (Component, props, connected) => {
   if (connected) {
@@ -193,12 +221,12 @@ global.expectChange = ({ async = false, by = '_un1_set2_value3_', fn, from = '_u
     })
   }
 
-  if (from !== '_un1_set2_value3_') {
-    // Initial value error
-    expect(of()).toEqual(from)
-  } else {
+  if (from === '_un1_set2_value3_') {
     // Initial value error
     expect(of()).not.toEqual(to)
+  } else {
+    // Initial value error
+    expect(of()).toEqual(from)
   }
 
   fn()
@@ -270,3 +298,20 @@ global.expectBecameFalse = ({ fn, of, async }) =>
   })
 
 global.expectKeys = (obj, keys) => expect(Object.keys(obj).sort()).toEqual(keys.sort())
+
+// @todo remove after migrate to react-test-library
+// eslint-disable-next-line no-console
+if (!console.errorOriginal) {
+  // eslint-disable-next-line no-console
+  console.errorOriginal = console.error
+  // eslint-disable-next-line no-console
+  console.error = (...args) => {
+    const newArgs = args.filter(
+      (arg) => typeof arg !== 'string' || !arg.includes('ReactDOM.render is no longer supported in React 18'),
+    )
+    if (newArgs.length) {
+      // eslint-disable-next-line no-console
+      console.errorOriginal(...newArgs)
+    }
+  }
+}

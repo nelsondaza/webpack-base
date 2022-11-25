@@ -1,10 +1,13 @@
-// we'll use 'history' that is being used by 'react-router-dom'
-import { createEpicMiddleware } from 'redux-observable'
-import { createStore, applyMiddleware } from 'redux'
+import { configureStore } from '@reduxjs/toolkit'
 import { routerMiddleware } from 'connected-react-router'
+import { applyMiddleware, compose, createStore } from 'redux'
+import { createEpicMiddleware } from 'redux-observable'
+
+import { USE_REDUX_TOOLS } from 'system'
+
+import rootReducerCreator, { epics } from '../src/reducers'
 
 import history from './history'
-import rootReducerCreator, { epics } from '../src/reducers'
 
 const epicMiddleWare = createEpicMiddleware()
 const middlewares = [epicMiddleWare, routerMiddleware(history)]
@@ -21,14 +24,25 @@ if (module.hot) {
   )
 }
 
-const store = createStore(
-  rootReducerCreator(history),
-  {},
-  /* istanbul ignore next */
-  module.hot && window && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__(applyMiddleware(...middlewares))
-    : applyMiddleware(...middlewares),
-)
+declare global {
+  interface Window {
+    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose
+  }
+}
+
+const store = USE_REDUX_TOOLS
+  ? configureStore({
+    reducer: rootReducerCreator(history),
+    enhancers: [applyMiddleware(...middlewares)],
+  })
+  : createStore(
+    rootReducerCreator(history),
+    {},
+    /* istanbul ignore next */
+    module.hot && window?.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+      ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__(applyMiddleware(...middlewares))
+      : applyMiddleware(...middlewares),
+  )
 
 /* istanbul ignore next */
 if (module.hot) {
@@ -39,7 +53,8 @@ if (module.hot) {
   // will unsubscribe from the previous one then
   // call and subscribe to the new one because of
   // how switchMap works
-  const hotReloadingEpic = (...args) => epic$.pipe(switchMap((epic) => epic(...args)))
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const hotReloadingEpic = (...args: any) => epic$.pipe(switchMap((epic: any) => epic(...args)))
   epicMiddleWare.run(hotReloadingEpic)
 
   // Enable Webpack hot module replacement for reducers
@@ -53,6 +68,11 @@ if (module.hot) {
   })
 } else {
   epicMiddleWare.run(epics)
+}
+
+declare global {
+  type GlobalState = ReturnType<typeof store.getState>
+  type GlobalDispatch = typeof store.dispatch
 }
 
 export default store

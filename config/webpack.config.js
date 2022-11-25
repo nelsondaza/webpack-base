@@ -1,10 +1,13 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
+
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const SentryCliPlugin = require('@sentry/webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const ReactRefreshTypeScript = require('react-refresh-typescript')
 const webpack = require('webpack')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { InjectManifest } = require('workbox-webpack-plugin')
@@ -38,12 +41,16 @@ const common = {
   staticPath: path.join(projectRoot, 'static'),
 }
 
-const chunkInContext = (context) => (chunk) =>
+const isChunkInContext = (context) => (chunk) =>
   !!context
-  && (context.includes(`/${chunk}`)
-    || context.includes(`/@${chunk}`)
-    || context.includes(`\\${chunk}`)
-    || context.includes(`\\@${chunk}`))
+  && (new RegExp(`node_modules[\\\\/]@?${chunk}[\\\\/]`, 'ig').test(context)
+    || new RegExp(`node_modules[\\\\/]@?${chunk}$`, 'i').test(context))
+
+const getChunk = (context, packs = configBuild.fixedChunksPackages) =>
+  context ? packs.find(isChunkInContext(context)) : ''
+
+const getChunkName = (context, packs = configBuild.fixedChunksPackages) =>
+  (getChunk(context, packs) || 'unknown').split('|')[0].replace(/[^a-z\d-]+/gi, '')
 
 const capitalize = (result, word) => result + word.charAt(0).toUpperCase() + word.slice(1)
 
@@ -55,7 +62,7 @@ const globalCSSLoaders = (isProduction, useModules = false) => [
       importLoaders: 3,
       modules: useModules
         ? {
-          getLocalIdent: (context, localIdentName, localName) => {
+          getLocalIdent: (context, _localIdentName, localName) => {
             if (localName.match(/^(GLOBAL_|KEEP_|_)/g)) {
               return localName.replace(/^(GLOBAL_|KEEP_|_)/g, '')
             }
@@ -65,29 +72,26 @@ const globalCSSLoaders = (isProduction, useModules = false) => [
               .replace(/([/\\]+)/g, '/')
               .replace(/(\/?)(src|packages|components)(\/)/gi, '$1')
             if (local !== '/index') {
-              localPath += local.replace(/[^A-Za-z0-9_]+/gi, '_')
+              localPath += local.replace(/\W+/g, '_')
             }
 
-            const localScope = localPath
-              .replace(/[^A-Za-z0-9_]+/gi, ' ')
-              .split(' ')
-              .reduce(capitalize)
+            const localScope = localPath.replace(/\W+/g, ' ').split(' ').reduce(capitalize)
 
             return `${localScope}_${localName}`
           },
           localIdentName: '[folder]_[local]_[hash:base64:5]',
         }
         : undefined,
-      sourceMap: !isProduction,
+      sourceMap: true,
     },
   },
-  { loader: 'postcss-loader', options: { sourceMap: !isProduction } },
-  { loader: 'sass-loader', options: { sourceMap: !isProduction } },
+  { loader: 'postcss-loader', options: { sourceMap: true } },
+  { loader: 'sass-loader', options: { sourceMap: true } },
   {
     loader: 'sass-resources-loader',
     options: {
       resources: path.join(common.appConfig, 'assets', 'scss', '**/*.scss'),
-      sourceMap: !isProduction,
+      sourceMap: true,
     },
   },
 ]
@@ -103,7 +107,7 @@ module.exports = (env, argv) => {
   const sentryEnvironment
     = Object.keys(env).some((key) => key.startsWith('SENTRY'))
     && Object.keys(env)
-      .filter((key) => !!key.startsWith('SENTRY-'))?.[0]
+      .find((key) => !!key.startsWith('SENTRY-'))
       ?.replace(/^SENTRY-/, '')
 
   setConfigEnvironment(sentryEnvironment || process.env.NODE_ENV)
@@ -137,8 +141,8 @@ module.exports = (env, argv) => {
         directory: common.staticPath,
       },
     },
-    devtool: isProduction ? 'source-map' : 'cheap-module-source-map',
-    entry: { bundle: './src/index' },
+    devtool: isProduction ? 'source-map' : 'inline-source-map',
+    entry: { b: './src/index' },
     mode: process.env.NODE_ENV,
     module: {
       rules: [
@@ -156,6 +160,12 @@ module.exports = (env, argv) => {
         {
           exclude: [common.appNodeModules],
           loader: 'ts-loader',
+          options: {
+            getCustomTransformers: () => ({
+              before: [!isProduction && ReactRefreshTypeScript()].filter(Boolean),
+            }),
+            transpileOnly: true,
+          },
           test: /\.[jt]sx?$/,
         },
         {
@@ -187,65 +197,69 @@ module.exports = (env, argv) => {
           clip: {
             chunks: 'all',
             enforce: true,
-            name: 'clip',
-            priority: 5,
+            name: 'c-',
+            priority: 8,
             reuseExistingChunk: false,
-            test: ({ context }) => !!context && /[/\\]src[/\\]packages[/\\]system/.test(context),
+            test: ({ context }) => !!context && /[/\\]src[/\\]packages[/\\]system[/\\]/.test(context),
           },
           base: {
             chunks: 'all',
             enforce: true,
-            name: ({ context }) => `vendors-${configBuild.fixedChunksPackages.find(chunkInContext(context))}`,
-            priority: 4,
+            name: ({ context }) => `v-${getChunkName(context)}`,
+            priority: 7,
             reuseExistingChunk: false,
-            test: ({ context }) => !!context && context.includes('tailwind'),
+            test: ({ context }) => !!context && context.includes('node_modules/tailwind'),
           },
           primary: {
             chunks: 'all',
             enforce: true,
-            name: ({ context }) => `vendors-${configBuild.fixedChunksPackages.find(chunkInContext(context))}`,
-            priority: 3,
+            name: ({ context }) => `v-${getChunkName(context)}`,
+            priority: 6,
             reuseExistingChunk: false,
-            test: ({ context }) => !!context && context.includes('semantic'),
+            test: ({ context }) => !!context && context.includes('node_modules/semantic'),
           },
           secondary: {
-            chunks: 'all',
-            enforce: true,
-            name: ({ context }) => context.replace(/.+[\\/]src[\\/]packages[\\/]([^\\/]+)[\\/].+/, 'pkg-$1'),
-            priority: 2,
+            chunks: 'async',
+            name: ({ context }) => context.replace(/.+[\\/]src[\\/]packages[\\/]([^\\/]+)[\\/].+/, 'p-$1'),
+            priority: 5,
             reuseExistingChunk: false,
             test: ({ context }) => !!context && /[/\\]src[/\\]packages[/\\](images|form|ui)[/\\]/.test(context),
           },
-          vendors: {
+          vendors_base: {
             chunks: 'all',
             enforce: true,
-            name: ({ context }) => `vendors-${configBuild.fixedChunksPackages.find(chunkInContext(context))}`,
-            priority: 1.1,
+            name: ({ context }) => `v-${getChunkName(context)}`,
+            priority: 4,
             reuseExistingChunk: false,
-            test: ({ context }) => !!context && configBuild.fixedChunksPackages.some(chunkInContext(context)),
+            test: ({ context }) => !!getChunk(context),
+          },
+          vendors: {
+            chunks: 'async',
+            name: ({ context }) => `v-${getChunkName(context, configBuild.dynamicChunksPackages)}`,
+            priority: 3,
+            reuseExistingChunk: false,
+            test: ({ context }) => !!getChunk(context, configBuild.dynamicChunksPackages),
           },
           node_modules: {
-            chunks: 'all',
-            enforce: true,
-            name: 'vendors',
-            priority: 1,
+            chunks: 'async',
+            name: 'v-',
+            priority: 2,
             reuseExistingChunk: false,
-            test: ({ context }) => !!context && context.includes('node_modules'),
+            test: ({ context }) => !!context && context.includes('/node_modules/'),
           },
           pkg: {
-            chunks: 'all',
-            enforce: true,
-            name: ({ context }) => context.replace(/.+[\\/]src[\\/]packages[\\/]([^\\/]+)[\\/].+/, 'pkg-$1'),
-            priority: 0,
-            reuseExistingChunk: true,
+            chunks: 'async',
+            name: ({ context }) => context.replace(/.+[\\/]src[\\/]packages[\\/]([^\\/]+)[\\/].+/, 'p-$1'),
+            priority: 1,
+            reuseExistingChunk: false,
             test: ({ context }) => !!context && /[/\\]src[/\\]packages[/\\]/.test(context),
           },
           common: {
             chunks: 'async',
             minChunks: 2,
-            name: 'common',
+            name: 'co',
             priority: 0,
-            reuseExistingChunk: true,
+            reuseExistingChunk: false,
             // test: ({ context }, chunk) => {
             //   if (chunk && chunk[0]) {
             //     // eslint-disable-next-line no-console
@@ -266,15 +280,14 @@ module.exports = (env, argv) => {
       publicPath: configBuild.publicPath,
     },
     performance: {
-      maxEntrypointSize: 1024 * 1024 * 0.5,
-      maxAssetSize: 1024 * 1024 * 0.25,
+      maxEntrypointSize: 1024 * 1024 * 4,
+      maxAssetSize: 1024 * 1024 * 0.8,
     },
     plugins: [
       // DefinePlugin should be the first one
       new webpack.DefinePlugin({
         FEATURES_FLAGS: JSON.stringify(getFeaturesFlags(getConfigEnvironment())),
-        process: JSON.stringify({ env: publicEnv }),
-        SYSTEM: JSON.stringify(getSystemVars()),
+        SYSTEM: JSON.stringify(getSystemVars({ sentry: { enabled: publicEnv.SENTRY_ENABLED } })),
       }),
       isProduction
         && new CopyWebpackPlugin({
@@ -308,6 +321,7 @@ module.exports = (env, argv) => {
         filename: 'css/[name].[contenthash].css',
         ignoreOrder: true,
       }),
+      new ForkTsCheckerWebpackPlugin(),
       !isProduction && new ReactRefreshWebpackPlugin(),
       isProduction
         && new InjectManifest({
@@ -316,9 +330,14 @@ module.exports = (env, argv) => {
             /\.gitignore$/,
             /\.map$/,
             /\.txt$/,
-            /asset-manifest\.json$/,
-            /indexTemplate\.html$/,
-            /Thumbs\.db$/,
+            /\.xml$/,
+            /\.json$/,
+            /\.html$/,
+            /\.svg$/,
+            /\.db$/,
+            /fonts/,
+            /emojis/,
+            /icon-\d{3,}/,
           ],
           swDest: 'sw.js',
           swSrc: './config/sw.js',
@@ -338,14 +357,22 @@ module.exports = (env, argv) => {
           ignore: ['sw.js'],
           release: getSystemVars().version,
         }),
+      new webpack.IgnorePlugin({
+        resourceRegExp: /^\.\/locale$/,
+        contextRegExp: /moment$/,
+      }),
     ].filter(Boolean),
     resolve: {
       alias: {
-        'core-js/es6': 'core-js/es',
+        // 'core-js/es6': 'core-js/es',
         'core-js/library/fn': 'core-js/features',
+        lodash: 'lodash-es',
       },
       extensions: ['.ts', '.tsx', '.js', '.jsx', '.css', '.scss', '.sass'],
       modules: [common.appEntry, common.packages, common.appNodeModules],
+    },
+    watchOptions: {
+      ignored: ['**/*.{tests,stories,cy}.{js,jsx,ts,tsx}', './dist'],
     },
   }
 }

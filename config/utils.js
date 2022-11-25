@@ -74,11 +74,12 @@ const systemVars = {
 // eslint-disable-next-line no-console
 console.log('VERSION: ', systemVars.version)
 
-const getSystemVars = () => ({
+const getSystemVars = ({ sentry } = {}) => ({
   ...systemVars,
-  env: getConfig('system') || {},
+  env: { ...getConfig('system'), development: undefined, production: undefined, staging: undefined, test: undefined },
   sentry: {
     ...systemVars.sentry,
+    ...sentry,
     dns: getConfig('sentry')?.SENTRY_DSN,
   },
 })

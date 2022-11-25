@@ -1,5 +1,8 @@
+import 'cypress-fail-fast'
+import '@testing-library/cypress/add-commands'
+import 'cypress-watch-and-reload/support'
 // ***********************************************************
-// This example support/index.ts is processed and
+// This example support/e2e.ts is processed and
 // loaded automatically before your test files.
 //
 // This is a great place to put global configuration and

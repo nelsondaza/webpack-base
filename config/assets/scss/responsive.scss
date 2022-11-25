@@ -1,101 +1,107 @@
 @mixin screen-min-320 {
-  @media (min-width: rem(320)) {
+  @media (min-width: 320px) {
     @content;
   }
 }
 
 @mixin screen-min-375 {
-  @media (min-width: rem(375)) {
+  @media (min-width: 375px) {
     @content;
   }
 }
 
 @mixin screen-min-424 {
-  @media (min-width: rem(424)) {
+  @media (min-width: 424px) {
     @content;
   }
 }
 
 @mixin screen-min-480 {
-  @media (min-width: rem(480)) {
+  @media (min-width: 480px) {
     @content;
   }
 }
 
 @mixin screen-min-600 {
-  @media (min-width: rem(600)) {
+  @media (min-width: 600px) {
+    @content;
+  }
+}
+
+@mixin screen-min-620 {
+  @media (min-width: 620px) {
     @content;
   }
 }
 
 @mixin screen-min-640 {
-  @media (min-width: rem(640)) {
+  @media (min-width: 640px) {
     @content;
   }
 }
 
 @mixin screen-min-768 {
-  @media (min-width: rem(768)) {
+  @media (min-width: 768px) {
     @content;
   }
 }
 
 @mixin screen-min-800 {
-  @media (min-width: rem(800)) {
+  @media (min-width: 800px) {
     @content;
   }
 }
 
 @mixin screen-min-1024 {
-  @media (min-width: rem(1024)) {
+  @media (min-width: 1024px) {
     @content;
   }
 }
 
 @mixin screen-min-1280 {
-  @media (min-width: rem(1280)) {
+  @media (min-width: 1280px) {
     @content;
   }
 }
 
 @mixin screen-min-1366 {
-  @media (min-width: rem(1366)) {
+  @media (min-width: 1366px) {
     @content;
   }
 }
 
 @mixin screen-min-1600 {
-  @media (min-width: rem(1600)) {
+  @media (min-width: 1600px) {
     @content;
   }
 }
 
 @mixin screen-min-1920 {
-  @media (min-width: rem(1920)) {
+  @media (min-width: 1920px) {
     @content;
   }
 }
 
 @mixin screen-min-2560 {
-  @media (min-width: rem(2560)) {
+  @media (min-width: 2560px) {
     @content;
   }
 }
 
 @mixin screen-min-3008 {
-  @media (min-width: rem(3008)) {
+  @media (min-width: 3008px) {
     @content;
   }
 }
 
 @mixin screen-min-3360 {
-  @media (min-width: rem(3360)) {
+  @media (min-width: 3360px) {
     @content;
   }
 }
 
 @mixin screen-min-3840 {
-  @media (min-width: rem(3840)) {
+  @media (min-width: 3840px) {
     @content;
   }
 }

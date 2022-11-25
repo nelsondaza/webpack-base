@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
+
 const baseConfig = require('../webpack.config')
 
 module.exports = {
@@ -12,13 +14,18 @@ module.exports = {
       name: '@storybook/addon-postcss',
       options: {
         postcssLoaderOptions: {
+          fsCache: true,
           implementation: require('postcss'),
         },
       },
     },
   ],
   core: {
+    disableTelemetry: true,
     builder: 'webpack5',
+    options: {
+      lazyCompilation: true,
+    },
   },
   staticDirs: ['../../static'],
   webpackFinal: (config) => {
@@ -39,6 +46,7 @@ module.exports = {
         path: require.resolve('path-browserify'),
       },
       modules: [...config.resolve.modules, ...localConfig.resolve.modules],
+      plugins: [...(config.resolve?.plugins || []), ...(localConfig.resolve?.plugins || []), new TsconfigPathsPlugin()],
     })
 
     config.plugins.push(

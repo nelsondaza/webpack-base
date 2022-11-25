@@ -1,6 +1,5 @@
 *.log
 /node_modules
-/.husky/prepare-commit-msg
 
 # OS generated files
 ._*
@@ -28,9 +27,14 @@ Thumbs.db
 
 # outputs
 dist/*
+storybook-static/*
 # Coverage directory used by tools like istanbul
 # - coverage
 # Public build
 # - public
 # Storybook
 # - style-guide
+
+#tmp
+/cypress/e2e/examples/
+/cypress/fixtures/*

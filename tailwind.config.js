@@ -43,7 +43,7 @@ module.exports = {
   corePlugins: {
     preflight: false,
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/line-clamp')],
   theme: {
     extend: {
       colors: {
@@ -87,6 +87,7 @@ module.exports = {
         424: '424px',
         480: '480px',
         600: '600px',
+        620: '620px',
         640: '640px',
         768: '768px',
         800: '800px',
@@ -161,20 +162,26 @@ module.exports = {
         inherit: 'inherit',
       },
       fontSize: {
-        xxs: ['0.5em', { lineHeight: '1.25em' }],
-        xs: ['0.75em', { lineHeight: '1.25em' }],
-        sm: ['0.875em', { lineHeight: '1.25em' }],
-        base: ['1em', { lineHeight: '1.25em' }],
-        lg: ['1.125em', { lineHeight: '1.25em' }],
-        xl: ['1.25em', { lineHeight: '1.25em' }],
-        '2xl': ['1.5em', { lineHeight: '1.25em' }],
-        '3xl': ['1.875em', { lineHeight: '1.25em' }],
-        '4xl': ['2.25em', { lineHeight: '1.25em' }],
-        '5xl': ['3em', { lineHeight: '1.25em' }],
-        '6xl': ['3.75em', { lineHeight: '1.25em' }],
-        '7xl': ['4.5em', { lineHeight: '1.25em' }],
-        '8xl': ['6em', { lineHeight: '1.25em' }],
-        '9xl': ['8em', { lineHeight: '1.25em' }],
+        xxs: ['0.5em', { lineHeight: '1.3125em' }],
+        xs: ['0.75em', { lineHeight: '1.3125em' }],
+        sm: ['0.875em', { lineHeight: '1.3125em' }],
+        base: ['1em', { lineHeight: '1.3125em' }],
+        lg: ['1.125em', { lineHeight: '1.3125em' }],
+        xl: ['1.25em', { lineHeight: '1.3125em' }],
+        '2xl': ['1.5em', { lineHeight: '1.3125em' }],
+        '3xl': ['1.875em', { lineHeight: '1.3125em' }],
+        '4xl': ['2.25em', { lineHeight: '1.3125em' }],
+        '5xl': ['3em', { lineHeight: '1.3125em' }],
+        '6xl': ['3.75em', { lineHeight: '1.3125em' }],
+        '7xl': ['4.5em', { lineHeight: '1.3125em' }],
+        '8xl': ['6em', { lineHeight: '1.3125em' }],
+        '9xl': ['8em', { lineHeight: '1.3125em' }],
+        inherit: 'inherit',
+      },
+      fontFamily: {
+        inherit: 'inherit',
+      },
+      fontWeight: {
         inherit: 'inherit',
       },
       letterSpacing: {

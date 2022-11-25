@@ -1,5 +1,5 @@
-import { doc } from 'storybook-readme'
 import { storiesOf } from '@storybook/react'
+import { doc } from 'storybook-readme'
 
 import README from '../README.md'
 

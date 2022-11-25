@@ -93,9 +93,8 @@ class Features {
 
     if (user && this.features[feature]) {
       const { users } = this.features[feature]
-      if (users && users.length) {
-        for (let c = 0; c < users.length; c += 1) {
-          const featUser = users[c]
+      if (users?.length) {
+        for (const featUser of users) {
           if (matchesUser(featUser, user)) {
             return true
           }
@@ -122,9 +121,8 @@ class Features {
 
     if (userAccess && this.features[feature]) {
       const { access } = this.features[feature]
-      if (access && access.length) {
-        for (let c = 0; c < access.length; c += 1) {
-          const featAccess = access[c]
+      if (access?.length) {
+        for (const featAccess of access) {
           if (matchesAccess(featAccess, userAccess)) {
             return true
           }
@@ -144,7 +142,7 @@ class Features {
     Object.keys(object).forEach((name) => {
       this.features[name] = parseAsFeature(object[name])
     })
-    this.enabled = !!this.features.features_flags?.enabled
+    this.enabled = !!this.features.feature_flags?.enabled
     this.checkCallbacks()
   }
 
@@ -158,15 +156,14 @@ class Features {
   valueForUser = (feature, user, defaultValue) => {
     if (this.enabled && !!this.features[feature]) {
       const { users } = this.features[feature]
-      if (users && users.length) {
-        for (let c = 0; c < users.length; c += 1) {
-          const featUser = users[c]
+      if (users?.length) {
+        for (const featUser of users) {
           if (matchesUser(featUser, user)) {
-            return featUser.value !== undefined ? featUser.value : defaultValue
+            return featUser.value === undefined ? defaultValue : featUser.value
           }
         }
       } else {
-        return this.features[feature].value !== undefined ? this.features[feature].value : defaultValue
+        return this.features[feature].value === undefined ? defaultValue : this.features[feature].value
       }
     }
     return defaultValue

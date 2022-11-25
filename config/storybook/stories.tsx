@@ -1,6 +1,6 @@
-import { Provider, useDispatch } from 'react-redux'
 import { ConnectedRouter } from 'connected-react-router'
-import { ReactNode, useEffect } from 'react'
+import { ReactNode } from 'react'
+import { Provider } from 'react-redux'
 
 import history from '../history'
 import store from '../store'
@@ -11,24 +11,14 @@ import '../../src/globals.scss'
 import './stories.css'
 
 type StoriesHolderProps = {
-  environmentSet?: () => { type: string; payload?: unknown }
   children: ReactNode
 }
 
-const StoriesHolder = ({
-  children,
-  environmentSet = () => ({ type: 'ENVIRONMENT_SET' }),
-}: StoriesHolderProps) => {
-  const dispatch = useDispatch()
-  // @ts-ignore
-  useEffect(() => dispatch(environmentSet()), [dispatch, environmentSet])
-
-  return (
-    <div className="StoriesContainer">
-      <div className="StoriesContainer__holder">{children}</div>
-    </div>
-  )
-}
+const StoriesHolder = ({ children }: StoriesHolderProps) => (
+  <div className="StoriesContainer">
+    <div className="StoriesContainer__holder">{children}</div>
+  </div>
+)
 
 export const withEnvironment = (Story: JSX.IntrinsicAttributes) => (
   <Provider store={store}>

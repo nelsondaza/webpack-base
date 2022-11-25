@@ -1,6 +1,6 @@
-import { combineEpics } from 'redux-observable'
-import { combineReducers } from 'redux'
 import { connectRouter } from 'connected-react-router'
+import { combineReducers } from 'redux'
+import { combineEpics } from 'redux-observable'
 
 // import { actions as company, registerReducer as companyReducer } from 'company'
 //

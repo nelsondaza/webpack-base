@@ -4,6 +4,10 @@
   margin: 0;
   padding: em(20);
   position: relative;
+
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
 .small .Block,

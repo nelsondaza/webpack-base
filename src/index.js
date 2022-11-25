@@ -1,16 +1,17 @@
 import 'regenerator-runtime/runtime'
 
-import Provider from 'react-redux/es/components/Provider'
 import { ConnectedRouter } from 'connected-react-router'
 import { createRoot } from 'react-dom/client'
+import Provider from 'react-redux/es/components/Provider'
 
 import System from 'system'
 
-import App from './App'
 import history from '../config/history'
+import store from '../config/store'
+
+import App from './App'
 import sentryRegistration from './sentryRegistration'
 import serviceWorkerRegistration from './serviceWorkerRegistration'
-import store from '../config/store'
 
 import '../config/assets/tailwind/tailwind.css'
 import '../config/assets/semantic-ui/semantic.css'

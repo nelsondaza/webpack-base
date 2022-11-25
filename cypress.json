@@ -1,4 +1,0 @@
-{
-  "HEADS-UP": "This file content will be override at /cypress/plugins/index.js",
-  "videosFolder": "dist/cypress/videos"
-}

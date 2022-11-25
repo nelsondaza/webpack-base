@@ -1,7 +1,7 @@
 import { BroadcastUpdatePlugin } from 'workbox-broadcast-update'
-import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching'
 import { clientsClaim } from 'workbox-core'
-import { googleFontsCache, imageCache, offlineFallback, pageCache, staticResourceCache } from 'workbox-recipes'
+import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching'
+import { offlineFallback } from 'workbox-recipes'
 import { registerRoute } from 'workbox-routing'
 import { StaleWhileRevalidate } from 'workbox-strategies'
 
@@ -19,10 +19,10 @@ clientsClaim()
 precacheAndRoute(swManifest)
 cleanupOutdatedCaches()
 
-pageCache()
-googleFontsCache()
-staticResourceCache()
-imageCache()
+// pageCache()
+// googleFontsCache()
+// staticResourceCache()
+// imageCache()
 
 offlineFallback({ pageFallback: 'index.html' })
 
